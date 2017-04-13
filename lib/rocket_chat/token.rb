@@ -15,12 +15,12 @@ module RocketChat
 
     # Authentication token
     def auth_token
-      @data['authToken']
+      data['authToken']
     end
 
     # User ID
     def user_id
-      @data['userId']
+      data['userId']
     end
 
     def inspect

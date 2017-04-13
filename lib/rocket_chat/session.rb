@@ -26,5 +26,16 @@ module RocketChat
       server.request_json('/api/v1/logout', method: :post, token: token)
       nil
     end
+
+    #
+    # me REST API
+    # @return [User]
+    # @raise [HTTPError, StatusError]
+    #
+    def me
+      response = server.request_json('/api/v1/me', method: :get, token: token, skip_status_check: true)
+      raise RocketChat::StatusError, 'Failed to fetch profile' unless response['success']
+      User.new response
+    end
   end
 end

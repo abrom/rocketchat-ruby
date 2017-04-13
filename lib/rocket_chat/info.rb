@@ -7,7 +7,7 @@ module RocketChat
     attr_reader :data
 
     #
-    # @param [Hash] data Raw version data
+    # @param [Hash] data Raw info data
     #
     def initialize(data)
       @data = data.dup.freeze
@@ -15,7 +15,7 @@ module RocketChat
 
     # Rocket.Chat version
     def version
-      @data['version']
+      data['version']
     end
 
     def inspect

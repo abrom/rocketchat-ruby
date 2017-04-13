@@ -22,6 +22,8 @@ module RocketChat
 
     def request_json(path, options = {})
       fail_unless_ok = options.delete :fail_unless_ok
+      skip_status_check = options.delete :skip_status_check
+
       response = request path, options
 
       if fail_unless_ok && !response.is_a?(Net::HTTPOK)
@@ -29,7 +31,7 @@ module RocketChat
       end
 
       response_json = JSON.parse(response.body)
-      unless response_json['status'] == 'success'
+      unless skip_status_check || response_json['status'] == 'success'
         raise RocketChat::StatusError, response_json['message']
       end
 

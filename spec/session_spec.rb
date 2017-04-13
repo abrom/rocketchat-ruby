@@ -38,4 +38,59 @@ describe RocketChat::Session do
       end
     end
   end
+
+  describe '#me' do
+    before do
+      # Stubs for /api/v1/me REST API
+      stub_request(:get, SERVER_URI + '/api/v1/me')
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_request(:get, SERVER_URI + '/api/v1/me')
+        .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
+        .to_return(
+          body: {
+            _id: USER_ID,
+            name: 'Example User',
+            emails: [
+              {
+                address: 'example@example.com',
+                verified: true
+              }
+            ],
+            status: 'online',
+            statusConnection: 'offline',
+            username: USERNAME,
+            utcOffset: 0,
+            active: true,
+            success: true
+          }.to_json,
+          status: 200
+        )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        me = session.me
+        expect(me.id).to eq USER_ID
+        expect(me.name).to eq 'Example User'
+        expect(me.email).to eq 'example@example.com'
+        expect(me).to be_email_verified
+        expect(me.status).to eq 'online'
+        expect(me.status_connection).to eq 'offline'
+        expect(me.username).to eq USERNAME
+        expect(me.utc_offset).to eq 0
+        expect(me).to be_active
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
+
+      it 'should be failure' do
+        expect do
+          session.me
+        end.to raise_error RocketChat::StatusError, 'Failed to fetch profile'
+      end
+    end
+  end
 end
