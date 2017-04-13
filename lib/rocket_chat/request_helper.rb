@@ -1,3 +1,5 @@
+require 'openssl'
+
 module RocketChat
   #
   # Rocket.Chat HTTP request helper
