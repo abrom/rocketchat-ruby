@@ -37,6 +37,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 
 ### Users
 * /api/v1/users.create
+* /api/v1/users.update
 
 
 ## Usage
@@ -62,6 +63,36 @@ session = rocket_server.login('username', 'password')
 # ... use the API ...
 session.logout
 ```
+
+
+To create a user:
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.users.create('new_username', 'user@example.com', 'New User', '123456', active: true, send_welcome_email: false)
+```
+
+Optional parameters for create are:
+
+:active, :roles, :join_default_channels, :require_password_change, :send_welcome_email, :verified, :custom_fields
+
+
+To update a user:
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.users.update('LAjzCDLqggCT7B82M', 'updated@example.com', 'Updated Name', roles: ['user', 'moderator'])
+```
+
+Optional parameters for update are:
+
+:username, :password, :active, :roles, :join_default_channels, :require_password_change, :send_welcome_email, :verified, :custom_fields
 
 
 ## Contributing
