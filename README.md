@@ -1,13 +1,13 @@
 [![Travis Build Status](http://img.shields.io/travis/abrom/rocketchat-ruby.svg?style=flat)](https://travis-ci.org/abrom/rocketchat-ruby)
 [![Code Climate Score](http://img.shields.io/codeclimate/github/abrom/rocketchat-ruby.svg?style=flat)](https://codeclimate.com/github/abrom/rocketchat-ruby)
-[![Gem Version](http://img.shields.io/gem/v/rocketchat-ruby.svg?style=flat)](#)
+[![Gem Version](http://img.shields.io/gem/v/rocketchat.svg?style=flat)](#)
 
 # Rocket.Chat REST API for Ruby
 
 This is a gem wrapping the v1 REST API for [Rocket.Chat](https://rocket.chat/).
 
-The gem is based on a fork of int2xx9/ruby-rocketchat however that gem implemented v0.1
-of the Rocket.Chat API and it was not forward compatible. Thanks to @int2xx9 for the
+The gem is based on a fork of http://github.com/int2xx9/ruby-rocketchat however that gem implemented v0.1
+of the Rocket.Chat API and it was not forward compatible. Thanks to [@int2xx9](http://github.com/int2xx9) for the
 framework on which this gem was based 
 
 ## Installation
@@ -34,6 +34,9 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/login
 * /api/v1/logout
 * /api/v1/me
+
+### Users
+* /api/v1/users.create
 
 
 ## Usage

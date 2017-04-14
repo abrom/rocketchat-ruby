@@ -22,17 +22,17 @@ module RocketChat
 
     def request_json(path, options = {})
       fail_unless_ok = options.delete :fail_unless_ok
-      skip_status_check = options.delete :skip_status_check
 
       response = request path, options
-
       if fail_unless_ok && !response.is_a?(Net::HTTPOK)
         raise RocketChat::HTTPError, "Invalid http response code: #{response.code}"
       end
 
       response_json = JSON.parse(response.body)
-      unless skip_status_check || response_json['status'] == 'success'
-        raise RocketChat::StatusError, response_json['message']
+      if response_json.has_key? 'success'
+        raise RocketChat::StatusError, response_json['error'] unless response_json['success']
+      else
+        raise RocketChat::StatusError, response_json['message'] unless response_json['status'] == 'success'
       end
 
       response_json
@@ -84,16 +84,23 @@ module RocketChat
       req = Net::HTTP.const_get(options[:method].to_s.capitalize).new(path, headers)
 
       body = options[:body]
-      req.body = url_encode(body) unless body.nil?
+      add_body(req, body) unless body.nil?
 
       req
     end
 
+    def add_body(request, body)
+      if body.is_a? Hash
+        request.body = body.to_json
+        request.content_type = 'application/json'
+      else
+        request.body = url_encode(body)
+      end
+    end
+
     def url_encode(body)
       if body.is_a?(Hash)
-        body.map do |key, value|
-          "#{URI.escape(key.to_s)}=#{URI.escape(value.to_s)}"
-        end.join('&')
+        URI.encode_www_form body
       else
         body.to_s
       end

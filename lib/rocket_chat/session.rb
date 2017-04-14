@@ -17,13 +17,17 @@ module RocketChat
       @token = token.dup.freeze
     end
 
+    def request_json(path, options = {})
+      server.request_json path, options.merge(token: token)
+    end
+
     #
     # logout REST API
     # @return [NilClass]
     # @raise [HTTPError, StatusError]
     #
     def logout
-      server.request_json('/api/v1/logout', method: :post, token: token)
+      request_json('/api/v1/logout', method: :post)
       nil
     end
 
@@ -33,9 +37,15 @@ module RocketChat
     # @raise [HTTPError, StatusError]
     #
     def me
-      response = server.request_json('/api/v1/me', method: :get, token: token, skip_status_check: true)
-      raise RocketChat::StatusError, 'Failed to fetch profile' unless response['success']
-      User.new response
+      User.new request_json('/api/v1/me', method: :get)
+    end
+
+    #
+    # User messages proxy
+    # @return [Messages::User]
+    #
+    def users
+      @users ||= RocketChat::Messages::User.new(self)
     end
   end
 end

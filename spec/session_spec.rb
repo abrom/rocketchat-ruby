@@ -89,7 +89,7 @@ describe RocketChat::Session do
       it 'should be failure' do
         expect do
           session.me
-        end.to raise_error RocketChat::StatusError, 'Failed to fetch profile'
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
   end

@@ -11,7 +11,5 @@ USERNAME = 'user'.freeze
 PASSWORD = 'password'.freeze
 UNAUTHORIZED_BODY = {
   status: :error,
-  data: {
-    message: 'You must be logged in to do this.'
-  }
+  message: 'You must be logged in to do this.'
 }.to_json
