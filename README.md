@@ -25,7 +25,7 @@ And then execute:
 
 ## Supported API calls
 
-This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.5.4)
+This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.54)
 
 #### Miscellaneous information
 * /api/v1/info
