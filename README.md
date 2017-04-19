@@ -72,7 +72,8 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.create('new_username', 'user@example.com', 'New User', '123456', active: true, send_welcome_email: false)
+session.users.create('new_username', 'user@example.com', 'New User', '123456',
+                     active: true, send_welcome_email: false)
 ```
 
 Optional parameters for create are:
@@ -87,12 +88,16 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.update('LAjzCDLqggCT7B82M', 'updated@example.com', 'Updated Name', roles: ['user', 'moderator'])
+session.users.update('LAjzCDLqggCT7B82M',
+  email: 'updated@example.com',
+  name: 'Updated Name',
+  roles: ['user', 'moderator']
+)
 ```
 
 Optional parameters for update are:
 
-:username, :password, :active, :roles, :join_default_channels, :require_password_change, :send_welcome_email, :verified, :custom_fields
+:username, :email, :password, :name, :active, :roles, :join_default_channels, :require_password_change, :send_welcome_email, :verified, :custom_fields
 
 
 ## Contributing

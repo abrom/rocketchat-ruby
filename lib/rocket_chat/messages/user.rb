@@ -38,21 +38,17 @@ module RocketChat
       #
       # users.update REST API
       # @param [String] id Rocket.Chat user id
-      # @param [String] new_email Email
-      # @param [String] new_name Name
+      # @param [Hash] options User properties to update
       # @return [User]
       # @raise [HTTPError, StatusError]
       #
-      def update(id, new_email, new_name, options = {})
+      def update(id, options = {})
         response = session.request_json(
           '/api/v1/users.update',
           method: :post,
           body: {
             userId: id,
-            data: {
-              email: new_email,
-              name: new_name
-            }.merge(user_option_hash(options))
+            data: user_option_hash(options, true)
           }
         )
         RocketChat::User.new response['user']
@@ -62,11 +58,12 @@ module RocketChat
 
       attr_reader :session
 
-      def user_option_hash(options)
-        options = Util.slice_hash(
-          options, :active, :roles, :join_default_channels, :require_password_change,
-          :send_welcome_email, :verified, :custom_fields, :username, :password
-        )
+      def user_option_hash(options, include_personal_fields = false)
+        args = [options, :active, :roles, :join_default_channels, :require_password_change,
+                :send_welcome_email, :verified, :custom_fields]
+        args += [:username, :email, :name, :password] if include_personal_fields
+
+        options = Util.slice_hash(*args)
         return {} if options.empty?
 
         new_hash = {}

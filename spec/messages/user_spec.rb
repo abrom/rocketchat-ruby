@@ -107,7 +107,6 @@ describe RocketChat::Messages::User do
             userId: '1234',
             data: {
               email: 'already@exists.com',
-              name: 'Already Exists'
             }
           }
         ).to_return(
@@ -150,7 +149,7 @@ describe RocketChat::Messages::User do
 
     context 'valid session' do
       it 'should be success' do
-        existing_user = session.users.update('1234', 'updated@user.com', 'Updated User', active: false)
+        existing_user = session.users.update('1234', email: 'updated@user.com', name: 'Updated User', active: false)
 
         expect(existing_user.id).to eq '1234'
         expect(existing_user.name).to eq 'Updated User'
@@ -164,7 +163,7 @@ describe RocketChat::Messages::User do
       context 'with an existing email' do
         it 'should be failure' do
           expect do
-            session.users.update('1234', 'already@exists.com', 'Already Exists')
+            session.users.update('1234', email: 'already@exists.com')
           end.to raise_error RocketChat::StatusError, 'Email already in use'
         end
       end
@@ -175,7 +174,7 @@ describe RocketChat::Messages::User do
 
       it 'should be failure' do
         expect do
-          session.users.update('1234', 'updated@user.com', 'Updated User')
+          session.users.update('1234', email: 'updated@user.com')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
