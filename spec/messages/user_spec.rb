@@ -1,5 +1,40 @@
 require 'spec_helper'
 
+def user_for_request(name, extras={})
+  split = name.downcase.split(' ')
+  {
+    username: split.join('_'),
+    email: extras[:email] || "#{split.join('@')}.com",
+    name: name,
+    password: '123456',
+  }.merge(extras)
+end
+
+def full_response(request_data)
+  {
+    body: {
+      success: true,
+      user: {
+        _id: '1234',
+        username: request_data[:username],
+        emails: [
+          { address: request_data[:email], verified: false }
+        ],
+        type: 'user',
+        status: 'online',
+        active: request_data.fetch(:active, true),
+        name: request_data[:name],
+      }
+    }.to_json,
+    status: 200
+  }
+end
+
+def stub_authed_request(method, action)
+  stub_request(method, SERVER_URI + action)
+    .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
+end
+
 describe RocketChat::Messages::User do
   let(:server) { RocketChat::Server.new(SERVER_URI) }
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
@@ -11,15 +46,10 @@ describe RocketChat::Messages::User do
       stub_request(:post, SERVER_URI + '/api/v1/users.create')
         .to_return(body: UNAUTHORIZED_BODY, status: 401)
 
-      stub_request(:post, SERVER_URI + '/api/v1/users.create')
+      data = user_for_request('Already Exists')
+      stub_authed_request(:post, '/api/v1/users.create')
         .with(
-          headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID },
-          body: {
-            username: 'already_exists',
-            email: 'already@exists.com',
-            name: 'Already Exists',
-            password: '123456'
-          }
+          body: data.to_json
         ).to_return(
           body: {
             success: false,
@@ -28,34 +58,13 @@ describe RocketChat::Messages::User do
           status: 401
         )
 
-      stub_request(:post, SERVER_URI + '/api/v1/users.create')
+      data = user_for_request('New User',
+                              active: true,
+                              joinDefaultChannels: false)
+      stub_authed_request(:post, '/api/v1/users.create')
         .with(
-          headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID },
-          body: {
-            username: 'new_user',
-            email: 'new@user.com',
-            name: 'New User',
-            password: '123456',
-            active: true,
-            joinDefaultChannels: false
-          }.to_json
-        ).to_return(
-          body: {
-            success: true,
-            user: {
-              _id: '1234',
-              username: 'new_user',
-              emails: [
-                { address: 'new@user.com', verified: false }
-              ],
-              type: 'user',
-              status: 'online',
-              active: true,
-              name: 'New User'
-            }
-          }.to_json,
-          status: 200
-        )
+          body: data.to_json
+        ).to_return(full_response(data))
     end
 
     context 'valid session' do
@@ -100,9 +109,8 @@ describe RocketChat::Messages::User do
       stub_request(:post, SERVER_URI + '/api/v1/users.update')
         .to_return(body: UNAUTHORIZED_BODY, status: 401)
 
-      stub_request(:post, SERVER_URI + '/api/v1/users.update')
+      stub_authed_request(:post, '/api/v1/users.update')
         .with(
-          headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID },
           body: {
             userId: '1234',
             data: {
@@ -117,9 +125,8 @@ describe RocketChat::Messages::User do
         status: 401
       )
 
-      stub_request(:post, SERVER_URI + '/api/v1/users.update')
+      stub_authed_request(:post, '/api/v1/users.update')
         .with(
-          headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID },
           body: {
             userId: '1234',
             data: {
@@ -128,23 +135,7 @@ describe RocketChat::Messages::User do
               active: false
             }
           }.to_json
-        ).to_return(
-        body: {
-          success: true,
-          user: {
-            _id: '1234',
-            username: 'new_user',
-            emails: [
-              { address: 'updated@user.com', verified: true }
-            ],
-            type: 'user',
-            status: 'online',
-            active: false,
-            name: 'Updated User'
-          }
-        }.to_json,
-        status: 200
-      )
+        ).to_return(full_response(user_for_request('Updated User', username: 'new_user', active: false)))
     end
 
     context 'valid session' do
@@ -154,7 +145,7 @@ describe RocketChat::Messages::User do
         expect(existing_user.id).to eq '1234'
         expect(existing_user.name).to eq 'Updated User'
         expect(existing_user.email).to eq 'updated@user.com'
-        expect(existing_user).to be_email_verified
+        expect(existing_user).not_to be_email_verified
         expect(existing_user.status).to eq 'online'
         expect(existing_user.username).to eq 'new_user'
         expect(existing_user).not_to be_active
