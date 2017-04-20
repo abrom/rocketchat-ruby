@@ -55,6 +55,22 @@ module RocketChat
       end
 
       #
+      # users.delete REST API
+      # @param [String] userId Rocket.Chat user id
+      # @param [String] username Username
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def delete(userId: nil, username: nil)
+        session.request_json(
+          '/api/v1/users.delete',
+          method: :post,
+          body: userId ? { userId: userId } : { username: username },
+          upstreamed_errors: ['error-invalid-user']
+        )['success']
+      end
+
+      #
       # users.info REST API
       # @param [String] userId Rocket.Chat user id
       # @param [String] username Username

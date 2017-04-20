@@ -40,6 +40,24 @@ describe RocketChat::Messages::User do
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
   let(:session) { RocketChat::Session.new(server, token) }
 
+  invalid_user_body = {
+    body: {
+      success: false,
+      error: 'The required "userId" or "username" param provided does not match any users [error-invalid-user]',
+      errorType: 'error-invalid-user'
+    }.to_json,
+    status: 400
+  }
+
+  not_provided_user_body = {
+    body: {
+      success: false,
+      error: 'The required "userId" or "username" param was not provided [error-user-param-not-provided]',
+      errorType: 'error-user-param-not-provided'
+    }.to_json,
+    status: 400
+  }
+
   describe '#create' do
     before do
       # Stubs for /api/v1/users.create REST API
@@ -177,15 +195,6 @@ describe RocketChat::Messages::User do
       stub_request(:get, SERVER_URI + '/api/v1/users.info?userId=1234')
         .to_return(body: UNAUTHORIZED_BODY, status: 401)
 
-      invalid_user_body = {
-        body: {
-          success: false,
-          error: 'The required "userId" or "username" param provided does not match any users [error-invalid-user]',
-          errorType: 'error-invalid-user'
-        }.to_json,
-        status: 400
-      }
-
       stub_authed_request(:get, '/api/v1/users.info?userId=123456')
         .to_return(invalid_user_body)
 
@@ -193,14 +202,7 @@ describe RocketChat::Messages::User do
         .to_return(invalid_user_body)
 
       stub_authed_request(:get, '/api/v1/users.info?username')
-        .to_return(
-        body: {
-          success: false,
-          error: 'The required "userId" or "username" param was not provided [error-user-param-not-provided]',
-          errorType: 'error-user-param-not-provided'
-        }.to_json,
-        status: 400
-      )
+        .to_return(not_provided_user_body)
 
       expected = full_response(user_for_request('Some User'))
 
@@ -262,6 +264,68 @@ describe RocketChat::Messages::User do
       it 'should be failure' do
         expect do
           session.users.info(userId: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#delete' do
+    before do
+      # Stubs for /api/v1/users.delete REST API
+      stub_request(:post, SERVER_URI + '/api/v1/users.delete')
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, '/api/v1/users.delete')
+        .with(
+          body: {userId: '123456'}
+        ).to_return(invalid_user_body)
+
+      stub_authed_request(:post, '/api/v1/users.delete')
+        .with(
+          body: {username: 'invalid-user'}.to_json
+        ).to_return(invalid_user_body)
+
+      stub_authed_request(:post, '/api/v1/users.delete')
+        .with(
+          body: {username: nil}.to_json
+        ).to_return(not_provided_user_body)
+
+      stub_authed_request(:post, '/api/v1/users.delete')
+        .with(
+          body: {userId: '1234'}.to_json
+        ).to_return(
+        body: {success: true}.to_json,
+        status: 200
+      )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(session.users.delete(userId: '1234')).to be_truthy
+      end
+
+      context 'with no user information' do
+        it 'should be failure' do
+          expect do
+            session.users.delete(username: nil)
+          end.to raise_error RocketChat::StatusError, 'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
+        end
+      end
+
+      context 'about a missing user' do
+        it 'should be false' do
+          expect(session.users.delete(userId: '123456')).to eq false
+          expect(session.users.delete(username: 'invalid-user')).to eq false
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
+
+      it 'should be failure' do
+        expect do
+          session.users.delete(userId: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end

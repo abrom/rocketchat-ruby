@@ -37,6 +37,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 
 ### Users
 * /api/v1/users.create
+* /api/v1/users.delete
 * /api/v1/users.info
 * /api/v1/users.update
 
@@ -112,6 +113,8 @@ session.users.info(username: 'some_username')
 ```
 
 Either userId (RocketChat's ID) or username can be used.
+
+Deleting a user can be done with the same options.
 
 ## Contributing
 
