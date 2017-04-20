@@ -54,6 +54,23 @@ module RocketChat
         RocketChat::User.new response['user']
       end
 
+      #
+      # users.info REST API
+      # @param [String] userId Rocket.Chat user id
+      # @param [String] username Username
+      # @return [User]
+      # @raise [HTTPError, StatusError]
+      #
+      def info(userId: nil, username: nil)
+        response = session.request_json(
+          '/api/v1/users.info',
+          body: userId ? { userId: userId } : { username: username },
+          upstreamed_errors: ['error-invalid-user']
+        )
+
+        RocketChat::User.new response['user'] if response['success']
+      end
+
       private
 
       attr_reader :session

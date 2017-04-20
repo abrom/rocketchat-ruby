@@ -22,6 +22,7 @@ module RocketChat
 
     def request_json(path, options = {})
       fail_unless_ok = options.delete :fail_unless_ok
+      upstreamed_errors = Array(options.delete(:upstreamed_errors))
 
       response = request path, options
       if fail_unless_ok && !response.is_a?(Net::HTTPOK)
@@ -30,9 +31,11 @@ module RocketChat
 
       response_json = JSON.parse(response.body)
       if response_json.has_key? 'success'
-        raise RocketChat::StatusError, response_json['error'] unless response_json['success']
-      else
-        raise RocketChat::StatusError, response_json['message'] unless response_json['status'] == 'success'
+        unless response_json['success'] || upstreamed_errors.include?(response_json['errorType'])
+          raise RocketChat::StatusError, response_json['error']
+        end
+      elsif response_json['status'] != 'success'
+        raise RocketChat::StatusError, response_json['message']
       end
 
       response_json
@@ -80,11 +83,16 @@ module RocketChat
 
     def create_request(path, options)
       headers = get_headers(options)
-
-      req = Net::HTTP.const_get(options[:method].to_s.capitalize).new(path, headers)
-
       body = options[:body]
-      add_body(req, body) unless body.nil?
+
+      if options[:method] == :post
+        req = Net::HTTP::Post.new(path, headers)
+        add_body(req, body) if body
+      else
+        uri = path
+        uri += '?' + URI.encode_www_form(body) if body
+        req = Net::HTTP.const_get(options[:method].to_s.capitalize).new(uri, headers)
+      end
 
       req
     end
