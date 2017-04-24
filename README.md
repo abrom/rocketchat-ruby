@@ -39,6 +39,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/users.create
 * /api/v1/users.delete
 * /api/v1/users.info
+* /api/v1/users.setAvatar
 * /api/v1/users.update
 
 
@@ -115,6 +116,20 @@ session.users.info(username: 'some_username')
 Either userId (RocketChat's ID) or username can be used.
 
 Deleting a user can be done with the same options.
+
+
+To set a user's avatar:
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.users.set_avatar("http://image_url")
+```
+
+There is an optional parameter userId, that works if the setting user is allowed to set other's avatar.
+
 
 ## Contributing
 

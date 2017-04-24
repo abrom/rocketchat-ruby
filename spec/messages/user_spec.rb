@@ -330,4 +330,77 @@ describe RocketChat::Messages::User do
       end
     end
   end
+
+  describe '#setAvatar' do
+    before do
+      # Stubs for /api/v1/users.set_avatar REST API
+      stub_request(:post, SERVER_URI + '/api/v1/users.setAvatar')
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, '/api/v1/users.setAvatar')
+        .with(
+          body: {
+            avatarUrl: 'some-image-url',
+            userId: '123456'
+          }
+        ).to_return(
+        body: {
+          success: false,
+          error: "Cannot read property 'username' of undefined"
+        }.to_json,
+        status: 200
+      )
+
+      stub_authed_request(:post, '/api/v1/users.setAvatar')
+        .with(
+          body: {
+            avatarUrl: 'some-image-url',
+            userId: '1234'
+          }
+      ).to_return(
+        body: {success: true}.to_json,
+        status: 200
+      )
+
+      stub_authed_request(:post, '/api/v1/users.setAvatar')
+        .with(
+          body: {
+            avatarUrl: 'some-image-url',
+          }
+      ).to_return(
+        body: {success: true}.to_json,
+        status: 200
+      )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(session.users.set_avatar('some-image-url')).to be_truthy
+      end
+
+      context 'with userId parameter' do
+        it 'should be success' do
+          expect(session.users.set_avatar('some-image-url', userId: '1234')).to be_truthy
+        end
+      end
+
+      context 'with bad user information' do
+        it 'should be failure' do
+          expect do
+            session.users.set_avatar('some-image-url', userId: '123456')
+          end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
+
+      it 'should be failure' do
+        expect do
+          session.users.set_avatar(userId: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
 end

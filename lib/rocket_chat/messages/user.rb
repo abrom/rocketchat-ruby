@@ -87,6 +87,23 @@ module RocketChat
         RocketChat::User.new response['user'] if response['success']
       end
 
+      #
+      # users.setAvatar REST API
+      # @param [String] avatarUrl URL to use for avatar
+      # @param [String] userId user to update (optional)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def set_avatar(avatarUrl, userId: nil)
+        body = {avatarUrl: avatarUrl}
+        body[:userId] = userId if userId
+        session.request_json(
+          '/api/v1/users.setAvatar',
+          method: :post,
+          body: body,
+        )['success']
+      end
+
       private
 
       attr_reader :session
