@@ -45,5 +45,9 @@ module RocketChat
       )
       Session.new self, Token.new(response['data'])
     end
+
+    def request_json(path, options = {})
+      super(path, @options.merge(options))
+    end
   end
 end
