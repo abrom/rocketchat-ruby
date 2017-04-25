@@ -113,7 +113,7 @@ session = rocket_server.login('username', 'password')
 session.users.info(username: 'some_username')
 ```
 
-Either userId (RocketChat's ID) or username can be used.
+Either user_id (RocketChat's ID) or username can be used.
 
 Deleting a user can be done with the same options.
 
@@ -125,10 +125,10 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.set_avatar("http://image_url")
+session.users.set_avatar('http://image_url')
 ```
 
-There is an optional parameter userId, that works if the setting user is allowed to set other's avatar.
+There is an optional parameter user_id, that works if the setting user is allowed to set other's avatar.
 
 
 ## Contributing
