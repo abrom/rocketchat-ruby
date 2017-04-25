@@ -106,16 +106,16 @@ describe RocketChat::Messages::User do
           body: {
             userId: '1234',
             data: {
-              email: 'already@exists.com',
+              email: 'already@exists.com'
             }
           }
         ).to_return(
-        body: {
-          success: false,
-          error: 'Email already in use'
-        }.to_json,
-        status: 401
-      )
+          body: {
+            success: false,
+            error: 'Email already in use'
+          }.to_json,
+          status: 401
+        )
 
       stub_request(:post, SERVER_URI + '/api/v1/users.update')
         .with(
@@ -129,22 +129,22 @@ describe RocketChat::Messages::User do
             }
           }.to_json
         ).to_return(
-        body: {
-          success: true,
-          user: {
-            _id: '1234',
-            username: 'new_user',
-            emails: [
-              { address: 'updated@user.com', verified: true }
-            ],
-            type: 'user',
-            status: 'online',
-            active: false,
-            name: 'Updated User'
-          }
-        }.to_json,
-        status: 200
-      )
+          body: {
+            success: true,
+            user: {
+              _id: '1234',
+              username: 'new_user',
+              emails: [
+                { address: 'updated@user.com', verified: true }
+              ],
+              type: 'user',
+              status: 'online',
+              active: false,
+              name: 'Updated User'
+            }
+          }.to_json,
+          status: 200
+        )
     end
 
     context 'valid session' do
