@@ -138,12 +138,12 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/abrom/
 Note that spec tests are appreciated to minimise regressions. Before submitting a PR, please ensure that:
  
 ```bash
-rspec
+$ rspec
 ```
 and
 
 ```bash
-rubocop
+$ rubocop
 ```
 both succeed 
 
