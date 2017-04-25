@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe RocketChat::Server do
   let(:server) { RocketChat::Server.new(SERVER_URI) }
+  let(:server_with_opts) { RocketChat::Server.new(SERVER_URI, headers: { 'X_TEST' => '1' }) }
 
   describe '#info' do
     before do
@@ -15,11 +16,30 @@ describe RocketChat::Server do
         }.to_json,
         status: 200
       )
+
+      stub_request(:get, SERVER_URI + '/api/v1/info')
+        .with(headers: { 'X_TEST' => '1' })
+        .to_return(
+          body: {
+            status: :success,
+            info: {
+              version: '0.6'
+            }
+          }.to_json,
+          status: 200
+        )
     end
 
     it 'gets server info' do
       info = server.info
       expect(info.version).to eq '0.5'
+    end
+
+    context 'with headers' do
+      it 'gets server info' do
+        info = server_with_opts.info
+        expect(info.version).to eq '0.6'
+      end
     end
   end
 
