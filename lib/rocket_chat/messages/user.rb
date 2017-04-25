@@ -111,7 +111,7 @@ module RocketChat
       def user_option_hash(options, include_personal_fields = false)
         args = [options, :active, :roles, :join_default_channels, :require_password_change,
                 :send_welcome_email, :verified, :custom_fields]
-        args += [:username, :email, :name, :password] if include_personal_fields
+        args += %i[username email name password] if include_personal_fields
 
         options = Util.slice_hash(*args)
         return {} if options.empty?

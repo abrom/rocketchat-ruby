@@ -25,18 +25,10 @@ module RocketChat
       upstreamed_errors = Array(options.delete(:upstreamed_errors))
 
       response = request path, options
-      if fail_unless_ok && !response.is_a?(Net::HTTPOK)
-        raise RocketChat::HTTPError, "Invalid http response code: #{response.code}"
-      end
+      check_response response, fail_unless_ok
 
       response_json = JSON.parse(response.body)
-      if response_json.has_key? 'success'
-        unless response_json['success'] || upstreamed_errors.include?(response_json['errorType'])
-          raise RocketChat::StatusError, response_json['error']
-        end
-      elsif response_json['status'] != 'success'
-        raise RocketChat::StatusError, response_json['message']
-      end
+      check_response_json response_json
 
       response_json
     end
@@ -52,6 +44,21 @@ module RocketChat
     end
 
     private
+
+    def check_response(response, fail_unless_ok)
+      return unless fail_unless_ok && !response.is_a?(Net::HTTPOK)
+      raise RocketChat::HTTPError, "Invalid http response code: #{response.code}"
+    end
+
+    def check_response_json(response_json)
+      if response_json.has_key? 'success'
+        unless response_json['success'] || upstreamed_errors.include?(response_json['errorType'])
+          raise RocketChat::StatusError, response_json['error']
+        end
+      elsif response_json['status'] != 'success'
+        raise RocketChat::StatusError, response_json['message']
+      end
+    end
 
     def get_headers(options)
       headers = options[:headers]

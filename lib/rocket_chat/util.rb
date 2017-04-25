@@ -38,7 +38,7 @@ module RocketChat
     # @return a camelized string
     #
     def camelize(string)
-      string.to_s.gsub(/_([a-z])/) { $1.upcase }
+      string.to_s.gsub(/_([a-z])/) { Regexp.last_match(1).upcase }
     end
     module_function :camelize
   end
