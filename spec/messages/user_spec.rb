@@ -308,7 +308,7 @@ describe RocketChat::Messages::User do
 
   describe '#setAvatar' do
     before do
-      # Stubs for /api/v1/users.set_avatar REST API
+      # Stubs for /api/v1/users.setAvatar REST API
       stub_request(:post, SERVER_URI + '/api/v1/users.setAvatar')
         .to_return(body: UNAUTHORIZED_BODY, status: 401)
 
@@ -353,7 +353,7 @@ describe RocketChat::Messages::User do
         expect(session.users.set_avatar('some-image-url')).to be_truthy
       end
 
-      context 'with userId parameter' do
+      context 'with user_id parameter' do
         it 'should be success' do
           expect(session.users.set_avatar('some-image-url', user_id: '1234')).to be_truthy
         end
@@ -373,7 +373,7 @@ describe RocketChat::Messages::User do
 
       it 'should be failure' do
         expect do
-          session.users.set_avatar(userId: '1234')
+          session.users.set_avatar(user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
