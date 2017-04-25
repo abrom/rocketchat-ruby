@@ -28,7 +28,7 @@ module RocketChat
       check_response response, fail_unless_ok
 
       response_json = JSON.parse(response.body)
-      check_response_json response_json
+      check_response_json response_json, upstreamed_errors
 
       response_json
     end
@@ -50,8 +50,8 @@ module RocketChat
       raise RocketChat::HTTPError, "Invalid http response code: #{response.code}"
     end
 
-    def check_response_json(response_json)
-      if response_json.has_key? 'success'
+    def check_response_json(response_json, upstreamed_errors)
+      if response_json.key? 'success'
         unless response_json['success'] || upstreamed_errors.include?(response_json['errorType'])
           raise RocketChat::StatusError, response_json['error']
         end
@@ -98,7 +98,7 @@ module RocketChat
       else
         uri = path
         uri += '?' + URI.encode_www_form(body) if body
-        req = Net::HTTP.const_get(options[:method].to_s.capitalize).new(uri, headers)
+        req = Net::HTTP::Get.new(uri, headers)
       end
 
       req
@@ -109,15 +109,7 @@ module RocketChat
         request.body = body.to_json
         request.content_type = 'application/json'
       else
-        request.body = url_encode(body)
-      end
-    end
-
-    def url_encode(body)
-      if body.is_a?(Hash)
-        URI.encode_www_form body
-      else
-        body.to_s
+        request.body = body.to_s
       end
     end
   end

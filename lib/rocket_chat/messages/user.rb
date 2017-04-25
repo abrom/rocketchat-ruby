@@ -56,31 +56,31 @@ module RocketChat
 
       #
       # users.delete REST API
-      # @param [String] userId Rocket.Chat user id
+      # @param [String] user_id Rocket.Chat user id
       # @param [String] username Username
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def delete(userId: nil, username: nil)
+      def delete(user_id: nil, username: nil)
         session.request_json(
           '/api/v1/users.delete',
           method: :post,
-          body: userId ? { userId: userId } : { username: username },
+          body: user_id ? { userId: user_id } : { username: username },
           upstreamed_errors: ['error-invalid-user']
         )['success']
       end
 
       #
       # users.info REST API
-      # @param [String] userId Rocket.Chat user id
+      # @param [String] user_id Rocket.Chat user id
       # @param [String] username Username
       # @return [User]
       # @raise [HTTPError, StatusError]
       #
-      def info(userId: nil, username: nil)
+      def info(user_id: nil, username: nil)
         response = session.request_json(
           '/api/v1/users.info',
-          body: userId ? { userId: userId } : { username: username },
+          body: user_id ? { userId: user_id } : { username: username },
           upstreamed_errors: ['error-invalid-user']
         )
 
@@ -89,18 +89,18 @@ module RocketChat
 
       #
       # users.setAvatar REST API
-      # @param [String] avatarUrl URL to use for avatar
-      # @param [String] userId user to update (optional)
+      # @param [String] avatar_url URL to use for avatar
+      # @param [String] user_id user to update (optional)
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def set_avatar(avatarUrl, userId: nil)
-        body = {avatarUrl: avatarUrl}
-        body[:userId] = userId if userId
+      def set_avatar(avatar_url, user_id: nil)
+        body = { avatarUrl: avatar_url }
+        body[:userId] = user_id if user_id
         session.request_json(
           '/api/v1/users.setAvatar',
           method: :post,
-          body: body,
+          body: body
         )['success']
       end
 

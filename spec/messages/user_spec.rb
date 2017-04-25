@@ -1,40 +1,5 @@
 require 'spec_helper'
 
-def user_for_request(name, extras={})
-  split = name.downcase.split(' ')
-  {
-    username: split.join('_'),
-    email: extras[:email] || "#{split.join('@')}.com",
-    name: name,
-    password: '123456',
-  }.merge(extras)
-end
-
-def full_response(request_data)
-  {
-    body: {
-      success: true,
-      user: {
-        _id: '1234',
-        username: request_data[:username],
-        emails: [
-          { address: request_data[:email], verified: false }
-        ],
-        type: 'user',
-        status: 'online',
-        active: request_data.fetch(:active, true),
-        name: request_data[:name],
-      }
-    }.to_json,
-    status: 200
-  }
-end
-
-def stub_authed_request(method, action)
-  stub_request(method, SERVER_URI + action)
-    .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
-end
-
 describe RocketChat::Messages::User do
   let(:server) { RocketChat::Server.new(SERVER_URI) }
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
@@ -218,20 +183,25 @@ describe RocketChat::Messages::User do
         it 'should be failure' do
           expect do
             session.users.info(username: nil)
-          end.to raise_error RocketChat::StatusError, 'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
+            )
+          )
         end
       end
 
       context 'about a missing user' do
         it 'should be nil' do
-          expect(session.users.info(userId: '123456')).to be_nil
+          expect(session.users.info(user_id: '123456')).to be_nil
           expect(session.users.info(username: 'invalid-user')).to be_nil
         end
       end
 
       context 'by existing userId' do
         it 'should be success' do
-          existing_user = session.users.info(userId: '1234')
+          existing_user = session.users.info(user_id: '1234')
 
           expect(existing_user.id).to eq '1234'
           expect(existing_user.name).to eq 'Some User'
@@ -263,7 +233,7 @@ describe RocketChat::Messages::User do
 
       it 'should be failure' do
         expect do
-          session.users.info(userId: '1234')
+          session.users.info(user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
@@ -277,44 +247,49 @@ describe RocketChat::Messages::User do
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
-          body: {userId: '123456'}
+          body: { userId: '123456' }
         ).to_return(invalid_user_body)
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
-          body: {username: 'invalid-user'}.to_json
+          body: { username: 'invalid-user' }.to_json
         ).to_return(invalid_user_body)
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
-          body: {username: nil}.to_json
+          body: { username: nil }.to_json
         ).to_return(not_provided_user_body)
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
-          body: {userId: '1234'}.to_json
+          body: { userId: '1234' }.to_json
         ).to_return(
-        body: {success: true}.to_json,
-        status: 200
-      )
+          body: { success: true }.to_json,
+          status: 200
+        )
     end
 
     context 'valid session' do
       it 'should be success' do
-        expect(session.users.delete(userId: '1234')).to be_truthy
+        expect(session.users.delete(user_id: '1234')).to be_truthy
       end
 
       context 'with no user information' do
         it 'should be failure' do
           expect do
             session.users.delete(username: nil)
-          end.to raise_error RocketChat::StatusError, 'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
+            )
+          )
         end
       end
 
       context 'about a missing user' do
         it 'should be false' do
-          expect(session.users.delete(userId: '123456')).to eq false
+          expect(session.users.delete(user_id: '123456')).to eq false
           expect(session.users.delete(username: 'invalid-user')).to eq false
         end
       end
@@ -325,7 +300,7 @@ describe RocketChat::Messages::User do
 
       it 'should be failure' do
         expect do
-          session.users.delete(userId: '1234')
+          session.users.delete(user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
@@ -344,12 +319,12 @@ describe RocketChat::Messages::User do
             userId: '123456'
           }
         ).to_return(
-        body: {
-          success: false,
-          error: "Cannot read property 'username' of undefined"
-        }.to_json,
-        status: 200
-      )
+          body: {
+            success: false,
+            error: "Cannot read property 'username' of undefined"
+          }.to_json,
+          status: 200
+        )
 
       stub_authed_request(:post, '/api/v1/users.setAvatar')
         .with(
@@ -357,20 +332,20 @@ describe RocketChat::Messages::User do
             avatarUrl: 'some-image-url',
             userId: '1234'
           }
-      ).to_return(
-        body: {success: true}.to_json,
-        status: 200
-      )
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
 
       stub_authed_request(:post, '/api/v1/users.setAvatar')
         .with(
           body: {
-            avatarUrl: 'some-image-url',
+            avatarUrl: 'some-image-url'
           }
-      ).to_return(
-        body: {success: true}.to_json,
-        status: 200
-      )
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
     end
 
     context 'valid session' do
@@ -380,14 +355,14 @@ describe RocketChat::Messages::User do
 
       context 'with userId parameter' do
         it 'should be success' do
-          expect(session.users.set_avatar('some-image-url', userId: '1234')).to be_truthy
+          expect(session.users.set_avatar('some-image-url', user_id: '1234')).to be_truthy
         end
       end
 
       context 'with bad user information' do
         it 'should be failure' do
           expect do
-            session.users.set_avatar('some-image-url', userId: '123456')
+            session.users.set_avatar('some-image-url', user_id: '123456')
           end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
         end
       end
@@ -402,5 +377,37 @@ describe RocketChat::Messages::User do
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
+  end
+
+  ### User request/response helpers
+
+  def user_for_request(name, extras = {})
+    split = name.downcase.split(' ')
+    {
+      username: split.join('_'),
+      email: extras[:email] || "#{split.join('@')}.com",
+      name: name,
+      password: '123456'
+    }.merge(extras)
+  end
+
+  def full_response(request_data)
+    {
+      body: {
+        success: true,
+        user: {
+          _id: '1234',
+          username: request_data[:username],
+          emails: [
+            { address: request_data[:email], verified: false }
+          ],
+          type: 'user',
+          status: 'online',
+          active: request_data.fetch(:active, true),
+          name: request_data[:name]
+        }
+      }.to_json,
+      status: 200
+    }
   end
 end
