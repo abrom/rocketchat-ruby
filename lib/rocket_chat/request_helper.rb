@@ -22,12 +22,13 @@ module RocketChat
 
     def request_json(path, options = {})
       fail_unless_ok = options.delete :fail_unless_ok
+      upstreamed_errors = Array(options.delete(:upstreamed_errors))
 
       response = request path, options
       check_response response, fail_unless_ok
 
       response_json = JSON.parse(response.body)
-      check_response_json response_json
+      check_response_json response_json, upstreamed_errors
 
       response_json
     end
@@ -49,11 +50,13 @@ module RocketChat
       raise RocketChat::HTTPError, "Invalid http response code: #{response.code}"
     end
 
-    def check_response_json(response_json)
+    def check_response_json(response_json, upstreamed_errors)
       if response_json.key? 'success'
-        raise RocketChat::StatusError, response_json['error'] unless response_json['success']
-      else
-        raise RocketChat::StatusError, response_json['message'] unless response_json['status'] == 'success'
+        unless response_json['success'] || upstreamed_errors.include?(response_json['errorType'])
+          raise RocketChat::StatusError, response_json['error']
+        end
+      elsif response_json['status'] != 'success'
+        raise RocketChat::StatusError, response_json['message']
       end
     end
 
@@ -87,11 +90,16 @@ module RocketChat
 
     def create_request(path, options)
       headers = get_headers(options)
-
-      req = Net::HTTP.const_get(options[:method].to_s.capitalize).new(path, headers)
-
       body = options[:body]
-      add_body(req, body) unless body.nil?
+
+      if options[:method] == :post
+        req = Net::HTTP::Post.new(path, headers)
+        add_body(req, body) if body
+      else
+        uri = path
+        uri += '?' + URI.encode_www_form(body) if body
+        req = Net::HTTP::Get.new(uri, headers)
+      end
 
       req
     end
@@ -101,15 +109,7 @@ module RocketChat
         request.body = body.to_json
         request.content_type = 'application/json'
       else
-        request.body = url_encode(body)
-      end
-    end
-
-    def url_encode(body)
-      if body.is_a?(Hash)
-        URI.encode_www_form body
-      else
-        body.to_s
+        request.body = body.to_s
       end
     end
   end

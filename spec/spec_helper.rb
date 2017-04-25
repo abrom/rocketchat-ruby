@@ -13,3 +13,10 @@ UNAUTHORIZED_BODY = {
   status: :error,
   message: 'You must be logged in to do this.'
 }.to_json
+
+### Authenticated request helpers
+
+def stub_authed_request(method, action)
+  stub_request(method, SERVER_URI + action)
+    .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
+end

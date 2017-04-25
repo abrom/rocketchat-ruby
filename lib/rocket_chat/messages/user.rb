@@ -54,6 +54,56 @@ module RocketChat
         RocketChat::User.new response['user']
       end
 
+      #
+      # users.delete REST API
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def delete(user_id: nil, username: nil)
+        session.request_json(
+          '/api/v1/users.delete',
+          method: :post,
+          body: user_id ? { userId: user_id } : { username: username },
+          upstreamed_errors: ['error-invalid-user']
+        )['success']
+      end
+
+      #
+      # users.info REST API
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [User]
+      # @raise [HTTPError, StatusError]
+      #
+      def info(user_id: nil, username: nil)
+        response = session.request_json(
+          '/api/v1/users.info',
+          body: user_id ? { userId: user_id } : { username: username },
+          upstreamed_errors: ['error-invalid-user']
+        )
+
+        RocketChat::User.new response['user'] if response['success']
+      end
+
+      #
+      # users.setAvatar REST API
+      # @param [String] avatar_url URL to use for avatar
+      # @param [String] user_id user to update (optional)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def set_avatar(avatar_url, user_id: nil)
+        body = { avatarUrl: avatar_url }
+        body[:userId] = user_id if user_id
+        session.request_json(
+          '/api/v1/users.setAvatar',
+          method: :post,
+          body: body
+        )['success']
+      end
+
       private
 
       attr_reader :session
