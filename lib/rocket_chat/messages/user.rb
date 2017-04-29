@@ -71,6 +71,32 @@ module RocketChat
       end
 
       #
+      # users.list REST API
+      # @param [Integer] offset Query offset
+      # @param [Integer] count Query count/limit
+      # @param [Hash] sort Query field sort hash. eg `{ active: 1, email: -1 }`
+      # @param [Hash] fields Query fields to return. eg `{ name: 1, email: 0 }`
+      # @param [Hash] query The query. `{ active: true, type: { $in: ['user', 'bot'] } }`
+      # @return [User[]]
+      # @raise [HTTPError, StatusError]
+      #
+      def list(offset: nil, count: nil, sort: nil, fields: nil, query: nil)
+        body = {}
+        body[:offset] = offset.to_i if offset.is_a? Integer
+        body[:count] = count.to_i if count.is_a? Integer
+        body[:sort] = sort.to_json if sort.is_a? Hash
+        body[:fields] = fields.to_json if fields.is_a? Hash
+        body[:query] = query.to_json if query.is_a? Hash
+
+        response = session.request_json(
+          '/api/v1/users.list',
+          body: body
+        )
+
+        response['users'].map { |hash| RocketChat::User.new hash } if response['success']
+      end
+
+      #
       # users.info REST API
       # @param [String] user_id Rocket.Chat user id
       # @param [String] username Username

@@ -75,7 +75,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.create('new_username', 'user@example.com', 'New User', '123456',
+user = session.users.create('new_username', 'user@example.com', 'New User', '123456',
                      active: true, send_welcome_email: false)
 ```
 
@@ -91,7 +91,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.update('LAjzCDLqggCT7B82M',
+user = session.users.update('LAjzCDLqggCT7B82M',
   email: 'updated@example.com',
   name: 'Updated Name',
   roles: ['user', 'moderator']
@@ -110,12 +110,23 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.info(username: 'some_username')
+user = session.users.info(username: 'some_username')
 ```
 
 Either user_id (RocketChat's ID) or username can be used.
 
-Deleting a user can be done with the same options.
+
+To delete a user, the same options as an info request can be used (`user_id` or `username`).
+
+To search for (list) users:
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+users = session.users.list(query: { email: 'foo@example.com' })
+```
 
 
 To set a user's avatar:
@@ -125,7 +136,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.users.set_avatar('http://image_url')
+success = session.users.set_avatar('http://image_url')
 ```
 
 There is an optional parameter user_id, that works if the setting user is allowed to set other's avatar.
