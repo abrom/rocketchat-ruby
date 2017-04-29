@@ -53,7 +53,7 @@ describe RocketChat::Messages::User do
     context 'valid session' do
       it 'should be success' do
         new_user = session.users.create(
-          'new_user', 'new@user.com', 'New User', '123456',
+          'new_user', 'new@user.com', 'New User', '1236',
           active: true, join_default_channels: false
         )
 
@@ -69,7 +69,7 @@ describe RocketChat::Messages::User do
       context 'with an existing user' do
         it 'should be failure' do
           expect do
-            session.users.create('already_exists', 'already@exists.com', 'Already Exists', '123456')
+            session.users.create('already_exists', 'already@exists.com', 'Already Exists', '1236')
           end.to raise_error RocketChat::StatusError, 'User already exists'
         end
       end
@@ -160,7 +160,7 @@ describe RocketChat::Messages::User do
       stub_request(:get, SERVER_URI + '/api/v1/users.info?userId=1234')
         .to_return(body: UNAUTHORIZED_BODY, status: 401)
 
-      stub_authed_request(:get, '/api/v1/users.info?userId=123456')
+      stub_authed_request(:get, '/api/v1/users.info?userId=1236')
         .to_return(invalid_user_body)
 
       stub_authed_request(:get, '/api/v1/users.info?username=invalid-user')
@@ -194,7 +194,7 @@ describe RocketChat::Messages::User do
 
       context 'about a missing user' do
         it 'should be nil' do
-          expect(session.users.info(user_id: '123456')).to be_nil
+          expect(session.users.info(user_id: '1236')).to be_nil
           expect(session.users.info(username: 'invalid-user')).to be_nil
         end
       end
@@ -239,6 +239,109 @@ describe RocketChat::Messages::User do
     end
   end
 
+  describe '#list' do
+    let(:roger) do
+      {
+        _id: 123,
+        username: 'rogersmith'
+      }
+    end
+
+    let(:cynthia) do
+      {
+        _id: 124,
+        username: 'cynthiasmith'
+      }
+    end
+
+    let(:empty_users_body) do
+      {
+        body: {
+          success: true,
+          users: []
+        }.to_json,
+        status: 200
+      }
+    end
+
+    let(:found_users_body) do
+      {
+        body: {
+          success: true,
+          users: [roger]
+        }.to_json,
+        status: 200
+      }
+    end
+
+    let(:all_users_body) do
+      {
+        body: {
+          success: true,
+          users: [roger, cynthia]
+        }.to_json,
+        status: 200
+      }
+    end
+
+    before do
+      # Stubs for /api/v1/users.list REST API
+      stub_request(:get, SERVER_URI + '/api/v1/users.list')
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:get, URI.escape('/api/v1/users.list?query={"username":"bobsmith"}'))
+        .to_return(empty_users_body)
+
+      stub_authed_request(:get, URI.escape('/api/v1/users.list?query={"username":"rogersmith"}'))
+        .to_return(found_users_body)
+
+      stub_authed_request(:get, '/api/v1/users.list')
+        .to_return(all_users_body)
+    end
+
+    context 'valid session' do
+      context 'searching for an invalid username' do
+        it 'should be empty' do
+          users = session.users.list(query: { username: 'bobsmith' })
+
+          expect(users).to be_empty
+        end
+      end
+
+      context 'searching for a valid username' do
+        it 'should return Roger' do
+          users = session.users.list(query: { username: 'rogersmith' })
+
+          expect(users.length).to eq 1
+          expect(users[0].id).to eq 123
+          expect(users[0].username).to eq 'rogersmith'
+        end
+      end
+
+      context 'without a filter' do
+        it 'should return all users' do
+          users = session.users.list
+
+          expect(users.length).to eq 2
+          expect(users[0].id).to eq 123
+          expect(users[0].username).to eq 'rogersmith'
+          expect(users[1].id).to eq 124
+          expect(users[1].username).to eq 'cynthiasmith'
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
+
+      it 'should be failure' do
+        expect do
+          session.users.list
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
   describe '#delete' do
     before do
       # Stubs for /api/v1/users.delete REST API
@@ -247,7 +350,7 @@ describe RocketChat::Messages::User do
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
-          body: { userId: '123456' }
+          body: { userId: '1236' }
         ).to_return(invalid_user_body)
 
       stub_authed_request(:post, '/api/v1/users.delete')
@@ -289,7 +392,7 @@ describe RocketChat::Messages::User do
 
       context 'about a missing user' do
         it 'should be false' do
-          expect(session.users.delete(user_id: '123456')).to eq false
+          expect(session.users.delete(user_id: '1236')).to eq false
           expect(session.users.delete(username: 'invalid-user')).to eq false
         end
       end
@@ -316,7 +419,7 @@ describe RocketChat::Messages::User do
         .with(
           body: {
             avatarUrl: 'some-image-url',
-            userId: '123456'
+            userId: '1236'
           }
         ).to_return(
           body: {
@@ -362,7 +465,7 @@ describe RocketChat::Messages::User do
       context 'with bad user information' do
         it 'should be failure' do
           expect do
-            session.users.set_avatar('some-image-url', user_id: '123456')
+            session.users.set_avatar('some-image-url', user_id: '1236')
           end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
         end
       end
@@ -387,7 +490,7 @@ describe RocketChat::Messages::User do
       username: split.join('_'),
       email: extras[:email] || "#{split.join('@')}.com",
       name: name,
-      password: '123456'
+      password: '1236'
     }.merge(extras)
   end
 

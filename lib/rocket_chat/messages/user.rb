@@ -81,16 +81,9 @@ module RocketChat
       # @raise [HTTPError, StatusError]
       #
       def list(offset: nil, count: nil, sort: nil, fields: nil, query: nil)
-        body = {}
-        body[:offset] = offset.to_i if offset.is_a? Integer
-        body[:count] = count.to_i if count.is_a? Integer
-        body[:sort] = sort.to_json if sort.is_a? Hash
-        body[:fields] = fields.to_json if fields.is_a? Hash
-        body[:query] = query.to_json if query.is_a? Hash
-
         response = session.request_json(
           '/api/v1/users.list',
-          body: body
+          body: build_list_body(offset, count, sort, fields, query)
         )
 
         response['users'].map { |hash| RocketChat::User.new hash } if response['success']
@@ -145,6 +138,18 @@ module RocketChat
         new_hash = {}
         options.each { |key, value| new_hash[Util.camelize(key)] = value }
         new_hash
+      end
+
+      def build_list_body(offset, count, sort, fields, query)
+        body = {}
+
+        body[:offset] = offset.to_i if offset.is_a? Integer
+        body[:count] = count.to_i if count.is_a? Integer
+        body[:sort] = sort.to_json if sort.is_a? Hash
+        body[:fields] = fields.to_json if fields.is_a? Hash
+        body[:query] = query.to_json if query.is_a? Hash
+
+        body
       end
     end
   end
