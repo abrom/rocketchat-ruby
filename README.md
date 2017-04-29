@@ -28,24 +28,25 @@ And then execute:
 This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.54)
 
 #### Miscellaneous information
-* /api/v1/info
+* [/api/v1/info](#info)
 
 #### Authentication
-* /api/v1/login
-* /api/v1/logout
+* [/api/v1/login](#authentication)
+* [/api/v1/logout](#authentication)
 * /api/v1/me
 
 ### Users
-* /api/v1/users.create
-* /api/v1/users.delete
-* /api/v1/users.info
-* /api/v1/users.list
-* /api/v1/users.setAvatar
-* /api/v1/users.update
+* [/api/v1/users.create](docs/users.md#userscreate)
+* [/api/v1/users.delete](docs/users.md#usersdelete)
+* [/api/v1/users.info](docs/users.md#usersinfo)
+* [/api/v1/users.list](docs/users.md#userslist)
+* [/api/v1/users.setAvatar](docs/users.md#userssetavatar)
+* [/api/v1/users.update](docs/users.md#usersupdate)
 
 
 ## Usage
 
+#### info
 To get Rocket.Chat version
 
 ```ruby
@@ -56,7 +57,7 @@ info = rocket_server.info
 puts "Rocket.Chat version: #{info.version}"
 ```
 
-
+#### authentication
 To logout from a server:
 
 ```ruby
@@ -71,7 +72,7 @@ session.logout
 
 For details of specific APIs:
 
-* [Users](docs/users)
+* [Users](docs/users.md)
 
 
 ## Contributing
