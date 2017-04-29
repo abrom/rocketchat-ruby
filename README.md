@@ -39,6 +39,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/users.create
 * /api/v1/users.delete
 * /api/v1/users.info
+* /api/v1/users.list
 * /api/v1/users.setAvatar
 * /api/v1/users.update
 
