@@ -65,7 +65,7 @@ module RocketChat
         session.request_json(
           '/api/v1/users.delete',
           method: :post,
-          body: user_id ? { userId: user_id } : { username: username },
+          body: user_params(user_id, username),
           upstreamed_errors: ['error-invalid-user']
         )['success']
       end
@@ -99,11 +99,27 @@ module RocketChat
       def info(user_id: nil, username: nil)
         response = session.request_json(
           '/api/v1/users.info',
-          body: user_id ? { userId: user_id } : { username: username },
+          body: user_params(user_id, username),
           upstreamed_errors: ['error-invalid-user']
         )
 
         RocketChat::User.new response['user'] if response['success']
+      end
+
+      #
+      # users.getPresence REST API
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [PresenceStatus]
+      # @raise [HTTPError, StatusError]
+      #
+      def get_presence(user_id: nil, username: nil)
+        response = session.request_json(
+          '/api/v1/users.getPresence',
+          body: user_params(user_id, username)
+        )
+
+        RocketChat::PresenceStatus.new response if response['success']
       end
 
       #
@@ -150,6 +166,14 @@ module RocketChat
         body[:query] = query.to_json if query.is_a? Hash
 
         body
+      end
+
+      def user_params(id, username)
+        if id
+          { userId: id }
+        elsif username
+          { username: username }
+        end
       end
     end
   end

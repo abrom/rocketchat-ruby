@@ -7,6 +7,7 @@ require 'webmock/rspec'
 SERVER_URI = URI.parse('http://www.example.com/')
 AUTH_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'.freeze
 USER_ID = 'AAAAAAAAAAAAAAAAA'.freeze
+OTHER_USER_ID = 'BBBBBBBBBBBBBBBBB'.freeze
 USERNAME = 'user'.freeze
 PASSWORD = 'password'.freeze
 UNAUTHORIZED_BODY = {

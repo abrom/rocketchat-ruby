@@ -166,7 +166,7 @@ describe RocketChat::Messages::User do
       stub_authed_request(:get, '/api/v1/users.info?username=invalid-user')
         .to_return(invalid_user_body)
 
-      stub_authed_request(:get, '/api/v1/users.info?username')
+      stub_authed_request(:get, '/api/v1/users.info')
         .to_return(not_provided_user_body)
 
       expected = full_response(user_for_request('Some User'))
@@ -342,11 +342,121 @@ describe RocketChat::Messages::User do
     end
   end
 
+  describe '#get_presence' do
+    let(:basic_presence_body) do
+      {
+        status: 200,
+        body: {
+          presence: 'online',
+          success: true
+        }.to_json
+      }
+    end
+
+    let(:full_presence_body) do
+      {
+        status: 200,
+        body: {
+          presence: 'offline',
+          connectionStatus: 'offline',
+          lastLogin: '2016-12-08T18:26:03.612Z',
+          success: true
+        }.to_json
+      }
+    end
+
+    before do
+      # Stubs for /api/v1/users.getPresence REST API
+      stub_request(:get, SERVER_URI + "/api/v1/users.getPresence?userId=#{USER_ID}")
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      # Invalid user
+      stub_authed_request(:get, '/api/v1/users.getPresence?userId=1236')
+        .to_return(invalid_user_body)
+
+      stub_authed_request(:get, '/api/v1/users.getPresence?username=invalid-user')
+        .to_return(invalid_user_body)
+
+      # Requesting a different user
+      stub_authed_request(:get, "/api/v1/users.getPresence?userId=#{OTHER_USER_ID}")
+        .to_return(basic_presence_body)
+
+      # Requesting for self
+      stub_authed_request(:get, "/api/v1/users.getPresence?userId=#{USER_ID}")
+        .to_return(full_presence_body)
+
+      stub_authed_request(:get, "/api/v1/users.getPresence?username=#{USERNAME}")
+        .to_return(full_presence_body)
+    end
+
+    context 'valid session' do
+      it 'should return full presence status for user id' do
+        status = session.users.get_presence(user_id: USER_ID)
+        expect(status.presence).to eq 'offline'
+        expect(status.connection_status).to eq 'offline'
+        expect(status.last_login).to be_within(1).of DateTime.new(2016, 12, 8, 18, 26, 03)
+      end
+
+      it 'should return full presence status for username' do
+        status = session.users.get_presence(username: USERNAME)
+        expect(status.presence).to eq 'offline'
+        expect(status.connection_status).to eq 'offline'
+        expect(status.last_login).to be_within(1).of DateTime.new(2016, 12, 8, 18, 26, 03)
+      end
+
+      context 'requesting a different user' do
+        it 'should return partial presence status' do
+          status = session.users.get_presence(user_id: OTHER_USER_ID)
+          expect(status.presence).to eq 'online'
+          expect(status.connection_status).to be_nil
+          expect(status.last_login).to be_nil
+        end
+      end
+
+      context 'an invalid user' do
+        it 'should return failure for invalid user id' do
+          expect do
+            session.users.get_presence(user_id: '1236')
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The required "userId" or "username" param provided does not match any users [error-invalid-user]'
+            )
+          )
+        end
+
+        it 'should return failure for invalid username' do
+          expect do
+            session.users.get_presence(username: 'invalid-user')
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The required "userId" or "username" param provided does not match any users [error-invalid-user]'
+            )
+          )
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
+
+      it 'should be failure' do
+        expect do
+          session.users.get_presence(user_id: USER_ID)
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
   describe '#delete' do
     before do
       # Stubs for /api/v1/users.delete REST API
       stub_request(:post, SERVER_URI + '/api/v1/users.delete')
         .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, '/api/v1/users.delete')
+        .to_return(not_provided_user_body)
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
@@ -357,11 +467,6 @@ describe RocketChat::Messages::User do
         .with(
           body: { username: 'invalid-user' }.to_json
         ).to_return(invalid_user_body)
-
-      stub_authed_request(:post, '/api/v1/users.delete')
-        .with(
-          body: { username: nil }.to_json
-        ).to_return(not_provided_user_body)
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .with(
@@ -409,7 +514,7 @@ describe RocketChat::Messages::User do
     end
   end
 
-  describe '#setAvatar' do
+  describe '#set_avatar' do
     before do
       # Stubs for /api/v1/users.setAvatar REST API
       stub_request(:post, SERVER_URI + '/api/v1/users.setAvatar')
