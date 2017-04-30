@@ -7,6 +7,7 @@ require 'rocket_chat/util'
 require 'rocket_chat/request_helper'
 
 require 'rocket_chat/messages/user'
+require 'rocket_chat/messages/settings'
 
 require 'rocket_chat/server'
 require 'rocket_chat/session'

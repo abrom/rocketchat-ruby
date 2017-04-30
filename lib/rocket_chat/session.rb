@@ -47,5 +47,13 @@ module RocketChat
     def users
       @users ||= RocketChat::Messages::User.new(self)
     end
+
+    #
+    # Settings messages proxy
+    # @return [Messages::Settings]
+    #
+    def settings
+      @settings ||= RocketChat::Messages::Settings.new(self)
+    end
   end
 end
