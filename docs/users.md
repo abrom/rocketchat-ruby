@@ -55,7 +55,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-presence_status = session.users.getPresence(username: 'some_username')
+presence_status = session.users.get_presence(username: 'some_username')
 ```
 
 Either user_id (RocketChat's ID) or username can be used.
