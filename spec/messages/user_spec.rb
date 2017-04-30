@@ -394,14 +394,14 @@ describe RocketChat::Messages::User do
         status = session.users.get_presence(user_id: USER_ID)
         expect(status.presence).to eq 'offline'
         expect(status.connection_status).to eq 'offline'
-        expect(status.last_login).to be_within(1).of DateTime.new(2016, 12, 8, 18, 26, 03)
+        expect(status.last_login).to be_within(1).of DateTime.new(2016, 12, 8, 18, 26, 3)
       end
 
       it 'should return full presence status for username' do
         status = session.users.get_presence(username: USERNAME)
         expect(status.presence).to eq 'offline'
         expect(status.connection_status).to eq 'offline'
-        expect(status.last_login).to be_within(1).of DateTime.new(2016, 12, 8, 18, 26, 03)
+        expect(status.last_login).to be_within(1).of DateTime.new(2016, 12, 8, 18, 26, 3)
       end
 
       context 'requesting a different user' do
