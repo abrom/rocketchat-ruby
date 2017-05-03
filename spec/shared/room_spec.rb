@@ -1,0 +1,267 @@
+shared_examples 'room_behavior' do |room_type|
+  let(:server) { RocketChat::Server.new(SERVER_URI) }
+  let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
+  let(:session) { RocketChat::Session.new(server, token) }
+  let(:scope) { described_class.new(session) }
+  let(:room_type) { room_type }
+  let(:not_provided_room_body) do
+    {
+      body: {
+        success: false,
+        error: 'The parameter "roomId" or "roomName" is required',
+        errorType: 'error-roomid-param-not-provided'
+      }.to_json,
+      status: 400
+    }
+  end
+  let(:invalid_room_message) do
+    %(The required "roomId" or "roomName" param provided does not match any #{described_class.field}) \
+      ' [error-room-not-found]'
+  end
+  let(:invalid_room_body) do
+    {
+      body: {
+        success: false,
+        error: invalid_room_message,
+        errorType: 'error-room-not-found'
+      }.to_json,
+      status: 400
+    }
+  end
+
+  describe '#create' do
+    before do
+      # Stubs for /api/v1/?.create REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('create'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('create'))
+        .with(
+          body: { name: 'duplicate-room' }.to_json
+        ).to_return(
+          body: {
+            success: false,
+            error: "A channel with name 'duplicate-room' exists",
+            errorType: 'error-duplicate-channel-name'
+          }.to_json,
+          status: 401
+        )
+
+      stub_authed_request(:post, described_class.api_path('create'))
+        .with(
+          body: { name: 'new-room' }.to_json
+        ).to_return(room_response('new-room'))
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        new_room = scope.create('new-room')
+        expect(new_room.id).to eq '1234'
+        expect(new_room.name).to eq 'new-room'
+        expect(new_room.data['t']).to eq room_type
+      end
+
+      context 'with an existing room' do
+        it 'should be failure' do
+          expect do
+            scope.create('duplicate-room')
+          end.to raise_error RocketChat::StatusError, "A channel with name 'duplicate-room' exists"
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.create('new-room')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#info' do
+    before do
+      # Stubs for /api/v1/?.info REST API
+      stub_request(:get, SERVER_URI + described_class.api_path('info?roomId=1234'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:get, described_class.api_path('info?roomId=1236'))
+        .to_return(invalid_room_body)
+
+      stub_authed_request(:get, described_class.api_path('info?roomName=invalid-room'))
+        .to_return(invalid_room_body)
+
+      stub_authed_request(:get, described_class.api_path('info'))
+        .to_return(not_provided_room_body)
+
+      expected = room_response('some-room')
+
+      stub_authed_request(:get, described_class.api_path('info?roomId=1234'))
+        .to_return(expected)
+
+      stub_authed_request(:get, described_class.api_path('info?roomName=some-room'))
+        .to_return(expected)
+    end
+
+    context 'valid session' do
+      context 'with no room information' do
+        it 'should be failure' do
+          expect do
+            scope.info(name: nil)
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The parameter "roomId" or "roomName" is required'
+            )
+          )
+        end
+      end
+
+      context 'about a missing room' do
+        it 'should be nil' do
+          expect(scope.info(room_id: '1236')).to be_nil
+          expect(scope.info(name: 'invalid-room')).to be_nil
+        end
+      end
+
+      context 'by existing roomId' do
+        it 'should be success' do
+          existing_room = scope.info(room_id: '1234')
+
+          expect(existing_room.id).to eq '1234'
+          expect(existing_room.name).to eq 'some-room'
+          expect(existing_room.data['t']).to eq room_type
+        end
+      end
+
+      context 'by existing name' do
+        it 'should be success' do
+          existing_room = scope.info(name: 'some-room')
+
+          expect(existing_room.id).to eq '1234'
+          expect(existing_room.name).to eq 'some-room'
+          expect(existing_room.data['t']).to eq room_type
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.info(room_id: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#rename' do
+    before do
+      # Stubs for /api/v1/?.info REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('rename'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('rename'))
+        .with(
+          body: { roomId: 'badId', name: 'new_room_name' }.to_json
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('rename'))
+        .with(
+          body: { roomId: nil, name: 'new_room_name' }.to_json
+        ).to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('rename'))
+        .with(
+          body: { roomId: nil, name: nil }.to_json
+        ).to_return(
+          body: {
+            success: false,
+            error: 'The bodyParam "name" is required'
+          }.to_json,
+          status: 401
+        )
+
+      stub_authed_request(:post, described_class.api_path('rename'))
+        .with(
+          body: { roomId: 'goodId', name: 'new_room_name' }.to_json
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'valid session' do
+      context 'with no room information' do
+        it 'should be failure' do
+          expect do
+            scope.rename(nil, 'new_room_name')
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The parameter "roomId" or "roomName" is required'
+            )
+          )
+        end
+      end
+
+      context 'about a missing room' do
+        it 'should be raise an error' do
+          expect do
+            scope.rename('badId', 'new_room_name')
+          end.to(
+            raise_error(RocketChat::StatusError, invalid_room_message)
+          )
+        end
+      end
+
+      context 'with no new name' do
+        it 'should be raise an error' do
+          expect do
+            scope.rename(nil, nil)
+          end.to(
+            raise_error(
+              RocketChat::StatusError,
+              'The bodyParam "name" is required'
+            )
+          )
+        end
+      end
+
+      context 'with all correct parameters' do
+        it 'should be success' do
+          expect(scope.rename('goodId', 'new_room_name')).to be_truthy
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.rename('goodId', 'new_room_name')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  ### Room request/response helpers
+
+  def room_response(name)
+    {
+      body: {
+        success: true,
+        described_class.name.split('::')[-1].downcase => {
+          _id: '1234',
+          name: name,
+          t: room_type
+        }
+      }.to_json,
+      status: 200
+    }
+  end
+end

@@ -40,10 +40,16 @@ module RocketChat
       User.new request_json('/api/v1/me', method: :get)
     end
 
-    #
-    # User messages proxy
-    # @return [Messages::User]
-    #
+    ### Message proxies
+
+    def channels
+      @channels ||= RocketChat::Messages::Channel.new(self)
+    end
+
+    def groups
+      @groups ||= RocketChat::Messages::Group.new(self)
+    end
+
     def users
       @users ||= RocketChat::Messages::User.new(self)
     end
