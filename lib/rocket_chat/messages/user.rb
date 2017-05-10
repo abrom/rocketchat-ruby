@@ -76,7 +76,7 @@ module RocketChat
       # @param [Integer] count Query count/limit
       # @param [Hash] sort Query field sort hash. eg `{ active: 1, email: -1 }`
       # @param [Hash] fields Query fields to return. eg `{ name: 1, email: 0 }`
-      # @param [Hash] query The query. `{ active: true, type: { $in: ['user', 'bot'] } }`
+      # @param [Hash] query The query. `{ active: true, type: { '$in': ['user', 'bot'] } }`
       # @return [User[]]
       # @raise [HTTPError, StatusError]
       #
