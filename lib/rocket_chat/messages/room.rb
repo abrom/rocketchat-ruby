@@ -4,6 +4,8 @@ module RocketChat
     # Rocket.Chat Room messages template (groups&channels)
     #
     class Room
+      include UserSupport
+
       def self.inherited(subclass)
         field = subclass.name.split('::')[-1].downcase
         collection = field + 's'
@@ -72,6 +74,39 @@ module RocketChat
         )
 
         RocketChat::Room.new response[self.class.field] if response['success']
+      end
+
+      #
+      # *.invite REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def invite(room_id: nil, name: nil, user_id: nil, username: nil)
+        session.request_json(
+          self.class.api_path('invite'),
+          method: :post,
+          body: room_params(room_id, name)
+            .merge(user_params(user_id, username))
+        )['success']
+      end
+
+      #
+      # *.leave REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def leave(room_id: nil, name: nil)
+        session.request_json(
+          self.class.api_path('leave'),
+          method: :post,
+          body: room_params(room_id, name)
+        )['success']
       end
 
       #

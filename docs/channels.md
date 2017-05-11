@@ -36,6 +36,46 @@ Either room_id (RocketChat's ID) or name can be used.
 To delete a channel, the same options as an info request can be used (`room_id` or `name`).
 
 
+#### channels.invite
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channel = session.channels.invite(name: 'some_channelname', username: 'some_username')
+```
+
+Either room_id (RocketChat's ID) or name can be used.
+The same applies to user_id and username.
+
+
+#### channels.join
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channel = session.channels.join(name: 'some_channelname')
+```
+
+Either room_id (RocketChat's ID) or name can be used.
+
+
+#### channels.leave
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channel = session.channels.leave(name: 'some_channelname')
+```
+
+Either room_id (RocketChat's ID) or name can be used.
+
+
 #### channels.list
 
 _N.B. list is also used for searching/querying_

@@ -5,6 +5,7 @@ module RocketChat
     #
     class User
       include ListSupport
+      include UserSupport
 
       #
       # @param [Session] session Session
@@ -156,14 +157,6 @@ module RocketChat
         new_hash = {}
         options.each { |key, value| new_hash[Util.camelize(key)] = value }
         new_hash
-      end
-
-      def user_params(id, username)
-        if id
-          { userId: id }
-        elsif username
-          { username: username }
-        end
       end
     end
   end
