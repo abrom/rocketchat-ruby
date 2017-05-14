@@ -1,4 +1,4 @@
-shared_examples 'room_behavior' do |room_type|
+shared_examples 'room_behavior' do |room_type, query:|
   let(:server) { RocketChat::Server.new(SERVER_URI) }
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
   let(:session) { RocketChat::Session.new(server, token) }
@@ -153,6 +153,122 @@ shared_examples 'room_behavior' do |room_type|
       it 'should be failure' do
         expect do
           scope.info(room_id: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#list' do
+    let(:rooms_key) { described_class.collection.to_sym }
+    let(:room1) do
+      {
+        _id: 123,
+        name: 'room-one'
+      }
+    end
+
+    let(:room2) do
+      {
+        _id: 124,
+        name: 'room-two'
+      }
+    end
+
+    let(:empty_rooms_body) do
+      {
+        body: {
+          success: true,
+          rooms_key => []
+        }.to_json,
+        status: 200
+      }
+    end
+
+    let(:found_rooms_body) do
+      {
+        body: {
+          success: true,
+          rooms_key => [room1]
+        }.to_json,
+        status: 200
+      }
+    end
+
+    let(:all_rooms_body) do
+      {
+        body: {
+          success: true,
+          rooms_key => [room1, room2]
+        }.to_json,
+        status: 200
+      }
+    end
+
+    before do
+      # Stubs for /api/v1/rooms.list REST API
+      stub_request(:get, SERVER_URI + described_class.api_path('list'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      if query
+        stub_authed_request(
+          :get,
+          described_class.api_path(
+            URI.escape('list?query={"name":"wrong-room"}')
+          )
+        ).to_return(empty_rooms_body)
+
+        stub_authed_request(
+          :get,
+          described_class.api_path(
+            URI.escape('list?query={"name":"room-one"}')
+          )
+        ).to_return(found_rooms_body)
+      end
+
+      stub_authed_request(:get, described_class.api_path('list'))
+        .to_return(all_rooms_body)
+    end
+
+    context 'valid session' do
+      if query
+        context 'searching for an invalid room name' do
+          it 'should be empty' do
+            rooms = scope.list(query: { name: 'wrong-room' })
+
+            expect(rooms).to be_empty
+          end
+        end
+
+        context 'searching for a valid room name' do
+          it 'should return room1' do
+            rooms = scope.list(query: { name: 'room-one' })
+
+            expect(rooms.length).to eq 1
+            expect(rooms[0].id).to eq 123
+            expect(rooms[0].name).to eq 'room-one'
+          end
+        end
+      end
+
+      context 'without a filter' do
+        it 'should return all rooms' do
+          rooms = scope.list
+
+          expect(rooms.length).to eq 2
+          expect(rooms[0].id).to eq 123
+          expect(rooms[0].name).to eq 'room-one'
+          expect(rooms[1].id).to eq 124
+          expect(rooms[1].name).to eq 'room-two'
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.list
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end

@@ -31,6 +31,19 @@ channel = session.channels.info(name: 'some_channelname')
 Either room_id (RocketChat's ID) or name can be used.
 
 
+#### channels.list
+
+_N.B. list is also used for searching/querying_
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channels = session.channels.list(query: {usernames: 'friend-username'})
+```
+
+
 ### channels.rename
 
 ```ruby
