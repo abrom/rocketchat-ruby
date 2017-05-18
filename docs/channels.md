@@ -31,6 +31,11 @@ channel = session.channels.info(name: 'some_channelname')
 Either room_id (RocketChat's ID) or name can be used.
 
 
+#### channels.delete
+
+To delete a channel, the same options as an info request can be used (`room_id` or `name`).
+
+
 #### channels.list
 
 _N.B. list is also used for searching/querying_

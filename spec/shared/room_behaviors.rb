@@ -81,6 +81,52 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
     end
   end
 
+  describe '#delete' do
+    before do
+      # Stubs for /api/v1/?.delete REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('delete'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('delete'))
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('delete'))
+        .with(
+          body: { roomId: '1236' }
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('delete'))
+        .with(
+          body: { roomId: '1234' }.to_json
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(scope.delete(room_id: '1234')).to be_truthy
+      end
+
+      context 'about a missing room' do
+        it 'should be false' do
+          expect(scope.delete(room_id: '1236')).to eq false
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.delete(room_id: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
   describe '#info' do
     before do
       # Stubs for /api/v1/?.info REST API
