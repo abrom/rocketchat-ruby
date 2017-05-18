@@ -42,6 +42,22 @@ module RocketChat
       end
 
       #
+      # *.delete REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def delete(room_id: nil, name: nil)
+        session.request_json(
+          self.class.api_path('delete'),
+          method: :post,
+          body: room_params(room_id, name),
+          upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
       # *.info REST API
       # @param [String] room_id Rocket.Chat room id
       # @param [String] name Room name (channels since 0.56)
