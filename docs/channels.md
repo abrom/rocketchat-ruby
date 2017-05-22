@@ -99,3 +99,16 @@ session = rocket_server.login('username', 'password')
 channel = session.channels.info(name: 'some_channelname')
 session.channels.rename(channel.id, 'new_channelname')
 ```
+
+
+### channels.set\*
+
+This method executes all setSomethingOrOther calls.
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.channels.set_attr(name: 'some_channelname', topic: 'Chatting about stuff')
+```

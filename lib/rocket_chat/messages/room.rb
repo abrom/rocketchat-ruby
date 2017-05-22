@@ -124,6 +124,25 @@ module RocketChat
         )['success']
       end
 
+      #
+      # *.set* REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] new_name New room name
+      # @param [Hash] setting Single key-value
+      # @return [Boolean]
+      # @raise [ArgumentError, HTTPError, StatusError]
+      #
+      def set_attr(room_id: nil, name: nil, **setting)
+        attribute, value = setting.first
+        validate_attribute(attribute)
+        session.request_json(
+          self.class.api_path(Util.camelize("set_#{attribute}")),
+          method: :post,
+          body: room_params(room_id, name)
+            .merge(Util.camelize(attribute) => value)
+        )['success']
+      end
+
       private
 
       attr_reader :session
@@ -145,6 +164,11 @@ module RocketChat
         new_hash = {}
         options.each { |key, value| new_hash[Util.camelize(key)] = value }
         new_hash
+      end
+
+      def validate_attribute(attribute)
+        raise ArgumentError, "Unsettable attribute: #{attribute}" unless \
+          self.class.settable_attributes.include?(attribute)
       end
     end
   end
