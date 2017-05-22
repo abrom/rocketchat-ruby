@@ -44,6 +44,12 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/channels.leave](docs/channels.md#channelsleave)
 * [/api/v1/channels.list](docs/channels.md#channelslist)
 * [/api/v1/channels.rename](docs/channels.md#channelsrename)
+* [/api/v1/channels.setDescription](docs/channels.md#channelsset_attr)
+* [/api/v1/channels.setJoinCode](docs/channels.md#channelsset_attr)
+* [/api/v1/channels.setPurpose](docs/channels.md#channelsset_attr)
+* [/api/v1/channels.setReadOnly](docs/channels.md#channelsset_attr)
+* [/api/v1/channels.setTopic](docs/channels.md#channelsset_attr)
+* [/api/v1/channels.setType](docs/channels.md#channelsset_attr)
 
 #### Groups
 * /api/v1/groups.create
@@ -53,6 +59,11 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/groups.leave
 * [/api/v1/groups.list](docs/groups.md#groupslist)
 * /api/v1/groups.rename
+* /api/v1/groups.setDescription
+* /api/v1/groups.setPurpose
+* /api/v1/groups.setReadOnly
+* /api/v1/groups.setTopic
+* /api/v1/groups.setType
 
 #### Users
 * [/api/v1/users.create](docs/users.md#userscreate)

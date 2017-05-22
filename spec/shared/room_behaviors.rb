@@ -527,6 +527,82 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
     end
   end
 
+  describe '#set_attr' do
+    before do
+      # Stubs for /api/v1/?.leave REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('setTopic'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .with(
+          body: { roomId: '1236', topic: 'A Topic' }
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .with(
+          body: { roomId: '1238', topic: 'A Topic' }
+        ).to_return(
+          body: {
+            success: false,
+            error: 'You are not in this room [error-user-not-in-room]',
+            errorType: 'error-user-not-in-room'
+          }.to_json,
+          status: 400
+        )
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .with(
+          body: { roomId: '1234', topic: 'A Topic' }
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'wrong attribute' do
+      it 'should raise an error' do
+        expect do
+          scope.set_attr(room_id: '1234', bad_attr: true)
+        end.to raise_error ArgumentError
+      end
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(scope.set_attr(room_id: '1234', topic: 'A Topic')).to be_truthy
+      end
+
+      context 'about a missing room' do
+        it 'should raise an error' do
+          expect do
+            scope.set_attr(room_id: '1236', topic: 'A Topic')
+          end.to raise_error RocketChat::StatusError, invalid_room_message
+        end
+      end
+
+      context 'about another room' do
+        it 'should raise an error' do
+          expect do
+            scope.set_attr(room_id: '1238', topic: 'A Topic')
+          end.to raise_error RocketChat::StatusError, 'You are not in this room [error-user-not-in-room]'
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.set_attr(room_id: '1234', topic: 'A Topic')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
   ### Room request/response helpers
 
   def room_response(name)

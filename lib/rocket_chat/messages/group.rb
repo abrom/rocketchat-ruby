@@ -22,6 +22,16 @@ module RocketChat
 
         response['groups'].map { |hash| RocketChat::Room.new hash } if response['success']
       end
+
+      # Keys for set_attr:
+      # * [String] description A room's description
+      # * [String] purpose Alias for description
+      # * [Boolean] read_only Read-only status
+      # * [String] topic A room's topic
+      # * [Strong] type c (channel) or p (private group)
+      def self.settable_attributes
+        %i[description purpose read_only topic type]
+      end
     end
   end
 end
