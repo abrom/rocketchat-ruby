@@ -79,6 +79,21 @@ users = session.users.list(query: { email: 'foo@example.com' })
 ```
 
 
+#### users.resetAvatar
+
+_N.B. available since 0.55.0_
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+success = session.users.reset_avatar
+```
+
+There are optional parameters user_id and username, that work if the setting user is allowed to set other's avatar.
+
+
 #### users.setAvatar
 
 ```ruby

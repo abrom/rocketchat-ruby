@@ -141,6 +141,21 @@ module RocketChat
         )['success']
       end
 
+      #
+      # users.resetAvatar REST API
+      # @param [String] user_id user to update (optional)
+      # @param [String] username Username (optional)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def reset_avatar(user_id: nil, username: nil)
+        session.request_json(
+          '/api/v1/users.resetAvatar',
+          method: :post,
+          body: user_params(user_id, username)
+        )['success']
+      end
+
       private
 
       attr_reader :session
