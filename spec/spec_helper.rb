@@ -4,6 +4,8 @@ require 'rocketchat'
 require 'json'
 require 'webmock/rspec'
 
+require 'shared/room_spec'
+
 SERVER_URI = URI.parse('http://www.example.com/')
 AUTH_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'.freeze
 USER_ID = 'AAAAAAAAAAAAAAAAA'.freeze

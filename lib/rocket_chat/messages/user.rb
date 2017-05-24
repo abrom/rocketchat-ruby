@@ -4,6 +4,8 @@ module RocketChat
     # Rocket.Chat User messages
     #
     class User
+      include ListSupport
+
       #
       # @param [Session] session Session
       #
@@ -76,7 +78,7 @@ module RocketChat
       # @param [Integer] count Query count/limit
       # @param [Hash] sort Query field sort hash. eg `{ active: 1, email: -1 }`
       # @param [Hash] fields Query fields to return. eg `{ name: 1, email: 0 }`
-      # @param [Hash] query The query. `{ active: true, type: { $in: ['user', 'bot'] } }`
+      # @param [Hash] query The query. `{ active: true, type: { '$in': ['user', 'bot'] } }`
       # @return [User[]]
       # @raise [HTTPError, StatusError]
       #
@@ -154,18 +156,6 @@ module RocketChat
         new_hash = {}
         options.each { |key, value| new_hash[Util.camelize(key)] = value }
         new_hash
-      end
-
-      def build_list_body(offset, count, sort, fields, query)
-        body = {}
-
-        body[:offset] = offset.to_i if offset.is_a? Integer
-        body[:count] = count.to_i if count.is_a? Integer
-        body[:sort] = sort.to_json if sort.is_a? Hash
-        body[:fields] = fields.to_json if fields.is_a? Hash
-        body[:query] = query.to_json if query.is_a? Hash
-
-        body
       end
 
       def user_params(id, username)
