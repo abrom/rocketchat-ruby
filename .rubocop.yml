@@ -1,6 +1,7 @@
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
+    - "spec/shared/*.rb"
 
 Metrics/LineLength:
   Max: 120

@@ -1,4 +1,4 @@
-shared_examples 'room_behavior' do |room_type, query:|
+shared_examples 'room_behavior' do |room_type: nil, query: false|
   let(:server) { RocketChat::Server.new(SERVER_URI) }
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
   let(:session) { RocketChat::Session.new(server, token) }
