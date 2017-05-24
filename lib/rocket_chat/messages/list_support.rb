@@ -4,6 +4,8 @@ module RocketChat
     # Support methods for *.list calls
     #
     module ListSupport
+      private
+
       def build_list_body(offset, count, sort, fields, query = nil)
         body = {}
 
