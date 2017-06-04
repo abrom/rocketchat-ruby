@@ -38,6 +38,22 @@ module RocketChat
       end
 
       #
+      # users.createToken REST API
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [RocketChat::Token]
+      # @raise [HTTPError, StatusError]
+      #
+      def create_token(user_id: nil, username: nil)
+        response = session.request_json(
+          '/api/v1/users.createToken',
+          method: :post,
+          body: user_params(user_id, username)
+        )
+        RocketChat::Token.new response['data']
+      end
+
+      #
       # users.update REST API
       # @param [String] id Rocket.Chat user id
       # @param [Hash] options User properties to update

@@ -16,6 +16,21 @@ Optional parameters for create are:
 :active, :roles, :join_default_channels, :require_password_change, :send_welcome_email, :verified, :custom_fields
 
 
+#### users.createToken
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+user = session.users.create('new_username', 'user@example.com', 'New User', '123456',
+                     active: true, send_welcome_email: false)
+token = session.users.create_token(user_id: user.id)
+```
+
+Either user_id (RocketChat's ID) or username can be used to target another user.
+
+
 #### users.update
 
 ```ruby
