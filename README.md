@@ -85,6 +85,16 @@ session = rocket_server.login('username', 'password')
 session.logout
 ```
 
+#### debugging
+To debug the communications between the gem and Rocket.Chat, there is a debug option.
+It accepts a stream for logging.
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/', debug: $stderr)
+```
+
 
 For details of specific APIs:
 
