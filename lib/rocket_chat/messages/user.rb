@@ -3,7 +3,7 @@ module RocketChat
     #
     # Rocket.Chat User messages
     #
-    class User
+    class User # rubocop:disable Metrics/ClassLength
       include ListSupport
 
       #
