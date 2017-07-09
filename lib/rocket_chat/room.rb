@@ -34,6 +34,12 @@ module RocketChat
       data['u']
     end
 
+    # Group leader
+    def leader
+      data['l']
+    end
+
+
     def created_at
       data['ts']
     end

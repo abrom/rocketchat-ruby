@@ -60,6 +60,82 @@ module RocketChat
       end
 
       #
+      # *.add_owner REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] user_id Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def add_owner(room_id: nil, user_id: nil)
+        session.request_json(
+            self.class.api_path('addOwner'),
+            method: :post,
+            body: {
+                roomId: room_id,
+                userId: user_id
+            },
+            upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
+      # *.remove_owner REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] user_id Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def remove_owner(room_id: nil, user_id: nil)
+        session.request_json(
+            self.class.api_path('removeOwner'),
+            method: :post,
+            body: {
+                roomId: room_id,
+                userId: user_id
+            },
+            upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
+      # *.add_leader REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] leader Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def add_leader(room_id: nil, leader: nil)
+        session.request_json(
+            self.class.api_path('addLeader'),
+            method: :post,
+            body: {
+                roomId: room_id,
+                userId: leader
+            },
+            upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
+      # *.remove_leader REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] leader Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def remove_leader(room_id: nil, leader: nil)
+        session.request_json(
+            self.class.api_path('removeLeader'),
+            method: :post,
+            body: {
+                roomId: room_id,
+                userId: leader
+            },
+            upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
       # *.info REST API
       # @param [String] room_id Rocket.Chat room id
       # @param [String] name Room name (channels since 0.56)
