@@ -3,7 +3,7 @@ module RocketChat
     #
     # Rocket.Chat User messages
     #
-    class User
+    class User # rubocop:disable Metrics/ClassLength
       include ListSupport
 
       #
@@ -35,6 +35,22 @@ module RocketChat
           }.merge(user_option_hash(options))
         )
         RocketChat::User.new response['user']
+      end
+
+      #
+      # users.createToken REST API
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [RocketChat::Token]
+      # @raise [HTTPError, StatusError]
+      #
+      def create_token(user_id: nil, username: nil)
+        response = session.request_json(
+          '/api/v1/users.createToken',
+          method: :post,
+          body: user_params(user_id, username)
+        )
+        RocketChat::Token.new response['data']
       end
 
       #
@@ -138,6 +154,21 @@ module RocketChat
           '/api/v1/users.setAvatar',
           method: :post,
           body: body
+        )['success']
+      end
+
+      #
+      # users.resetAvatar REST API
+      # @param [String] user_id user to update (optional)
+      # @param [String] username Username (optional)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def reset_avatar(user_id: nil, username: nil)
+        session.request_json(
+          '/api/v1/users.resetAvatar',
+          method: :post,
+          body: user_params(user_id, username)
         )['success']
       end
 
