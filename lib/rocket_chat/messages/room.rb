@@ -3,7 +3,7 @@ module RocketChat
     #
     # Rocket.Chat Room messages template (groups&channels)
     #
-    class Room
+    class Room # rubocop:disable Metrics/ClassLength
       include UserSupport
 
       def self.inherited(subclass)
@@ -55,6 +55,44 @@ module RocketChat
           self.class.api_path('delete'),
           method: :post,
           body: room_params(room_id, name),
+          upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
+      # *.add_owner REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] user_id Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def add_owner(room_id: nil, user_id: nil)
+        session.request_json(
+          self.class.api_path('addOwner'),
+          method: :post,
+          body: {
+            roomId: room_id,
+            userId: user_id
+          },
+          upstreamed_errors: ['error-room-not-found']
+        )['success']
+      end
+
+      #
+      # *.remove_owner REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] user_id Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def remove_owner(room_id: nil, user_id: nil)
+        session.request_json(
+          self.class.api_path('removeOwner'),
+          method: :post,
+          body: {
+            roomId: room_id,
+            userId: user_id
+          },
           upstreamed_errors: ['error-room-not-found']
         )['success']
       end
