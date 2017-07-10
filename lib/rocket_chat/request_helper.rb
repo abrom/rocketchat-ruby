@@ -29,6 +29,7 @@ module RocketChat
       check_response response, fail_unless_ok
 
       response_json = JSON.parse(response.body)
+      options[:debug].puts("Response: #{response_json.inspect}") if options[:debug]
       check_response_json response_json, upstreamed_errors
 
       response_json
@@ -79,6 +80,7 @@ module RocketChat
 
     def create_http(options)
       http = Net::HTTP.new(server.host, server.port)
+      http.set_debug_output(options[:debug]) if options[:debug]
 
       if server.scheme == 'https'
         http.use_ssl = true
