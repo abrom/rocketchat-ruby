@@ -190,6 +190,8 @@ module RocketChat
           { roomId: id }
         elsif name
           { roomName: name }
+        else
+          {}
         end
       end
 
@@ -205,7 +207,7 @@ module RocketChat
       end
 
       def validate_attribute(attribute)
-        raise ArgumentError, "Unsettable attribute: #{attribute}" unless \
+        raise ArgumentError, "Unsettable attribute: #{attribute || 'nil'}" unless \
           self.class.settable_attributes.include?(attribute)
       end
     end

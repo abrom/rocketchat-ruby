@@ -9,6 +9,8 @@ module RocketChat
           { userId: id }
         elsif username
           { username: username }
+        else
+          {}
         end
       end
     end
