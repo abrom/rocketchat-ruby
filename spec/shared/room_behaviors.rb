@@ -81,6 +81,52 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
     end
   end
 
+  describe '#delete' do
+    before do
+      # Stubs for /api/v1/?.delete REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('delete'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('delete'))
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('delete'))
+        .with(
+          body: { roomId: '1236' }
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('delete'))
+        .with(
+          body: { roomId: '1234' }.to_json
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(scope.delete(room_id: '1234')).to be_truthy
+      end
+
+      context 'about a missing room' do
+        it 'should be false' do
+          expect(scope.delete(room_id: '1236')).to eq false
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.delete(room_id: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
   describe '#info' do
     before do
       # Stubs for /api/v1/?.info REST API
@@ -360,6 +406,198 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       it 'should be failure' do
         expect do
           scope.rename('goodId', 'new_room_name')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#invite' do
+    before do
+      # Stubs for /api/v1/?.invite REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('invite'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('invite'))
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('invite'))
+        .with(
+          body: { roomId: '1236', username: 'good-user' }.to_json
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('invite'))
+        .with(
+          body: { roomId: '1234', username: 'good-user' }.to_json
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(scope.invite(room_id: '1234', username: 'good-user')).to be_truthy
+      end
+
+      context 'about a missing room' do
+        it 'should be failure' do
+          expect do
+            scope.invite(room_id: '1236', username: 'good-user')
+          end.to raise_error RocketChat::StatusError, invalid_room_message
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.invite(room_id: '1234', username: 'good-user')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#leave' do
+    before do
+      # Stubs for /api/v1/?.leave REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('leave'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('leave'))
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('leave'))
+        .with(
+          body: { roomId: '1236' }
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('leave'))
+        .with(
+          body: { roomId: '1238' }
+        ).to_return(
+          body: {
+            success: false,
+            error: 'You are not in this room [error-user-not-in-room]',
+            errorType: 'error-user-not-in-room'
+          }.to_json,
+          status: 400
+        )
+
+      stub_authed_request(:post, described_class.api_path('leave'))
+        .with(
+          body: { roomId: '1234' }.to_json
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(scope.leave(room_id: '1234')).to be_truthy
+      end
+
+      context 'about a missing room' do
+        it 'should raise an error' do
+          expect do
+            scope.leave(room_id: '1236')
+          end.to raise_error RocketChat::StatusError, invalid_room_message
+        end
+      end
+
+      context 'about another room' do
+        it 'should raise an error' do
+          expect do
+            scope.leave(room_id: '1238')
+          end.to raise_error RocketChat::StatusError, 'You are not in this room [error-user-not-in-room]'
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.leave(room_id: '1234')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
+
+  describe '#set_attr' do
+    before do
+      # Stubs for /api/v1/?.leave REST API
+      stub_request(:post, SERVER_URI + described_class.api_path('setTopic'))
+        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .with(
+          body: { roomId: '1236', topic: 'A Topic' }
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .with(
+          body: { roomId: '1238', topic: 'A Topic' }
+        ).to_return(
+          body: {
+            success: false,
+            error: 'You are not in this room [error-user-not-in-room]',
+            errorType: 'error-user-not-in-room'
+          }.to_json,
+          status: 400
+        )
+
+      stub_authed_request(:post, described_class.api_path('setTopic'))
+        .with(
+          body: { roomId: '1234', topic: 'A Topic' }
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'wrong attribute' do
+      it 'should raise an error' do
+        expect do
+          scope.set_attr(room_id: '1234', bad_attr: true)
+        end.to raise_error ArgumentError
+      end
+    end
+
+    context 'valid session' do
+      it 'should be success' do
+        expect(scope.set_attr(room_id: '1234', topic: 'A Topic')).to be_truthy
+      end
+
+      context 'about a missing room' do
+        it 'should raise an error' do
+          expect do
+            scope.set_attr(room_id: '1236', topic: 'A Topic')
+          end.to raise_error RocketChat::StatusError, invalid_room_message
+        end
+      end
+
+      context 'about another room' do
+        it 'should raise an error' do
+          expect do
+            scope.set_attr(room_id: '1238', topic: 'A Topic')
+          end.to raise_error RocketChat::StatusError, 'You are not in this room [error-user-not-in-room]'
+        end
+      end
+    end
+
+    context 'invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'should be failure' do
+        expect do
+          scope.set_attr(room_id: '1234', topic: 'A Topic')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
