@@ -6,6 +6,22 @@ module RocketChat
     class Channel < Room
       include ListSupport
 
+      #
+      # channels.join REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def join(room_id: nil, name: nil)
+        session.request_json(
+          '/api/v1/channels.join',
+          method: :post,
+          body: room_params(room_id, name)
+        )['success']
+      end
+
+      #
       # channels.list REST API
       # @param [Integer] offset Query offset
       # @param [Integer] count Query count/limit
@@ -22,6 +38,17 @@ module RocketChat
         )
 
         response['channels'].map { |hash| RocketChat::Room.new hash } if response['success']
+      end
+
+      # Keys for set_attr:
+      # * [String] description A room's description
+      # * [String] join_code Code to join a channel
+      # * [String] purpose Alias for description
+      # * [Boolean] read_only Read-only status
+      # * [String] topic A room's topic
+      # * [Strong] type c (channel) or p (private group)
+      def self.settable_attributes
+        %i[description join_code purpose read_only topic type]
       end
     end
   end
