@@ -133,6 +133,38 @@ module RocketChat
       end
 
       #
+      # *.archive REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def archive(room_id)
+        session.request_json(
+          self.class.api_path('archive'),
+          method: :post,
+          body: {
+            roomId: room_id
+          }
+        )['success']
+      end
+
+      #
+      # *.unarchive REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def unarchive(room_id)
+        session.request_json(
+          self.class.api_path('unarchive'),
+          method: :post,
+          body: {
+            roomId: room_id
+          }
+        )['success']
+      end
+
+      #
       # *.leave REST API
       # @param [String] room_id Rocket.Chat room id
       # @param [String] name Rocket.Chat room name (coming soon)
