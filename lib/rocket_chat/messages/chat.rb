@@ -22,7 +22,7 @@ module RocketChat
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def delete(room_id: nil, name: nil, msg_id:, as_user: nil)
+      def delete(room_id: nil, name: nil, msg_id: nil, as_user: nil)
         session.request_json(
           '/api/v1/chat.delete',
           method: :post,
@@ -40,7 +40,7 @@ module RocketChat
       # @return [RocketChat::Message]
       # @raise [HTTPError, StatusError]
       #
-      def get_message(msg_id:)
+      def get_message(msg_id: nil)
         response = session.request_json(
           '/api/v1/chat.getMessage',
           body: { msgId: msg_id }
@@ -57,7 +57,7 @@ module RocketChat
       # @return [RocketChat::Message]
       # @raise [HTTPError, StatusError]
       #
-      def post_message(room_id: nil, name: nil, channel:, **params)
+      def post_message(room_id: nil, name: nil, channel: nil, **params)
         response = session.request_json(
           '/api/v1/chat.postMessage',
           method: :post,
@@ -77,7 +77,7 @@ module RocketChat
       # @return [RocketChat::Message]
       # @raise [HTTPError, StatusError]
       #
-      def update(room_id: nil, name: nil, msg_id:, text:)
+      def update(room_id: nil, name: nil, msg_id: nil, text: nil)
         response = session.request_json(
           '/api/v1/chat.update',
           method: :post,
