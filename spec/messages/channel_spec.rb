@@ -6,8 +6,7 @@ describe RocketChat::Messages::Channel do
   describe '#join' do
     before do
       # Stubs for /api/v1/channels.join REST API
-      stub_request(:post, SERVER_URI + '/api/v1/channels.join')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/channels.join'
 
       stub_authed_request(:post, '/api/v1/channels.join')
         .to_return(not_provided_room_body)

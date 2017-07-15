@@ -6,8 +6,7 @@ describe RocketChat::Messages::Group do
   describe '#add_leader' do
     before do
       # Stubs for /api/v1/groups.join REST API
-      stub_request(:post, SERVER_URI + '/api/v1/groups.addLeader')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/groups.addLeader'
 
       stub_authed_request(:post, '/api/v1/groups.addLeader')
         .to_return(not_provided_room_body)

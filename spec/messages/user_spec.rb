@@ -26,8 +26,7 @@ describe RocketChat::Messages::User do
   describe '#create' do
     before do
       # Stubs for /api/v1/users.create REST API
-      stub_request(:post, SERVER_URI + '/api/v1/users.create')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/users.create'
 
       data = user_for_request('Already Exists')
       stub_authed_request(:post, '/api/v1/users.create')
@@ -89,8 +88,7 @@ describe RocketChat::Messages::User do
   describe '#update' do
     before do
       # Stubs for /api/v1/users.update REST API
-      stub_request(:post, SERVER_URI + '/api/v1/users.update')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/users.update'
 
       stub_authed_request(:post, '/api/v1/users.update')
         .with(
@@ -157,8 +155,7 @@ describe RocketChat::Messages::User do
   describe '#info' do
     before do
       # Stubs for /api/v1/users.info REST API
-      stub_request(:get, SERVER_URI + '/api/v1/users.info?userId=1234')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :get, '/api/v1/users.info?userId=1234'
 
       stub_authed_request(:get, '/api/v1/users.info?userId=1236')
         .to_return(invalid_user_body)
@@ -286,8 +283,7 @@ describe RocketChat::Messages::User do
 
     before do
       # Stubs for /api/v1/users.list REST API
-      stub_request(:get, SERVER_URI + '/api/v1/users.list')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :get, '/api/v1/users.list'
 
       stub_authed_request(:get, URI.escape('/api/v1/users.list?query={"username":"bobsmith"}'))
         .to_return(empty_users_body)
@@ -367,8 +363,7 @@ describe RocketChat::Messages::User do
 
     before do
       # Stubs for /api/v1/users.getPresence REST API
-      stub_request(:get, SERVER_URI + "/api/v1/users.getPresence?userId=#{USER_ID}")
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :get, "/api/v1/users.getPresence?userId=#{USER_ID}"
 
       # Invalid user
       stub_authed_request(:get, '/api/v1/users.getPresence?userId=1236')
@@ -452,8 +447,7 @@ describe RocketChat::Messages::User do
   describe '#delete' do
     before do
       # Stubs for /api/v1/users.delete REST API
-      stub_request(:post, SERVER_URI + '/api/v1/users.delete')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/users.delete'
 
       stub_authed_request(:post, '/api/v1/users.delete')
         .to_return(not_provided_user_body)
@@ -517,8 +511,7 @@ describe RocketChat::Messages::User do
   describe '#reset_avatar' do
     before do
       # Stubs for /api/v1/users.resetAvatar REST API
-      stub_request(:post, SERVER_URI + '/api/v1/users.resetAvatar')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/users.resetAvatar'
 
       stub_authed_request(:post, '/api/v1/users.resetAvatar')
         .with(
@@ -576,8 +569,7 @@ describe RocketChat::Messages::User do
   describe '#set_avatar' do
     before do
       # Stubs for /api/v1/users.setAvatar REST API
-      stub_request(:post, SERVER_URI + '/api/v1/users.setAvatar')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/users.setAvatar'
 
       stub_authed_request(:post, '/api/v1/users.setAvatar')
         .with(

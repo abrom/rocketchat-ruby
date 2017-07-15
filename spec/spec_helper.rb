@@ -23,3 +23,8 @@ def stub_authed_request(method, action)
   stub_request(method, SERVER_URI + action)
     .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
 end
+
+def stub_unauthed_request(method, action)
+  stub_request(method, SERVER_URI + action)
+    .to_return(body: UNAUTHORIZED_BODY, status: 401)
+end

@@ -32,8 +32,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#create' do
     before do
       # Stubs for /api/v1/?.create REST API
-      stub_request(:post, SERVER_URI + described_class.api_path('create'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, described_class.api_path('create')
 
       stub_authed_request(:post, described_class.api_path('create'))
         .with(
@@ -84,8 +83,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#delete' do
     before do
       # Stubs for /api/v1/?.delete REST API
-      stub_request(:post, SERVER_URI + described_class.api_path('delete'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, described_class.api_path('delete')
 
       stub_authed_request(:post, described_class.api_path('delete'))
         .to_return(not_provided_room_body)
@@ -130,8 +128,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#info' do
     before do
       # Stubs for /api/v1/?.info REST API
-      stub_request(:get, SERVER_URI + described_class.api_path('info?roomId=1234'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :get, described_class.api_path('info?roomId=1234')
 
       stub_authed_request(:get, described_class.api_path('info?roomId=1236'))
         .to_return(invalid_room_body)
@@ -252,8 +249,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
 
     before do
       # Stubs for /api/v1/rooms.list REST API
-      stub_request(:get, SERVER_URI + described_class.api_path('list'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :get, described_class.api_path('list')
 
       if query
         stub_authed_request(
@@ -323,8 +319,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#rename' do
     before do
       # Stubs for /api/v1/?.info REST API
-      stub_request(:post, SERVER_URI + described_class.api_path('rename'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, described_class.api_path('rename')
 
       stub_authed_request(:post, described_class.api_path('rename'))
         .with(
@@ -414,8 +409,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#invite' do
     before do
       # Stubs for /api/v1/?.invite REST API
-      stub_request(:post, SERVER_URI + described_class.api_path('invite'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, described_class.api_path('invite')
 
       stub_authed_request(:post, described_class.api_path('invite'))
         .to_return(not_provided_room_body)
@@ -462,8 +456,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#leave' do
     before do
       # Stubs for /api/v1/?.leave REST API
-      stub_request(:post, SERVER_URI + described_class.api_path('leave'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, described_class.api_path('leave')
 
       stub_authed_request(:post, described_class.api_path('leave'))
         .to_return(not_provided_room_body)
@@ -530,8 +523,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
   describe '#set_attr' do
     before do
       # Stubs for /api/v1/?.leave REST API
-      stub_request(:post, SERVER_URI + described_class.api_path('setTopic'))
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, described_class.api_path('setTopic')
 
       stub_authed_request(:post, described_class.api_path('setTopic'))
         .to_return(not_provided_room_body)

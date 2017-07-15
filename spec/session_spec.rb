@@ -8,8 +8,7 @@ describe RocketChat::Session do
   describe '#logout' do
     before do
       # Stubs for /api/v1/logout REST API
-      stub_request(:post, SERVER_URI + '/api/v1/logout')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :post, '/api/v1/logout'
 
       stub_request(:post, SERVER_URI + '/api/v1/logout')
         .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
@@ -42,8 +41,7 @@ describe RocketChat::Session do
   describe '#me' do
     before do
       # Stubs for /api/v1/me REST API
-      stub_request(:get, SERVER_URI + '/api/v1/me')
-        .to_return(body: UNAUTHORIZED_BODY, status: 401)
+      stub_unauthed_request :get, '/api/v1/me'
 
       stub_request(:get, SERVER_URI + '/api/v1/me')
         .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
