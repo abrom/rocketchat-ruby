@@ -10,7 +10,14 @@ module RocketChat
     #
     def stringify_hash_keys(hash)
       new_hash = {}
-      hash.each { |key, value| new_hash[key.to_s] = value }
+      hash.each do |key, value|
+        new_hash[key.to_s] =
+          if value.is_a? Hash
+            stringify_hash_keys value
+          else
+            value
+          end
+      end
       new_hash
     end
     module_function :stringify_hash_keys

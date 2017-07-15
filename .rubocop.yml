@@ -10,3 +10,7 @@ Metrics/MethodLength:
   Max: 15
   Exclude:
     - "**/*_spec.rb"
+
+Style/NumericLiterals:
+  Exclude:
+    - "**/*_spec.rb"

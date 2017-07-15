@@ -4,6 +4,7 @@ module RocketChat
     # Rocket.Chat Room messages template (groups&channels)
     #
     class Room # rubocop:disable Metrics/ClassLength
+      include RoomSupport
       include UserSupport
 
       def self.inherited(subclass)
@@ -212,16 +213,6 @@ module RocketChat
       private
 
       attr_reader :session
-
-      def room_params(id, name)
-        if id
-          { roomId: id }
-        elsif name
-          { roomName: name }
-        else
-          {}
-        end
-      end
 
       def room_option_hash(options)
         args = [options, :members, :read_only, :custom_fields]

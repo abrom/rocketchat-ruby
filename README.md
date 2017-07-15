@@ -35,7 +35,14 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/logout](#authentication)
 * /api/v1/me
 
+#### Chat
+* /api/v1/chat.delete
+* /api/v1/chat.getMessage
+* /api/v1/chat.postMessage
+* /api/v1/chat.update
+
 #### Channels
+* /api/v1/channels.archive
 * [/api/v1/channels.create](docs/channels.md#channelscreate)
 * [/api/v1/channels.delete](docs/channels.md#channelsdelete)
 * [/api/v1/channels.info](docs/channels.md#channelsinfo)
@@ -50,8 +57,10 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/channels.setReadOnly](docs/channels.md#channelsset_attr)
 * [/api/v1/channels.setTopic](docs/channels.md#channelsset_attr)
 * [/api/v1/channels.setType](docs/channels.md#channelsset_attr)
+* /api/v1/channels.unarchive
 
 #### Groups
+* /api/v1/groups.archive
 * /api/v1/groups.create
 * /api/v1/groups.delete
 * /api/v1/groups.info
@@ -64,6 +73,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/groups.setReadOnly
 * /api/v1/groups.setTopic
 * /api/v1/groups.setType
+* /api/v1/groups.unarchive
 
 #### Users
 * [/api/v1/users.create](docs/users.md#userscreate)
