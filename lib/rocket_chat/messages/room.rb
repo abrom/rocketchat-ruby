@@ -138,13 +138,11 @@ module RocketChat
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def archive(room_id)
+      def archive(room_id: nil, name: nil)
         session.request_json(
           self.class.api_path('archive'),
           method: :post,
-          body: {
-            roomId: room_id
-          }
+          body: room_params(room_id, name)
         )['success']
       end
 
@@ -154,13 +152,11 @@ module RocketChat
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def unarchive(room_id)
+      def unarchive(room_id: nil, name: nil)
         session.request_json(
           self.class.api_path('unarchive'),
           method: :post,
-          body: {
-            roomId: room_id
-          }
+          body: room_params(room_id, name)
         )['success']
       end
 
