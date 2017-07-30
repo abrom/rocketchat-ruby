@@ -14,10 +14,10 @@ module RocketChat
       # @return [Room[]]
       # @raise [HTTPError, StatusError]
       #
-      def list(offset: nil, count: nil, sort: nil, fields: nil)
+      def list(offset: nil, count: nil, sort: nil, fields: nil, query: nil)
         response = session.request_json(
           '/api/v1/groups.list',
-          body: build_list_body(offset, count, sort, fields)
+          body: build_list_body(offset, count, sort, fields, query)
         )
 
         response['groups'].map { |hash| RocketChat::Room.new hash } if response['success']
