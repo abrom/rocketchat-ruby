@@ -13,15 +13,12 @@ module RocketChat
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def add_leader(room_id: nil, user_id: nil)
+      def add_leader(room_id: nil, name: nil, user_id: nil, username: nil)
         session.request_json(
           self.class.api_path('addLeader'),
           method: :post,
-          body: {
-            roomId: room_id,
-            userId: user_id
-          },
-          upstreamed_errors: ['error-room-not-found']
+          body: room_params(room_id, name)
+            .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -32,15 +29,12 @@ module RocketChat
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
-      def remove_leader(room_id: nil, user_id: nil)
+      def remove_leader(room_id: nil, name: nil, user_id: nil, username: nil)
         session.request_json(
           self.class.api_path('removeLeader'),
           method: :post,
-          body: {
-            roomId: room_id,
-            userId: user_id
-          },
-          upstreamed_errors: ['error-room-not-found']
+          body: room_params(room_id, name)
+            .merge(user_params(user_id, username))
         )['success']
       end
 
