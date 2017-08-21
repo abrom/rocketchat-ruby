@@ -1,5 +1,6 @@
 require 'uri'
 require 'openssl'
+require 'net/http'
 
 module RocketChat
   #
