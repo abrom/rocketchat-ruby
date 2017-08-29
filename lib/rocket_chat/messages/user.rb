@@ -126,6 +126,21 @@ module RocketChat
       end
 
       #
+      # users.unread_count REST API
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Username
+      # @return [User]
+      # @raise [HTTPError, StatusError]
+      #
+      def unread_count(user_id: nil, username: nil)
+        response = session.request_json(
+            '/api/v1/users.unreadCount',
+            body: user_params(user_id, username)
+        )
+        response['data']['unread'] if response['success']
+      end
+
+      #
       # users.getPresence REST API
       # @param [String] user_id Rocket.Chat user id
       # @param [String] username Username
