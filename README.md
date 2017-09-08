@@ -45,6 +45,11 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/channels.archive
 * [/api/v1/channels.create](docs/channels.md#channelscreate)
 * [/api/v1/channels.delete](docs/channels.md#channelsdelete)
+* [/api/v1/channels.addAll](docs/channels.md#channelsaddall)
+* [/api/v1/channels.addOwner](docs/channels.md#channelsaddowner)
+* [/api/v1/channels.removeOwner](docs/channels.md#channelsremoveowner)
+* [/api/v1/channels.addModerator](docs/channels.md#channelsaddmoderator)
+* [/api/v1/channels.removeModerator](docs/channels.md#channelsremovemoderator)
 * [/api/v1/channels.info](docs/channels.md#channelsinfo)
 * [/api/v1/channels.invite](docs/channels.md#channelsinvite)
 * [/api/v1/channels.join](docs/channels.md#channelsjoin)
@@ -63,6 +68,11 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/groups.archive
 * /api/v1/groups.create
 * /api/v1/groups.delete
+* [/api/v1/groups.addAll](docs/groups.md#groupsaddall)
+* [/api/v1/groups.addOwner](docs/groups.md#groupsaddowner)
+* [/api/v1/groups.removeOwner](docs/groups.md#groupsremoveowner)
+* [/api/v1/groups.addModerator](docs/groups.md#groupsaddmoderator)
+* [/api/v1/groups.removeModerator](docs/groups.md#groupsremovemoderator)
 * /api/v1/groups.info
 * /api/v1/groups.invite
 * /api/v1/groups.leave

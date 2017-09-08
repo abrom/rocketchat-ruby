@@ -61,9 +61,28 @@ module RocketChat
       end
 
       #
+      # *.addAll REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
+      # @param [String] active_users_only Add active users only
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def add_all(room_id: nil, name: nil, active_users_only: false)
+        session.request_json(
+          self.class.api_path('addAll'),
+          method: :post,
+          body: room_params(room_id, name)
+                  .merge(activeUsersOnly: active_users_only)
+        )['success']
+      end
+
+      #
       # *.add_owner REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Rocket.Chat username
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -79,7 +98,9 @@ module RocketChat
       #
       # *.remove_owner REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Rocket.Chat username
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -95,7 +116,9 @@ module RocketChat
       #
       # *.add_moderator REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Rocket.Chat username
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -111,7 +134,9 @@ module RocketChat
       #
       # *.remove_moderator REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Rocket.Chat username
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -146,7 +171,7 @@ module RocketChat
       # @param [String] room_id Rocket.Chat room id
       # @param [String] name Rocket.Chat room name (coming soon)
       # @param [String] user_id Rocket.Chat user id
-      # @param [String] username Username
+      # @param [String] username Rocket.Chat username
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -162,6 +187,7 @@ module RocketChat
       #
       # *.archive REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -176,6 +202,7 @@ module RocketChat
       #
       # *.unarchive REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @return [Boolean]
       # @raise [HTTPError, StatusError]
       #
@@ -220,7 +247,7 @@ module RocketChat
       #
       # *.set* REST API
       # @param [String] room_id Rocket.Chat room id
-      # @param [String] new_name New room name
+      # @param [String] name Rocket.Chat room name (coming soon)
       # @param [Hash] setting Single key-value
       # @return [Boolean]
       # @raise [ArgumentError, HTTPError, StatusError]

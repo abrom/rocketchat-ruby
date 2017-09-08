@@ -36,6 +36,50 @@ Either room_id (RocketChat's ID) or name can be used.
 To delete a channel, the same options as an info request can be used (`room_id` or `name`).
 
 
+#### channels.addAll
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+success = session.channels.add_all(room_id: 'ByehQjC44FwMeiLbX')
+```
+
+Optional parameter for add_all is `active_users_only` (default false)
+
+_N.B. the addAll API endpoint requires the calling user to have the `admin` role_
+
+
+#### channels.addOwner
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+success = session.channels.add_owner(name: 'some_channelname', username: 'some_username')
+```
+
+Either room_id (RocketChat's ID) or name can be used.
+The same applies to user_id and username.
+
+
+#### channels.removeOwner
+
+To remove an owner from a channel, the same options as an `add_owner` request can be used.
+
+
+#### channels.addModerator
+
+To add a moderator to a channel, the same options as an `add_owner` request can be used.
+
+
+#### channels.removeModerator
+
+To remove a moderator from a channel, the same options as an `add_owner` request can be used.
+
+
 #### channels.invite
 
 ```ruby
