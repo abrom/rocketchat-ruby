@@ -185,6 +185,24 @@ module RocketChat
       end
 
       #
+      # *.kick REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name (coming soon)
+      # @param [String] user_id Rocket.Chat user id
+      # @param [String] username Rocket.Chat username
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def kick(room_id: nil, name: nil, user_id: nil, username: nil)
+        session.request_json(
+          self.class.api_path('kick'),
+          method: :post,
+          body: room_params(room_id, name)
+            .merge(user_params(user_id, username))
+        )['success']
+      end
+
+      #
       # *.archive REST API
       # @param [String] room_id Rocket.Chat room id
       # @param [String] name Rocket.Chat room name (coming soon)
