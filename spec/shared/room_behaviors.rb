@@ -254,16 +254,12 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       if query
         stub_authed_request(
           :get,
-          described_class.api_path(
-            URI.escape('list?query={"name":"wrong-room"}')
-          )
+          described_class.api_path('list?query=%7B%22name%22:%22wrong-room%22%7D')
         ).to_return(empty_rooms_body)
 
         stub_authed_request(
           :get,
-          described_class.api_path(
-            URI.escape('list?query={"name":"room-one"}')
-          )
+          described_class.api_path('list?query=%7B%22name%22:%22room-one%22%7D')
         ).to_return(found_rooms_body)
       end
 

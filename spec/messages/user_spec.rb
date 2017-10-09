@@ -285,10 +285,10 @@ describe RocketChat::Messages::User do
       # Stubs for /api/v1/users.list REST API
       stub_unauthed_request :get, '/api/v1/users.list'
 
-      stub_authed_request(:get, URI.escape('/api/v1/users.list?query={"username":"bobsmith"}'))
+      stub_authed_request(:get, '/api/v1/users.list?query=%7B%22username%22:%22bobsmith%22%7D')
         .to_return(empty_users_body)
 
-      stub_authed_request(:get, URI.escape('/api/v1/users.list?query={"username":"rogersmith"}'))
+      stub_authed_request(:get, '/api/v1/users.list?query=%7B%22username%22:%22rogersmith%22%7D')
         .to_return(found_users_body)
 
       stub_authed_request(:get, '/api/v1/users.list')

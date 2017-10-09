@@ -26,7 +26,7 @@ module RocketChat
     # Last login
     def last_login
       DateTime.parse data['lastLogin']
-    rescue
+    rescue ArgumentError, TypeError
       nil
     end
 
