@@ -20,12 +20,12 @@ module RocketChat
 
     # Timestamp
     def timestamp
-      DateTime.parse data['ts']
+      Time.parse data['ts']
     end
 
     # Updated at
     def updated_at
-      DateTime.parse data['_updatedAt']
+      Time.parse data['_updatedAt']
     end
 
     # Room ID
@@ -60,12 +60,12 @@ module RocketChat
 
     def inspect
       format(
-        '#<%s:0x%p @id="%s" @room="%s" @msg="%s">',
-        self.class.name,
-        object_id,
-        id,
-        room_id,
-        message
+        '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @room="%<room_id>s" @msg="%<message>s">',
+        class_name: self.class.name,
+        object_id: object_id,
+        id: id,
+        room_id: room_id,
+        message: message
       )
     end
   end

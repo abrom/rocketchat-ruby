@@ -25,17 +25,17 @@ module RocketChat
 
     # Last login
     def last_login
-      DateTime.parse data['lastLogin']
+      Time.parse data['lastLogin']
     rescue ArgumentError, TypeError
       nil
     end
 
     def inspect
       format(
-        '#<%s:0x%p @presence="%s">',
-        self.class.name,
-        object_id,
-        presence
+        '#<%<class_name>s:0x%<object_id>p @presence="%<presence>s">',
+        class_name: self.class.name,
+        object_id: object_id,
+        presence: presence
       )
     end
   end

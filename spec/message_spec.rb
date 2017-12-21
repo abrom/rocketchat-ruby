@@ -24,11 +24,11 @@ describe RocketChat::Message do
   end
 
   describe '#timestamp' do
-    it { expect(message.timestamp).to eq DateTime.parse('2016-12-14T20:56:05.117Z') }
+    it { expect(message.timestamp).to eq Time.parse('2016-12-14T20:56:05.117Z') }
   end
 
   describe '#updated_at' do
-    it { expect(message.updated_at).to eq DateTime.parse('2016-12-14T20:57:05.119Z') }
+    it { expect(message.updated_at).to eq Time.parse('2016-12-14T20:57:05.119Z') }
   end
 
   describe '#room_id' do

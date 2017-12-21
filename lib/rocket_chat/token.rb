@@ -25,11 +25,11 @@ module RocketChat
 
     def inspect
       format(
-        '#<%s:0x%p @auth_token="%s", @user_id="%s">',
-        self.class.name,
-        object_id,
-        auth_token,
-        user_id
+        '#<%<class_name>s:0x%<object_id>p @auth_token="%<auth_token>s", @user_id="%<user_id>s">',
+        class_name: self.class.name,
+        object_id: object_id,
+        auth_token: auth_token,
+        user_id: user_id
       )
     end
   end

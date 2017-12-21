@@ -20,10 +20,10 @@ module RocketChat
 
     def inspect
       format(
-        '#<%s:0x%p @version="%s">',
-        self.class.name,
-        object_id,
-        version
+        '#<%<class_name>s:0x%<object_id>p @version="%<version>s">',
+        class_name: self.class.name,
+        object_id: object_id,
+        version: version
       )
     end
   end

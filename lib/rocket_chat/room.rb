@@ -82,12 +82,12 @@ module RocketChat
 
     def inspect
       format(
-        '#<%s:0x%p @id="%s" @name="%s" @type="%s">',
-        self.class.name,
-        object_id,
-        id,
-        name,
-        type
+        '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @name="%<name>s" @type="%<type>s">',
+        class_name: self.class.name,
+        object_id: object_id,
+        id: id,
+        name: name,
+        type: type
       )
     end
   end
