@@ -1,5 +1,6 @@
 [![Travis Build Status](http://img.shields.io/travis/abrom/rocketchat-ruby.svg?style=flat)](https://travis-ci.org/abrom/rocketchat-ruby)
-[![Code Climate Score](http://img.shields.io/codeclimate/github/abrom/rocketchat-ruby.svg?style=flat)](https://codeclimate.com/github/abrom/rocketchat-ruby)
+[![Maintainability](https://api.codeclimate.com/v1/badges/9de85764122a44a14c22/maintainability)](https://codeclimate.com/github/abrom/rocketchat-ruby/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/9de85764122a44a14c22/test_coverage)](https://codeclimate.com/github/abrom/rocketchat-ruby/test_coverage)
 [![Gem Version](http://img.shields.io/gem/v/rocketchat.svg?style=flat)](#)
 
 # Rocket.Chat REST API for Ruby
