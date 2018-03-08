@@ -32,8 +32,8 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/info](#info)
 
 #### Authentication
-* [/api/v1/login](#authentication)
-* [/api/v1/logout](#authentication)
+* [/api/v1/login](docs/authentication.md#login)
+* [/api/v1/logout](docs/authentication.md#logout)
 * /api/v1/me
 
 #### Chat
