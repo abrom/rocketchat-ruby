@@ -2,3 +2,7 @@ Gemfile.lock
 *.gem
 .bundle
 vendor/bundle
+
+# IntelliJ, RubyMine IDE projects
+.idea
+*.iml
