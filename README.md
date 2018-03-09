@@ -56,6 +56,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/channels.join](docs/channels.md#channelsjoin)
 * [/api/v1/channels.leave](docs/channels.md#channelsleave)
 * [/api/v1/channels.list](docs/channels.md#channelslist)
+* [/api/v1/channels.list.joined](docs/channels.md#channelslist.joined)
 * [/api/v1/channels.rename](docs/channels.md#channelsrename)
 * [/api/v1/channels.setDescription](docs/channels.md#channelsset_attr)
 * [/api/v1/channels.setJoinCode](docs/channels.md#channelsset_attr)

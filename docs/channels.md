@@ -132,6 +132,18 @@ session = rocket_server.login('username', 'password')
 channels = session.channels.list(query: {usernames: 'friend-username'})
 ```
 
+#### channels.list.joined
+
+Lists all of the channels the calling user has joined. 
+list is also used for searching/querying_
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channels = session.channels.list_joined(query: {usernames: 'friend-username'})
+```
 
 ### channels.rename
 
