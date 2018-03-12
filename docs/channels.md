@@ -135,7 +135,7 @@ channels = session.channels.list(query: {usernames: 'friend-username'})
 #### channels.list.joined
 
 Lists all of the channels the calling user has joined. 
-list is also used for searching/querying_
+List is also used for searching/querying
 
 ```ruby
 require 'rocketchat'
