@@ -52,8 +52,8 @@ module RocketChat
       #
       def list_joined(offset: nil, count: nil, sort: nil, fields: nil, query: nil)
         response = session.request_json(
-            '/api/v1/channels.list.joined',
-            body: build_list_body(offset, count, sort, fields, query)
+          '/api/v1/channels.list.joined',
+          body: build_list_body(offset, count, sort, fields, query)
         )
 
         response['channels'].map { |hash| RocketChat::Room.new hash } if response['success']
