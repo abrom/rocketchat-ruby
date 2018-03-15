@@ -37,10 +37,10 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/me
 
 #### Chat
-* /api/v1/chat.delete
-* /api/v1/chat.getMessage
-* /api/v1/chat.postMessage
-* /api/v1/chat.update
+* [/api/v1/chat.delete](docs/chat.md#delete)
+* [/api/v1/chat.getMessage](docs/chat.md#getmessage)
+* [/api/v1/chat.postMessage](docs/chat.md#postmessage)
+* [/api/v1/chat.update](docs/chat.md#update)
 
 #### Channels
 * /api/v1/channels.archive
