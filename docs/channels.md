@@ -9,8 +9,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-channel = session.channels.create('new_channelname',
-                     members: ['username1', 'username2'])
+channel = session.channels.create('new_channelname', members: ['username1', 'username2'])
 ```
 
 Optional parameters for create are:
@@ -87,7 +86,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-channel = session.channels.invite(name: 'some_channelname', username: 'some_username')
+channel = session.channels.invite(name: 'some_channel_name', username: 'some_username')
 ```
 
 Either room_id (RocketChat's ID) or name can be used.
@@ -101,7 +100,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-channel = session.channels.join(name: 'some_channelname')
+channel = session.channels.join(name: 'some_channel_name')
 ```
 
 Either room_id (RocketChat's ID) or name can be used.
@@ -114,7 +113,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-channel = session.channels.leave(name: 'some_channelname')
+channel = session.channels.leave(name: 'some_channel_name')
 ```
 
 Either room_id (RocketChat's ID) or name can be used.
@@ -129,7 +128,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-channels = session.channels.list(query: {usernames: 'friend-username'})
+channels = session.channels.list(query: { usernames: 'friend-username' })
 ```
 
 
@@ -140,8 +139,8 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-channel = session.channels.info(name: 'some_channelname')
-session.channels.rename(channel.id, 'new_channelname')
+channel = session.channels.info(name: 'some_channel_name')
+session.channels.rename(channel.id, 'new_channel_name')
 ```
 
 
@@ -154,5 +153,5 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.channels.set_attr(name: 'some_channelname', topic: 'Chatting about stuff')
+session.channels.set_attr(name: 'some_channel_name', topic: 'Chatting about stuff')
 ```
