@@ -43,7 +43,12 @@ module RocketChat
       data['status']
     end
 
-    # User connection status
+    # User status connection
+    def status_connection
+      data['statusConnection']
+    end
+
+    # User status connection
     def status_connection
       data['statusConnection']
     end
@@ -64,6 +69,11 @@ module RocketChat
     # User active
     def active?
       data['active']
+    end
+
+    # User roles
+    def roles
+      data['roles'] || []
     end
 
     def inspect
