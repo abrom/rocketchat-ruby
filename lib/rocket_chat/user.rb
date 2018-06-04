@@ -43,11 +43,14 @@ module RocketChat
       data['status']
     end
 
-    # User connection status
+    # User status connection
     def status_connection
       data['statusConnection']
     end
 
+    def type
+      data['type']
+    end
     # User username
     def username
       data['username']
@@ -59,18 +62,33 @@ module RocketChat
     end
 
     # User active
-    def active?
+    def active
       data['active']
+    end
+
+    # Check if the user is active
+    def active?
+      data['active'] == true
+    end
+
+    # User roles
+    def roles
+      data['roles'] || []
     end
 
     def inspect
       format(
-        '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @active="%<active>s">',
+        '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @type="%<type>s" @active="%<active>s" @roles="%<roles>s" @status_connection="%<status_connection>s" @utc_offset="%<utc_offset>s" @emails="%<emails>s">',
         class_name: self.class.name,
         object_id: object_id,
         id: id,
         username: username,
-        active: active?
+        roles: roles,
+        utc_offset: utc_offset,
+        emails: emails,
+        status_connection: status_connection,
+        type: type,
+        active: active
       )
     end
   end
