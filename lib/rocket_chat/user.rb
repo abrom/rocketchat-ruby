@@ -48,6 +48,9 @@ module RocketChat
       data['statusConnection']
     end
 
+    def type
+      data['type']
+    end
     # User username
     def username
       data['username']
@@ -65,11 +68,12 @@ module RocketChat
 
     def inspect
       format(
-        '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @active="%<active>s">',
+        '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @type="%<type>s" @active="%<active>s">',
         class_name: self.class.name,
         object_id: object_id,
         id: id,
         username: username,
+        type: type,
         active: active?
       )
     end
