@@ -40,6 +40,21 @@ module RocketChat
         response['channels'].map { |hash| RocketChat::Room.new hash } if response['success']
       end
 
+      #
+      # channels.online REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @return [Users]
+      # @raise [HTTPError, StatusError]
+      #
+      def online(room_id)
+        response = session.request_json(
+          'api/v1/channels.online',
+          method: :get,
+          body: { roomId: room_id }
+        )
+        RocketChat::Channel.new response['online'] if response['success']
+      end
+
       # Keys for set_attr:
       # * [String] description A room's description
       # * [String] join_code Code to join a channel

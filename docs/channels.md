@@ -155,3 +155,16 @@ rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
 session.channels.set_attr(name: 'some_channel_name', topic: 'Chatting about stuff')
 ```
+
+
+### channels.online
+
+This method returns all online users in a channel.
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.channels.online(id: 'some_channel_id')
+```
