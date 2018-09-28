@@ -16,7 +16,7 @@ before_install:
 
 install:
   - bundle install --jobs=3 --retry=3
-  - [[ ! `ruby --version` =~ ^ruby\ 2\.1 ]] && gem install rubocop
+  - if [[ ! `ruby --version` =~ ^ruby\ 2\.1 ]]; then gem install rubocop; fi
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -24,7 +24,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - [[ ! `ruby --version` =~ ^ruby\ 2\.1 ]] && rubocop
+  - if [[ ! `ruby --version` =~ ^ruby\ 2\.1 ]]; then rubocop; fi
   - bundle exec rake
 
 after_script:
