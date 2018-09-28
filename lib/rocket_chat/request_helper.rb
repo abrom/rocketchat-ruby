@@ -56,6 +56,7 @@ module RocketChat
 
     def check_response(response, fail_unless_ok)
       return if response.is_a?(Net::HTTPOK) || !(fail_unless_ok || response.is_a?(Net::HTTPServerError))
+
       raise RocketChat::HTTPError, "Invalid http response code: #{response.code}"
     end
 
@@ -81,6 +82,7 @@ module RocketChat
       end
 
       return unless headers
+
       headers = Util.stringify_hash_keys headers
       headers.delete_if { |key, value| key.nil? || value.nil? }
     end

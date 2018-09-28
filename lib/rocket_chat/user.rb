@@ -63,6 +63,11 @@ module RocketChat
       data['active']
     end
 
+    # User roles
+    def roles
+      data['roles']
+    end
+
     def inspect
       format(
         '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @active="%<active>s">',

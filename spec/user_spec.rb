@@ -94,4 +94,8 @@ describe RocketChat::User do
   describe '#active?' do
     it { expect(user.active?).to eq true }
   end
+
+  describe '#roles' do
+    it { expect(user.roles).to eq ['user'] }
+  end
 end

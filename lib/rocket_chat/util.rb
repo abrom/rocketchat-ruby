@@ -3,6 +3,8 @@ module RocketChat
   # Rocket.Chat generic utility functions
   #
   module Util
+    module_function
+
     #
     # Stringify symbolized hash keys
     # @param [Hash] hash A string/symbol keyed hash
@@ -20,7 +22,6 @@ module RocketChat
       end
       new_hash
     end
-    module_function :stringify_hash_keys
 
     #
     # Slice keys from hash
@@ -37,7 +38,6 @@ module RocketChat
       end
       new_hash
     end
-    module_function :slice_hash
 
     #
     # Camelize a string or symbol
@@ -47,6 +47,5 @@ module RocketChat
     def camelize(string)
       string.to_s.gsub(/_([a-z])/) { Regexp.last_match(1).upcase }
     end
-    module_function :camelize
   end
 end
