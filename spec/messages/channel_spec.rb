@@ -54,7 +54,7 @@ describe RocketChat::Messages::Channel do
   end
 
   describe '#online' do
-    let(:online_users_request) do
+    let(:online_users_response) do
       {
         body: {
           success: true,
@@ -73,7 +73,17 @@ describe RocketChat::Messages::Channel do
       }
     end
 
-    let(:invalid_room_body) do
+    let(:empty_room_response) do
+      {
+        body: {
+          success: true,
+          online: []
+        }.to_json,
+        status: 200
+      }
+    end
+
+    let(:invalid_room_response) do
       {
         body: {
           success: false,
@@ -88,10 +98,13 @@ describe RocketChat::Messages::Channel do
       stub_unauthed_request :get, described_class.api_path('online')
 
       stub_authed_request(:get, described_class.api_path('online?roomName=wrong-room'))
-        .to_return(invalid_room_body)
+        .to_return(invalid_room_response)
 
       stub_authed_request(:get, described_class.api_path('online?roomName=room-one'))
-        .to_return(online_users_request)
+        .to_return(online_users_response)
+
+      stub_authed_request(:get, described_class.api_path('online?roomName=empty-room'))
+        .to_return(empty_room_response)
     end
 
     context 'valid session' do
@@ -103,14 +116,24 @@ describe RocketChat::Messages::Channel do
         end
       end
 
-      it 'return online users' do
-        online_users = scope.online(name: 'room-one')
+      context 'online users request with an valid room name' do
+        context 'empty room' do
+          it 'return no users' do
+            expect do
+              scope.online(name: 'empty-room').to eq empty_room_response
+            end
+          end
+        end
 
-        expect(online_users.length).to eq 2
-        expect(online_users[0].id).to eq 'rocketID1'
-        expect(online_users[0].username).to eq 'rocketUserName1'
-        expect(online_users[1].id).to eq 'rocketID2'
-        expect(online_users[1].username).to eq 'rocketUserName2'
+        it 'return online users' do
+          online_users = scope.online(name: 'room-one')
+
+          expect(online_users.length).to eq 2
+          expect(online_users[0].id).to eq 'rocketID1'
+          expect(online_users[0].username).to eq 'rocketUserName1'
+          expect(online_users[1].id).to eq 'rocketID2'
+          expect(online_users[1].username).to eq 'rocketUserName2'
+        end
       end
     end
 
