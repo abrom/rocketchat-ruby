@@ -87,9 +87,9 @@ describe RocketChat::Messages::Channel do
       {
         body: {
           success: false,
-          error: 'That Channel does not exist.'
+          error: 'Channel does not exists'
         }.to_json,
-        status: 200
+        status: 400
       }
     end
 
@@ -112,7 +112,7 @@ describe RocketChat::Messages::Channel do
         it 'return no users' do
           expect do
             scope.online(name: 'wrong-room')
-          end.to raise_error RocketChat::StatusError, 'That Channel does not exist.'
+          end.to raise_error RocketChat::StatusError, 'Channel does not exists'
         end
       end
 
@@ -120,7 +120,7 @@ describe RocketChat::Messages::Channel do
         context 'empty room' do
           it 'return no users' do
             expect do
-              scope.online(name: 'empty-room').to eq empty_room_response
+              scope.online(name: 'empty-room').to eq []
             end
           end
         end
@@ -128,7 +128,7 @@ describe RocketChat::Messages::Channel do
         it 'return online users' do
           online_users = scope.online(name: 'room-one')
 
-          expect(online_users.length).to eq 2
+          expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
           expect(online_users[0].id).to eq 'rocketID1'
           expect(online_users[0].username).to eq 'rocketUserName1'
           expect(online_users[1].id).to eq 'rocketID2'
