@@ -117,15 +117,11 @@ describe RocketChat::Messages::Channel do
       end
 
       context 'online users request with an valid room name' do
-        context 'empty room' do
-          it 'return no users' do
-            expect do
-              scope.online(name: 'empty-room').to eq []
-            end
-          end
+        it 'empty room returns no users' do
+          expect(scope.online(name: 'empty-room')).to eq []
         end
 
-        it 'return online users' do
+        it 'filled room returns online users' do
           online_users = scope.online(name: 'room-one')
 
           expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
