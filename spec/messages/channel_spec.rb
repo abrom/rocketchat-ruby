@@ -95,7 +95,7 @@ describe RocketChat::Messages::Channel do
 
     before do
       # Stubs for /api/v1/channels.online REST API
-      stub_unauthed_request :get, described_class.api_path('online')
+      stub_unauthed_request :get, described_class.api_path('online?roomName=authed')
 
       stub_authed_request(:get, described_class.api_path('online?roomName=wrong-room'))
         .to_return(invalid_room_response)
@@ -109,7 +109,7 @@ describe RocketChat::Messages::Channel do
 
     context 'valid session' do
       context 'online users request with an invalid room name' do
-        it 'return no users' do
+        it 'raises a channel existance error' do
           expect do
             scope.online(name: 'wrong-room')
           end.to raise_error RocketChat::StatusError, 'Channel does not exists'
@@ -136,9 +136,9 @@ describe RocketChat::Messages::Channel do
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
 
-      it 'failure' do
+      it 'raises an authentication status error' do
         expect do
-          scope.online
+          scope.online(name: 'authed')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
