@@ -54,7 +54,7 @@ describe RocketChat::Messages::Channel do
   end
 
   describe '#online' do
-    let(:online_users_body) do
+    let(:online_users_request) do
       {
         body: {
           success: true,
@@ -76,8 +76,8 @@ describe RocketChat::Messages::Channel do
     let(:invalid_room_body) do
       {
         body: {
-          success: true,
-          online: []
+          success: false,
+          error: 'That Channel does not exist.'
         }.to_json,
         status: 200
       }
@@ -91,35 +91,33 @@ describe RocketChat::Messages::Channel do
         .to_return(invalid_room_body)
 
       stub_authed_request(:get, described_class.api_path('online?roomName=room-one'))
-        .to_return(online_users_body)
+        .to_return(online_users_request)
     end
 
     context 'valid session' do
-      context 'searching for an invalid room name' do
-        it 'should be empty' do
-          online_users = scope.online(name: 'wrong-room')
-
-          expect(online_users).to be_empty
+      context 'online users request with an invalid room name' do
+        it 'return no users' do
+          expect do
+            scope.online(name: 'wrong-room')
+          end.to raise_error RocketChat::StatusError, 'That Channel does not exist.'
         end
       end
 
-      context 'searching for a valid room name' do
-        it 'should return room1' do
-          online_users = scope.online(name: 'room-one')
+      it 'return online users' do
+        online_users = scope.online(name: 'room-one')
 
-          expect(online_users.length).to eq 2
-          expect(online_users[0].id).to eq 'rocketID1'
-          expect(online_users[0].username).to eq 'rocketUserName1'
-          expect(online_users[1].id).to eq 'rocketID2'
-          expect(online_users[1].username).to eq 'rocketUserName2'
-        end
+        expect(online_users.length).to eq 2
+        expect(online_users[0].id).to eq 'rocketID1'
+        expect(online_users[0].username).to eq 'rocketUserName1'
+        expect(online_users[1].id).to eq 'rocketID2'
+        expect(online_users[1].username).to eq 'rocketUserName2'
       end
     end
 
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
 
-      it 'should be failure' do
+      it 'failure' do
         expect do
           scope.online
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'

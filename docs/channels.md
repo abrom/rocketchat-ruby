@@ -166,6 +166,6 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.channels.online(room_id: 'some_channel_id')
+session.channels.online(name: 'some_channel_name')
 
 ```
