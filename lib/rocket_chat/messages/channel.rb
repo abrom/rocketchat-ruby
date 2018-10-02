@@ -5,6 +5,7 @@ module RocketChat
     #
     class Channel < Room
       include ListSupport
+      include UserSupport
 
       #
       # channels.join REST API
@@ -46,13 +47,13 @@ module RocketChat
       # @return [Users]
       # @raise [HTTPError, StatusError]
       #
-      def online(room_id)
+      def online(room_id: nil, name: nil)
         response = session.request_json(
           'api/v1/channels.online',
-          method: :get,
-          body: { roomId: room_id }
+          body: room_params(room_id, name)
         )
-        RocketChat::Channel.new response['online'] if response['success']
+
+        response['online'].map { |hash| RocketChat::User.new hash } if response['success']
       end
 
       # Keys for set_attr:
