@@ -44,12 +44,12 @@ module RocketChat
       #
       # channels.online REST API
       # @param [String] room_id Rocket.Chat room id
-      # @return [Users]
+      # @return [Users[]]
       # @raise [HTTPError, StatusError]
       #
       def online(room_id: nil, name: nil)
         response = session.request_json(
-          'api/v1/channels.online',
+          '/api/v1/channels.online',
           body: room_params(room_id, name)
         )
 
