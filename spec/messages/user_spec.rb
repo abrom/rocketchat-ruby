@@ -49,7 +49,7 @@ describe RocketChat::Messages::User do
         ).to_return(full_response(data))
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns user' do
         new_user = session.users.create(
           'new_user', 'new@user.com', 'New User', '1236',
@@ -74,7 +74,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -119,7 +119,7 @@ describe RocketChat::Messages::User do
         ).to_return full_response(user_for_request('Updated User', username: 'new_user', active: false))
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns user' do
         existing_user = session.users.update('1234', email: 'updated@user.com', name: 'Updated User', active: false)
 
@@ -141,7 +141,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -175,7 +175,7 @@ describe RocketChat::Messages::User do
         .to_return(expected)
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       context 'with no user information' do
         it 'raises a status error' do
           expect do
@@ -189,14 +189,14 @@ describe RocketChat::Messages::User do
         end
       end
 
-      context 'about a missing user' do
+      context 'with an invalid user' do
         it 'returns nil' do
           expect(session.users.info(user_id: '1236')).to be_nil
           expect(session.users.info(username: 'invalid-user')).to be_nil
         end
       end
 
-      context 'by existing userId' do
+      context 'when searching by an existing userId' do
         it 'returns user' do
           existing_user = session.users.info(user_id: '1234')
 
@@ -210,7 +210,7 @@ describe RocketChat::Messages::User do
         end
       end
 
-      context 'by existing username' do
+      context 'when searching by an existing username' do
         it 'returns user' do
           existing_user = session.users.info(username: 'some_user')
 
@@ -225,7 +225,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -295,8 +295,8 @@ describe RocketChat::Messages::User do
         .to_return(all_users_body)
     end
 
-    context 'valid session' do
-      context 'searching for an invalid username' do
+    context 'with a valid session' do
+      context 'when searching for an invalid username' do
         it 'returns empty' do
           users = session.users.list(query: { username: 'bobsmith' })
 
@@ -304,7 +304,7 @@ describe RocketChat::Messages::User do
         end
       end
 
-      context 'searching for a valid username' do
+      context 'when searching for a valid username' do
         it 'returns Roger' do
           users = session.users.list(query: { username: 'rogersmith' })
 
@@ -327,7 +327,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -384,7 +384,7 @@ describe RocketChat::Messages::User do
         .to_return(full_presence_body)
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns full presence status for user id' do
         status = session.users.get_presence(user_id: USER_ID)
         expect(status.presence).to eq 'offline'
@@ -399,7 +399,7 @@ describe RocketChat::Messages::User do
         expect(status.last_login).to be_within(1).of Time.new(2016, 12, 8, 18, 26, 3, '+00:00')
       end
 
-      context 'requesting a different user' do
+      context 'when requesting a different user' do
         it 'returns partial presence status' do
           status = session.users.get_presence(user_id: OTHER_USER_ID)
           expect(status.presence).to eq 'online'
@@ -408,7 +408,7 @@ describe RocketChat::Messages::User do
         end
       end
 
-      context 'an invalid user' do
+      context 'with an invalid user' do
         it 'raises a status error for invalid user id' do
           expect do
             session.users.get_presence(user_id: '1236')
@@ -433,7 +433,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -471,7 +471,7 @@ describe RocketChat::Messages::User do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(session.users.delete(user_id: '1234')).to be_truthy
       end
@@ -489,7 +489,7 @@ describe RocketChat::Messages::User do
         end
       end
 
-      context 'about a missing user' do
+      context 'with an invalid user' do
         it 'returns false' do
           expect(session.users.delete(user_id: '1236')).to eq false
           expect(session.users.delete(username: 'invalid-user')).to eq false
@@ -497,7 +497,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -545,7 +545,7 @@ describe RocketChat::Messages::User do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(session.users.reset_avatar).to be_truthy
       end
@@ -607,7 +607,7 @@ describe RocketChat::Messages::User do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(session.users.set_avatar('some-image-url')).to be_truthy
       end
@@ -627,7 +627,7 @@ describe RocketChat::Messages::User do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do

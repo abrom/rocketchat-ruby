@@ -71,7 +71,7 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success for room id' do
         expect(session.chat.delete(room_id: '1234', msg_id: 'valid_msg_id')).to be_truthy
       end
@@ -87,7 +87,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -97,7 +97,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'message doesnt belong to room' do
+    context 'when message doesnt belong to room' do
       it 'raises a status error' do
         expect do
           session.chat.delete room_id: '1234', msg_id: 'not_found'
@@ -140,7 +140,7 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns message for room id' do
         message = session.chat.get_message msg_id: 'valid_msg_id'
         expect(message).to be_a RocketChat::Message
@@ -148,7 +148,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'message not found' do
+    context 'when message not found' do
       it 'raises a status error' do
         expect do
           session.chat.get_message msg_id: 'not_found'
@@ -156,7 +156,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -245,7 +245,7 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns message for room id' do
         message = session.chat.post_message room_id: '1234', channel: '#general', text: 'Test message'
         expect(message).to be_a RocketChat::Message
@@ -261,7 +261,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -271,7 +271,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'message isnt provided' do
+    context 'when message isnt provided' do
       it 'raises a status error' do
         expect do
           session.chat.post_message room_id: '1234', channel: '#general'
@@ -331,7 +331,7 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns message for room id' do
         message = session.chat.update room_id: '1234', msg_id: 'valid_msg_id', text: 'New message'
         expect(message).to be_a RocketChat::Message
@@ -339,7 +339,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -349,7 +349,7 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'message doesnt belong to room' do
+    context 'when message doesnt belong to room' do
       it 'raises a status error' do
         expect do
           session.chat.update room_id: '1234', msg_id: 'not_found', text: 'Failing update message'

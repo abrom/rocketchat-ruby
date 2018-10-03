@@ -25,12 +25,12 @@ describe RocketChat::Messages::Channel do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(scope.join(name: 'a-room')).to be_truthy
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'raises a status error' do
           expect do
             scope.join(name: 'missing-room')
@@ -42,7 +42,7 @@ describe RocketChat::Messages::Channel do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -107,8 +107,8 @@ describe RocketChat::Messages::Channel do
         .to_return(empty_room_response)
     end
 
-    context 'valid session' do
-      context 'online users request with an invalid room name' do
+    context 'with a valid session' do
+      context 'with an invalid room name' do
         it 'raises a channel existence error' do
           expect do
             scope.online(name: 'wrong-room')
@@ -116,12 +116,12 @@ describe RocketChat::Messages::Channel do
         end
       end
 
-      context 'online users request with an valid room name' do
-        it 'empty room returns no users' do
+      context 'with a valid room name' do
+        it 'returns no users for an empty room' do
           expect(scope.online(name: 'empty-room')).to eq []
         end
 
-        it 'filled room returns online users' do
+        it 'returns online users for a filled room' do
           online_users = scope.online(name: 'room-one')
 
           expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
@@ -133,7 +133,7 @@ describe RocketChat::Messages::Channel do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
 
       it 'raises an authentication status error' do

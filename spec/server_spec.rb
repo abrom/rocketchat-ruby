@@ -65,7 +65,7 @@ describe RocketChat::Server do
         )
     end
 
-    context 'correct password' do
+    context 'with a correct password' do
       it 'returns new session' do
         rc = server.login(USERNAME, PASSWORD)
         expect(rc.token.auth_token).to eq AUTH_TOKEN
@@ -73,7 +73,7 @@ describe RocketChat::Server do
       end
     end
 
-    context 'incorrect password' do
+    context 'with an incorrect password' do
       it 'raises a status error' do
         expect do
           server.login(USERNAME, PASSWORD + PASSWORD)

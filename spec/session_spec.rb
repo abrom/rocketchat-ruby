@@ -21,13 +21,13 @@ describe RocketChat::Session do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns nil (success)' do
         expect(session.logout).to be_nil
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -66,7 +66,7 @@ describe RocketChat::Session do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns user session' do
         me = session.me
         expect(me.id).to eq USER_ID
@@ -81,7 +81,7 @@ describe RocketChat::Session do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do

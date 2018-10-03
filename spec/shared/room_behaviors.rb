@@ -52,7 +52,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         ).to_return(room_response('new-room'))
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns new room' do
         new_room = scope.create('new-room')
         expect(new_room.id).to eq '1234'
@@ -69,7 +69,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -102,19 +102,19 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(scope.delete(room_id: '1234')).to be_truthy
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'returns failure' do
           expect(scope.delete(room_id: '1236')).to eq false
         end
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -148,7 +148,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         .to_return(expected)
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       context 'with no room information' do
         it 'raises a status error' do
           expect do
@@ -162,14 +162,14 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'returns nil' do
           expect(scope.info(room_id: '1236')).to be_nil
           expect(scope.info(name: 'invalid-room')).to be_nil
         end
       end
 
-      context 'by existing roomId' do
+      context 'when querying an existing roomId' do
         it 'returns room' do
           existing_room = scope.info(room_id: '1234')
 
@@ -179,7 +179,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'by existing name' do
+      context 'when querying an existing name' do
         it 'returns room' do
           existing_room = scope.info(name: 'some-room')
 
@@ -190,7 +190,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -267,9 +267,9 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         .to_return(all_rooms_body)
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       if query
-        context 'searching for an invalid room name' do
+        context 'when searching for an invalid room name' do
           it 'is empty' do
             rooms = scope.list(query: { name: 'wrong-room' })
 
@@ -277,7 +277,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
           end
         end
 
-        context 'searching for a valid room name' do
+        context 'when searching for a valid room name' do
           it 'returns room1' do
             rooms = scope.list(query: { name: 'room-one' })
 
@@ -301,7 +301,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
 
       it 'raises a status error' do
@@ -347,7 +347,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       context 'with no room information' do
         it 'raises a status error' do
           expect do
@@ -361,7 +361,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'raises a status error' do
           expect do
             scope.rename('badId', 'new_room_name')
@@ -391,7 +391,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -424,12 +424,12 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(scope.invite(room_id: '1234', username: 'good-user')).to be_truthy
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'raises a status error' do
           expect do
             scope.invite(room_id: '1236', username: 'good-user')
@@ -438,7 +438,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -483,12 +483,12 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(scope.leave(room_id: '1234')).to be_truthy
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'raises a status error' do
           expect do
             scope.leave(room_id: '1236')
@@ -496,7 +496,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'about another room' do
+      context 'when setting attribute for another room' do
         it 'raises a status error' do
           expect do
             scope.leave(room_id: '1238')
@@ -505,7 +505,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do
@@ -550,7 +550,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'wrong attribute' do
+    context 'when trying to set an invalid attribute' do
       it 'raises an argument error' do
         expect do
           scope.set_attr(room_id: '1234', bad_attr: true)
@@ -558,12 +558,12 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns success' do
         expect(scope.set_attr(room_id: '1234', topic: 'A Topic')).to be_truthy
       end
 
-      context 'about a missing room' do
+      context 'when setting attribute for an invalid room' do
         it 'raises a status error' do
           expect do
             scope.set_attr(room_id: '1236', topic: 'A Topic')
@@ -571,7 +571,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'about another room' do
+      context 'when setting attribute for another room' do
         it 'raises a status error' do
           expect do
             scope.set_attr(room_id: '1238', topic: 'A Topic')
@@ -580,7 +580,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
       it 'raises a status error' do

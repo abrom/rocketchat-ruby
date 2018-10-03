@@ -21,13 +21,13 @@ describe RocketChat::Messages::Settings do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns the value' do
         expect(session.settings['foo']).to eq 'some value'
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
@@ -57,13 +57,13 @@ describe RocketChat::Messages::Settings do
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       it 'returns value' do
         expect(session.settings['foo'] = '1234').to eq '1234'
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
       it 'raises a status error' do
