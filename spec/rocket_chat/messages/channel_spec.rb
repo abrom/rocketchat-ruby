@@ -25,20 +25,18 @@ describe RocketChat::Messages::Channel do
         )
     end
 
-    context 'with a valid session' do
-      it 'returns success' do
-        expect(scope.join(name: 'a-room')).to be_truthy
-      end
+    it 'returns success' do
+      expect(scope.join(name: 'a-room')).to be_truthy
+    end
 
-      context 'when setting attribute for an invalid room' do
-        it 'raises a status error' do
-          expect do
-            scope.join(name: 'missing-room')
-          end.to raise_error(
-            RocketChat::StatusError,
-            'The required "roomId" or "roomName" param provided does not match any channel [error-room-not-found]'
-          )
-        end
+    context 'when setting attribute for an invalid room' do
+      it 'raises a status error' do
+        expect do
+          scope.join(name: 'missing-room')
+        end.to raise_error(
+          RocketChat::StatusError,
+          'The required "roomId" or "roomName" param provided does not match any channel [error-room-not-found]'
+        )
       end
     end
 
@@ -107,29 +105,27 @@ describe RocketChat::Messages::Channel do
         .to_return(empty_room_response)
     end
 
-    context 'with a valid session' do
-      context 'with an invalid room name' do
-        it 'raises a channel existence error' do
-          expect do
-            scope.online(name: 'wrong-room')
-          end.to raise_error RocketChat::StatusError, 'Channel does not exists'
-        end
+    context 'with an invalid room name' do
+      it 'raises a channel existence error' do
+        expect do
+          scope.online(name: 'wrong-room')
+        end.to raise_error RocketChat::StatusError, 'Channel does not exists'
+      end
+    end
+
+    context 'with a valid room name' do
+      it 'returns no users for an empty room' do
+        expect(scope.online(name: 'empty-room')).to eq []
       end
 
-      context 'with a valid room name' do
-        it 'returns no users for an empty room' do
-          expect(scope.online(name: 'empty-room')).to eq []
-        end
+      it 'returns online users for a filled room' do
+        online_users = scope.online(name: 'room-one')
 
-        it 'returns online users for a filled room' do
-          online_users = scope.online(name: 'room-one')
-
-          expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
-          expect(online_users[0].id).to eq 'rocketID1'
-          expect(online_users[0].username).to eq 'rocketUserName1'
-          expect(online_users[1].id).to eq 'rocketID2'
-          expect(online_users[1].username).to eq 'rocketUserName2'
-        end
+        expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
+        expect(online_users[0].id).to eq 'rocketID1'
+        expect(online_users[0].username).to eq 'rocketUserName1'
+        expect(online_users[1].id).to eq 'rocketID2'
+        expect(online_users[1].username).to eq 'rocketUserName2'
       end
     end
 
