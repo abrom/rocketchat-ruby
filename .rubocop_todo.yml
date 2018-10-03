@@ -6,20 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 9
-# Configuration parameters: CustomTransform, IgnoreMethods.
-RSpec/FilePath:
-  Exclude:
-    - 'spec/message_spec.rb'
-    - 'spec/messages/channel_spec.rb'
-    - 'spec/messages/chat_spec.rb'
-    - 'spec/messages/group_spec.rb'
-    - 'spec/messages/settings_spec.rb'
-    - 'spec/messages/user_spec.rb'
-    - 'spec/server_spec.rb'
-    - 'spec/session_spec.rb'
-    - 'spec/user_spec.rb'
-
 # Offense count: 24
 # Configuration parameters: AggregateFailuresByDefault.
 RSpec/MultipleExpectations:
