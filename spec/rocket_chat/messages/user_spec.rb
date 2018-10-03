@@ -24,6 +24,13 @@ describe RocketChat::Messages::User do
   }
 
   describe '#create' do
+    subject(:users_create) do
+      session.users.create(
+        'new_user', 'new@user.com', 'New User', '1236',
+        active: true, join_default_channels: false
+      )
+    end
+
     before do
       # Stubs for /api/v1/users.create REST API
       stub_unauthed_request :post, '/api/v1/users.create'
@@ -49,35 +56,26 @@ describe RocketChat::Messages::User do
         ).to_return(full_response(data))
     end
 
-    context 'valid session' do
-      it 'should be success' do
-        new_user = session.users.create(
-          'new_user', 'new@user.com', 'New User', '1236',
-          active: true, join_default_channels: false
-        )
+    it { expect(users_create.id).to eq '1234' }
+    it { expect(users_create.name).to eq 'New User' }
+    it { expect(users_create.email).to eq 'new@user.com' }
+    it { is_expected.not_to be_email_verified }
+    it { expect(users_create.status).to eq 'online' }
+    it { expect(users_create.username).to eq 'new_user' }
+    it { is_expected.to be_active }
 
-        expect(new_user.id).to eq '1234'
-        expect(new_user.name).to eq 'New User'
-        expect(new_user.email).to eq 'new@user.com'
-        expect(new_user).not_to be_email_verified
-        expect(new_user.status).to eq 'online'
-        expect(new_user.username).to eq 'new_user'
-        expect(new_user).to be_active
-      end
-
-      context 'with an existing user' do
-        it 'should be failure' do
-          expect do
-            session.users.create('already_exists', 'already@exists.com', 'Already Exists', '1236')
-          end.to raise_error RocketChat::StatusError, 'User already exists'
-        end
+    context 'with an existing user' do
+      it 'raises a status error' do
+        expect do
+          session.users.create('already_exists', 'already@exists.com', 'Already Exists', '1236')
+        end.to raise_error RocketChat::StatusError, 'User already exists'
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.create 'newuser', 'new@user.com', 'New User', 'passw0rd'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -86,6 +84,10 @@ describe RocketChat::Messages::User do
   end
 
   describe '#update' do
+    subject(:users_update) do
+      session.users.update('1234', email: 'updated@user.com', name: 'Updated User', active: false)
+    end
+
     before do
       # Stubs for /api/v1/users.update REST API
       stub_unauthed_request :post, '/api/v1/users.update'
@@ -119,32 +121,26 @@ describe RocketChat::Messages::User do
         ).to_return full_response(user_for_request('Updated User', username: 'new_user', active: false))
     end
 
-    context 'valid session' do
-      it 'should be success' do
-        existing_user = session.users.update('1234', email: 'updated@user.com', name: 'Updated User', active: false)
+    it { expect(users_update.id).to eq '1234' }
+    it { expect(users_update.name).to eq 'Updated User' }
+    it { expect(users_update.email).to eq 'updated@user.com' }
+    it { is_expected.not_to be_email_verified }
+    it { expect(users_update.status).to eq 'online' }
+    it { expect(users_update.username).to eq 'new_user' }
+    it { is_expected.not_to be_active }
 
-        expect(existing_user.id).to eq '1234'
-        expect(existing_user.name).to eq 'Updated User'
-        expect(existing_user.email).to eq 'updated@user.com'
-        expect(existing_user).not_to be_email_verified
-        expect(existing_user.status).to eq 'online'
-        expect(existing_user.username).to eq 'new_user'
-        expect(existing_user).not_to be_active
-      end
-
-      context 'with an existing email' do
-        it 'should be failure' do
-          expect do
-            session.users.update('1234', email: 'already@exists.com')
-          end.to raise_error RocketChat::StatusError, 'Email already in use'
-        end
+    context 'with an existing email' do
+      it 'raises a status error' do
+        expect do
+          session.users.update('1234', email: 'already@exists.com')
+        end.to raise_error RocketChat::StatusError, 'Email already in use'
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.update('1234', email: 'updated@user.com')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -175,60 +171,54 @@ describe RocketChat::Messages::User do
         .to_return(expected)
     end
 
-    context 'valid session' do
-      context 'with no user information' do
-        it 'should be failure' do
-          expect do
-            session.users.info(username: nil)
-          end.to(
-            raise_error(
-              RocketChat::StatusError,
-              'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
-            )
+    context 'with no user information' do
+      it 'raises a status error' do
+        expect do
+          session.users.info(username: nil)
+        end.to(
+          raise_error(
+            RocketChat::StatusError,
+            'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
           )
-        end
-      end
-
-      context 'about a missing user' do
-        it 'should be nil' do
-          expect(session.users.info(user_id: '1236')).to be_nil
-          expect(session.users.info(username: 'invalid-user')).to be_nil
-        end
-      end
-
-      context 'by existing userId' do
-        it 'should be success' do
-          existing_user = session.users.info(user_id: '1234')
-
-          expect(existing_user.id).to eq '1234'
-          expect(existing_user.name).to eq 'Some User'
-          expect(existing_user.email).to eq 'some@user.com'
-          expect(existing_user).not_to be_email_verified
-          expect(existing_user.status).to eq 'online'
-          expect(existing_user.username).to eq 'some_user'
-          expect(existing_user).to be_active
-        end
-      end
-
-      context 'by existing username' do
-        it 'should be success' do
-          existing_user = session.users.info(username: 'some_user')
-
-          expect(existing_user.id).to eq '1234'
-          expect(existing_user.name).to eq 'Some User'
-          expect(existing_user.email).to eq 'some@user.com'
-          expect(existing_user).not_to be_email_verified
-          expect(existing_user.status).to eq 'online'
-          expect(existing_user.username).to eq 'some_user'
-          expect(existing_user).to be_active
-        end
+        )
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid user' do
+      it 'returns nil' do
+        expect(session.users.info(user_id: '1236')).to be_nil
+        expect(session.users.info(username: 'invalid-user')).to be_nil
+      end
+    end
+
+    context 'when searching by an existing userId' do
+      subject(:existing_user) { session.users.info(user_id: '1234') }
+
+      it { expect(existing_user.id).to eq '1234' }
+      it { expect(existing_user.name).to eq 'Some User' }
+      it { expect(existing_user.email).to eq 'some@user.com' }
+      it { expect(existing_user).not_to be_email_verified }
+      it { expect(existing_user.status).to eq 'online' }
+      it { expect(existing_user.username).to eq 'some_user' }
+      it { expect(existing_user).to be_active }
+    end
+
+    context 'when searching by an existing username' do
+      subject(:existing_user) { session.users.info(username: 'some_user') }
+
+      it { expect(existing_user.id).to eq '1234' }
+      it { expect(existing_user.name).to eq 'Some User' }
+      it { expect(existing_user.email).to eq 'some@user.com' }
+      it { expect(existing_user).not_to be_email_verified }
+      it { expect(existing_user.status).to eq 'online' }
+      it { expect(existing_user.username).to eq 'some_user' }
+      it { expect(existing_user).to be_active }
+    end
+
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.info(user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -295,42 +285,40 @@ describe RocketChat::Messages::User do
         .to_return(all_users_body)
     end
 
-    context 'valid session' do
-      context 'searching for an invalid username' do
-        it 'should be empty' do
-          users = session.users.list(query: { username: 'bobsmith' })
+    context 'when searching for an invalid username' do
+      it 'returns empty' do
+        users = session.users.list(query: { username: 'bobsmith' })
 
-          expect(users).to be_empty
-        end
-      end
-
-      context 'searching for a valid username' do
-        it 'should return Roger' do
-          users = session.users.list(query: { username: 'rogersmith' })
-
-          expect(users.length).to eq 1
-          expect(users[0].id).to eq 123
-          expect(users[0].username).to eq 'rogersmith'
-        end
-      end
-
-      context 'without a filter' do
-        it 'should return all users' do
-          users = session.users.list
-
-          expect(users.length).to eq 2
-          expect(users[0].id).to eq 123
-          expect(users[0].username).to eq 'rogersmith'
-          expect(users[1].id).to eq 124
-          expect(users[1].username).to eq 'cynthiasmith'
-        end
+        expect(users).to be_empty
       end
     end
 
-    context 'invalid session token' do
+    context 'when searching for a valid username' do
+      it 'returns Roger' do
+        users = session.users.list(query: { username: 'rogersmith' })
+
+        expect(users.length).to eq 1
+        expect(users[0].id).to eq 123
+        expect(users[0].username).to eq 'rogersmith'
+      end
+    end
+
+    context 'without a filter' do
+      it 'returns all users' do
+        users = session.users.list
+
+        expect(users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
+        expect(users[0].id).to eq 123
+        expect(users[0].username).to eq 'rogersmith'
+        expect(users[1].id).to eq 124
+        expect(users[1].username).to eq 'cynthiasmith'
+      end
+    end
+
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.list
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -384,59 +372,57 @@ describe RocketChat::Messages::User do
         .to_return(full_presence_body)
     end
 
-    context 'valid session' do
-      it 'should return full presence status for user id' do
-        status = session.users.get_presence(user_id: USER_ID)
-        expect(status.presence).to eq 'offline'
-        expect(status.connection_status).to eq 'offline'
-        expect(status.last_login).to be_within(1).of Time.new(2016, 12, 8, 18, 26, 3, '+00:00')
-      end
+    it 'returns full presence status for user id' do
+      status = session.users.get_presence(user_id: USER_ID)
+      expect(status.presence).to eq 'offline'
+      expect(status.connection_status).to eq 'offline'
+      expect(status.last_login).to be_within(1).of Time.new(2016, 12, 8, 18, 26, 3, '+00:00')
+    end
 
-      it 'should return full presence status for username' do
-        status = session.users.get_presence(username: USERNAME)
-        expect(status.presence).to eq 'offline'
-        expect(status.connection_status).to eq 'offline'
-        expect(status.last_login).to be_within(1).of Time.new(2016, 12, 8, 18, 26, 3, '+00:00')
-      end
+    it 'returns full presence status for username' do
+      status = session.users.get_presence(username: USERNAME)
+      expect(status.presence).to eq 'offline'
+      expect(status.connection_status).to eq 'offline'
+      expect(status.last_login).to be_within(1).of Time.new(2016, 12, 8, 18, 26, 3, '+00:00')
+    end
 
-      context 'requesting a different user' do
-        it 'should return partial presence status' do
-          status = session.users.get_presence(user_id: OTHER_USER_ID)
-          expect(status.presence).to eq 'online'
-          expect(status.connection_status).to be_nil
-          expect(status.last_login).to be_nil
-        end
-      end
-
-      context 'an invalid user' do
-        it 'should return failure for invalid user id' do
-          expect do
-            session.users.get_presence(user_id: '1236')
-          end.to(
-            raise_error(
-              RocketChat::StatusError,
-              'The required "userId" or "username" param provided does not match any users [error-invalid-user]'
-            )
-          )
-        end
-
-        it 'should return failure for invalid username' do
-          expect do
-            session.users.get_presence(username: 'invalid-user')
-          end.to(
-            raise_error(
-              RocketChat::StatusError,
-              'The required "userId" or "username" param provided does not match any users [error-invalid-user]'
-            )
-          )
-        end
+    context 'when requesting a different user' do
+      it 'returns partial presence status' do
+        status = session.users.get_presence(user_id: OTHER_USER_ID)
+        expect(status.presence).to eq 'online'
+        expect(status.connection_status).to be_nil
+        expect(status.last_login).to be_nil
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid user' do
+      it 'raises a status error for invalid user id' do
+        expect do
+          session.users.get_presence(user_id: '1236')
+        end.to(
+          raise_error(
+            RocketChat::StatusError,
+            'The required "userId" or "username" param provided does not match any users [error-invalid-user]'
+          )
+        )
+      end
+
+      it 'raises a status error for invalid username' do
+        expect do
+          session.users.get_presence(username: 'invalid-user')
+        end.to(
+          raise_error(
+            RocketChat::StatusError,
+            'The required "userId" or "username" param provided does not match any users [error-invalid-user]'
+          )
+        )
+      end
+    end
+
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.get_presence(user_id: USER_ID)
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -471,36 +457,34 @@ describe RocketChat::Messages::User do
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
-        expect(session.users.delete(user_id: '1234')).to be_truthy
-      end
+    it 'returns success' do
+      expect(session.users.delete(user_id: '1234')).to be_truthy
+    end
 
-      context 'with no user information' do
-        it 'should be failure' do
-          expect do
-            session.users.delete(username: nil)
-          end.to(
-            raise_error(
-              RocketChat::StatusError,
-              'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
-            )
+    context 'with no user information' do
+      it 'raises a status error' do
+        expect do
+          session.users.delete(username: nil)
+        end.to(
+          raise_error(
+            RocketChat::StatusError,
+            'The required "userId" or "username" param was not provided [error-user-param-not-provided]'
           )
-        end
-      end
-
-      context 'about a missing user' do
-        it 'should be false' do
-          expect(session.users.delete(user_id: '1236')).to eq false
-          expect(session.users.delete(username: 'invalid-user')).to eq false
-        end
+        )
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid user' do
+      it 'returns false' do
+        expect(session.users.delete(user_id: '1236')).to eq false
+        expect(session.users.delete(username: 'invalid-user')).to eq false
+      end
+    end
+
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.delete(user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -545,23 +529,21 @@ describe RocketChat::Messages::User do
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
-        expect(session.users.reset_avatar).to be_truthy
-      end
+    it 'returns success' do
+      expect(session.users.reset_avatar).to be_truthy
+    end
 
-      context 'with user_id parameter' do
-        it 'should be success' do
-          expect(session.users.reset_avatar(user_id: '1234')).to be_truthy
-        end
+    context 'with user_id parameter' do
+      it 'returns success' do
+        expect(session.users.reset_avatar(user_id: '1234')).to be_truthy
       end
+    end
 
-      context 'with bad user information' do
-        it 'should be failure' do
-          expect do
-            session.users.reset_avatar(user_id: '1236')
-          end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
-        end
+    context 'with bad user information' do
+      it 'raises a status error' do
+        expect do
+          session.users.reset_avatar(user_id: '1236')
+        end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
       end
     end
   end
@@ -607,30 +589,28 @@ describe RocketChat::Messages::User do
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
-        expect(session.users.set_avatar('some-image-url')).to be_truthy
-      end
+    it 'returns success' do
+      expect(session.users.set_avatar('some-image-url')).to be_truthy
+    end
 
-      context 'with user_id parameter' do
-        it 'should be success' do
-          expect(session.users.set_avatar('some-image-url', user_id: '1234')).to be_truthy
-        end
-      end
-
-      context 'with bad user information' do
-        it 'should be failure' do
-          expect do
-            session.users.set_avatar('some-image-url', user_id: '1236')
-          end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
-        end
+    context 'with user_id parameter' do
+      it 'returns success' do
+        expect(session.users.set_avatar('some-image-url', user_id: '1234')).to be_truthy
       end
     end
 
-    context 'invalid session token' do
+    context 'with bad user information' do
+      it 'raises a status error' do
+        expect do
+          session.users.set_avatar('some-image-url', user_id: '1236')
+        end.to raise_error RocketChat::StatusError, "Cannot read property 'username' of undefined"
+      end
+    end
+
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.users.set_avatar(user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'

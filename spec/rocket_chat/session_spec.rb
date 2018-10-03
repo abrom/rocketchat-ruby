@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RocketChat::Session do
   let(:server) { RocketChat::Server.new(SERVER_URI) }
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
-  let(:session) { RocketChat::Session.new(server, token) }
+  let(:session) { described_class.new(server, token) }
 
   describe '#logout' do
     before do
@@ -21,16 +21,16 @@ describe RocketChat::Session do
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns nil (success)' do
         expect(session.logout).to be_nil
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.logout
         end.to raise_error RocketChat::StatusError
@@ -39,6 +39,8 @@ describe RocketChat::Session do
   end
 
   describe '#me' do
+    subject(:me) { session.me }
+
     before do
       # Stubs for /api/v1/me REST API
       stub_unauthed_request :get, '/api/v1/me'
@@ -66,27 +68,24 @@ describe RocketChat::Session do
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
-        me = session.me
-        expect(me.id).to eq USER_ID
-        expect(me.name).to eq 'Example User'
-        expect(me.email).to eq 'example@example.com'
-        expect(me).to be_email_verified
-        expect(me.status).to eq 'online'
-        expect(me.status_connection).to eq 'offline'
-        expect(me.username).to eq USERNAME
-        expect(me.utc_offset).to eq 0
-        expect(me).to be_active
-      end
+    context 'with a valid session' do
+      it { expect(me.id).to eq USER_ID }
+      it { expect(me.name).to eq 'Example User' }
+      it { expect(me.email).to eq 'example@example.com' }
+      it { expect(me).to be_email_verified }
+      it { expect(me.status).to eq 'online' }
+      it { expect(me.status_connection).to eq 'offline' }
+      it { expect(me.username).to eq USERNAME }
+      it { expect(me.utc_offset).to eq 0 }
+      it { expect(me).to be_active }
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
-          session.me
+          me
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end

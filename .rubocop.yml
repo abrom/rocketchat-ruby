@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
@@ -14,3 +16,9 @@ Metrics/MethodLength:
 Style/NumericLiterals:
   Exclude:
     - "**/*_spec.rb"
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/MultipleExpectations:
+  Max: 5

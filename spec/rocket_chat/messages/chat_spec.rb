@@ -71,34 +71,34 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
-      it 'should be success for room id' do
+    context 'with a valid session' do
+      it 'returns success for room id' do
         expect(session.chat.delete(room_id: '1234', msg_id: 'valid_msg_id')).to be_truthy
       end
 
-      it 'should be success for room name' do
+      it 'returns success for room name' do
         expect(session.chat.delete(name: 'room', msg_id: 'valid_room_msg_id')).to be_truthy
       end
 
-      it 'should pass through `asUser` and return success' do
+      it 'passes through `asUser` and return success' do
         expect(
           session.chat.delete(room_id: '1234', msg_id: 'valid_msg_user_id', as_user: true)
         ).to be_truthy
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.chat.delete room_id: '1234', msg_id: 'valid_id'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
 
-    context 'message doesnt belong to room' do
-      it 'should be failure' do
+    context 'when message doesnt belong to room' do
+      it 'raises a status error' do
         expect do
           session.chat.delete room_id: '1234', msg_id: 'not_found'
         end.to raise_error RocketChat::StatusError, 'No message found with the id of "not_found".'
@@ -140,26 +140,26 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
-      it 'should be success for room id' do
+    context 'with a valid session' do
+      it 'returns message for room id' do
         message = session.chat.get_message msg_id: 'valid_msg_id'
         expect(message).to be_a RocketChat::Message
         expect(message.message).to eq 'This is a test!'
       end
     end
 
-    context 'message not found' do
-      it 'should be failure' do
+    context 'when message not found' do
+      it 'raises a status error' do
         expect do
           session.chat.get_message msg_id: 'not_found'
         end.to raise_error RocketChat::StatusError
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.chat.get_message msg_id: 'other_valid_id'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -245,14 +245,14 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
-      it 'should be success for room id' do
+    context 'with a valid session' do
+      it 'returns message for room id' do
         message = session.chat.post_message room_id: '1234', channel: '#general', text: 'Test message'
         expect(message).to be_a RocketChat::Message
         expect(message.message).to eq 'Test message'
       end
 
-      it 'should not send unknown attributes' do
+      it 'does not send unknown attributes' do
         message = session.chat.post_message(
           room_id: '1234', channel: '#general', text: 'Other message', foo: 'bar'
         )
@@ -261,18 +261,18 @@ describe RocketChat::Messages::Chat do
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.chat.post_message room_id: '1234', channel: '#general', text: 'Sample message'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
 
-    context 'message isnt provided' do
-      it 'should be failure' do
+    context 'when message isnt provided' do
+      it 'raises a status error' do
         expect do
           session.chat.post_message room_id: '1234', channel: '#general'
         end.to raise_error RocketChat::StatusError, 'unknown-error'
@@ -331,26 +331,26 @@ describe RocketChat::Messages::Chat do
         )
     end
 
-    context 'valid session' do
-      it 'should be success for room id' do
+    context 'with a valid session' do
+      it 'returns message for room id' do
         message = session.chat.update room_id: '1234', msg_id: 'valid_msg_id', text: 'New message'
         expect(message).to be_a RocketChat::Message
         expect(message.message).to eq 'New message'
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.chat.update room_id: '1234', msg_id: 'valid_id', text: 'Not logged in'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
 
-    context 'message doesnt belong to room' do
-      it 'should be failure' do
+    context 'when message doesnt belong to room' do
+      it 'raises a status error' do
         expect do
           session.chat.update room_id: '1234', msg_id: 'not_found', text: 'Failing update message'
         end.to raise_error RocketChat::StatusError, 'No message found with the id of "not_found".'

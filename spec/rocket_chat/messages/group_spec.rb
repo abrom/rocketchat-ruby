@@ -25,16 +25,16 @@ describe RocketChat::Messages::Group do
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns success' do
         expect(scope.add_leader(room_id: 'a-room', user_id: '1')).to be_truthy
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.add_leader(room_id: 'a-room', user_id: 'test')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'

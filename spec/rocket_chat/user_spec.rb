@@ -46,7 +46,7 @@ describe RocketChat::User do
       'username' => 'example'
     }
   end
-  let(:user) { RocketChat::User.new data }
+  let(:user) { described_class.new data }
 
   describe '#id' do
     it { expect(user.id).to eq 'nSYqWzZ4GsKTX4dyK' }

@@ -52,8 +52,8 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         ).to_return(room_response('new-room'))
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns new room' do
         new_room = scope.create('new-room')
         expect(new_room.id).to eq '1234'
         expect(new_room.name).to eq 'new-room'
@@ -61,7 +61,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
 
       context 'with an existing room' do
-        it 'should be failure' do
+        it 'raises a status error' do
           expect do
             scope.create('duplicate-room')
           end.to raise_error RocketChat::StatusError, "A channel with name 'duplicate-room' exists"
@@ -69,10 +69,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.create('new-room')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -102,22 +102,22 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns success' do
         expect(scope.delete(room_id: '1234')).to be_truthy
       end
 
-      context 'about a missing room' do
-        it 'should be false' do
+      context 'when setting attribute for an invalid room' do
+        it 'returns failure' do
           expect(scope.delete(room_id: '1236')).to eq false
         end
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.delete(room_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -148,9 +148,9 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         .to_return(expected)
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       context 'with no room information' do
-        it 'should be failure' do
+        it 'raises a status error' do
           expect do
             scope.info(name: nil)
           end.to(
@@ -162,15 +162,15 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'about a missing room' do
-        it 'should be nil' do
+      context 'when setting attribute for an invalid room' do
+        it 'returns nil' do
           expect(scope.info(room_id: '1236')).to be_nil
           expect(scope.info(name: 'invalid-room')).to be_nil
         end
       end
 
-      context 'by existing roomId' do
-        it 'should be success' do
+      context 'when querying an existing roomId' do
+        it 'returns room' do
           existing_room = scope.info(room_id: '1234')
 
           expect(existing_room.id).to eq '1234'
@@ -179,8 +179,8 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'by existing name' do
-        it 'should be success' do
+      context 'when querying an existing name' do
+        it 'returns room' do
           existing_room = scope.info(name: 'some-room')
 
           expect(existing_room.id).to eq '1234'
@@ -190,10 +190,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.info(room_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -267,18 +267,18 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         .to_return(all_rooms_body)
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       if query
-        context 'searching for an invalid room name' do
-          it 'should be empty' do
+        context 'when searching for an invalid room name' do
+          it 'is empty' do
             rooms = scope.list(query: { name: 'wrong-room' })
 
             expect(rooms).to be_empty
           end
         end
 
-        context 'searching for a valid room name' do
-          it 'should return room1' do
+        context 'when searching for a valid room name' do
+          it 'returns room1' do
             rooms = scope.list(query: { name: 'room-one' })
 
             expect(rooms.length).to eq 1
@@ -289,10 +289,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
 
       context 'without a filter' do
-        it 'should return all rooms' do
+        it 'returns all rooms' do
           rooms = scope.list
 
-          expect(rooms.length).to eq 2
+          expect(rooms.map(&:class)).to eq [RocketChat::Room, RocketChat::Room]
           expect(rooms[0].id).to eq 123
           expect(rooms[0].name).to eq 'room-one'
           expect(rooms[1].id).to eq 124
@@ -301,10 +301,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.list
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -347,9 +347,9 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
+    context 'with a valid session' do
       context 'with no room information' do
-        it 'should be failure' do
+        it 'raises a status error' do
           expect do
             scope.rename(nil, 'new_room_name')
           end.to(
@@ -361,8 +361,8 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
       end
 
-      context 'about a missing room' do
-        it 'should be raise an error' do
+      context 'when setting attribute for an invalid room' do
+        it 'raises a status error' do
           expect do
             scope.rename('badId', 'new_room_name')
           end.to(
@@ -372,7 +372,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
 
       context 'with no new name' do
-        it 'should be raise an error' do
+        it 'raises a status error' do
           expect do
             scope.rename(nil, nil)
           end.to(
@@ -385,16 +385,16 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
 
       context 'with all correct parameters' do
-        it 'should be success' do
+        it 'returns success' do
           expect(scope.rename('goodId', 'new_room_name')).to be_truthy
         end
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.rename('goodId', 'new_room_name')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -424,13 +424,13 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns success' do
         expect(scope.invite(room_id: '1234', username: 'good-user')).to be_truthy
       end
 
-      context 'about a missing room' do
-        it 'should be failure' do
+      context 'when setting attribute for an invalid room' do
+        it 'raises a status error' do
           expect do
             scope.invite(room_id: '1236', username: 'good-user')
           end.to raise_error RocketChat::StatusError, invalid_room_message
@@ -438,10 +438,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.invite(room_id: '1234', username: 'good-user')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -483,21 +483,21 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns success' do
         expect(scope.leave(room_id: '1234')).to be_truthy
       end
 
-      context 'about a missing room' do
-        it 'should raise an error' do
+      context 'when setting attribute for an invalid room' do
+        it 'raises a status error' do
           expect do
             scope.leave(room_id: '1236')
           end.to raise_error RocketChat::StatusError, invalid_room_message
         end
       end
 
-      context 'about another room' do
-        it 'should raise an error' do
+      context 'when setting attribute for another room' do
+        it 'raises a status error' do
           expect do
             scope.leave(room_id: '1238')
           end.to raise_error RocketChat::StatusError, 'You are not in this room [error-user-not-in-room]'
@@ -505,10 +505,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.leave(room_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -550,29 +550,29 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         )
     end
 
-    context 'wrong attribute' do
-      it 'should raise an error' do
+    context 'when trying to set an invalid attribute' do
+      it 'raises an argument error' do
         expect do
           scope.set_attr(room_id: '1234', bad_attr: true)
         end.to raise_error ArgumentError
       end
     end
 
-    context 'valid session' do
-      it 'should be success' do
+    context 'with a valid session' do
+      it 'returns success' do
         expect(scope.set_attr(room_id: '1234', topic: 'A Topic')).to be_truthy
       end
 
-      context 'about a missing room' do
-        it 'should raise an error' do
+      context 'when setting attribute for an invalid room' do
+        it 'raises a status error' do
           expect do
             scope.set_attr(room_id: '1236', topic: 'A Topic')
           end.to raise_error RocketChat::StatusError, invalid_room_message
         end
       end
 
-      context 'about another room' do
-        it 'should raise an error' do
+      context 'when setting attribute for another room' do
+        it 'raises a status error' do
           expect do
             scope.set_attr(room_id: '1238', topic: 'A Topic')
           end.to raise_error RocketChat::StatusError, 'You are not in this room [error-user-not-in-room]'
@@ -580,10 +580,10 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
     end
 
-    context 'invalid session token' do
+    context 'with an invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.set_attr(room_id: '1234', topic: 'A Topic')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
