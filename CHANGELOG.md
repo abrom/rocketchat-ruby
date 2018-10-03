@@ -59,3 +59,31 @@
 ### Added
 - [#6] User createToken and resetAvatar endpoints ([@reist][])
 - [#7] Support for debugging server calls ([@reist][])
+
+## [0.1.4](releases/tag/v0.1.4) - 2017-07-9
+### Fixed
+- Fixed a missing dependency issue with `uri`
+
+## [0.1.2](releases/tag/v0.1.2) - 2017-05-24
+### Added
+- [#3] Initial support for 'Room' endpoints ([@reist][])
+
+## [0.1.1](releases/tag/v0.1.1) - 2017-05-1
+### Added
+- Support for settings get/set endpoints
+
+## [0.0.8](releases/tag/v0.0.8) - 2017-04-30
+### Added
+- Support for Users `getPresence` endpoint
+
+## [0.0.7](releases/tag/v0.0.7) - 2017-04-30
+### Added
+- Support for Users `list` endpoint
+
+## [0.0.6](releases/tag/v0.0.6) - 2017-04-25
+### Fixed
+- [#2] Allow requests to include server options ([@reist][])
+
+## [0.0.5](releases/tag/v0.0.5) - 2017-04-25
+### Added
+- [#1] Added Users `info` and `delete` endpoints ([@reist][])
