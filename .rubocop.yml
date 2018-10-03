@@ -20,3 +20,6 @@ Style/NumericLiterals:
 
 RSpec/ExampleLength:
   Max: 10
+
+RSpec/MultipleExpectations:
+  Max: 5

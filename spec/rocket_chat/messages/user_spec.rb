@@ -197,31 +197,27 @@ describe RocketChat::Messages::User do
       end
 
       context 'when searching by an existing userId' do
-        it 'returns user' do
-          existing_user = session.users.info(user_id: '1234')
+        subject(:existing_user) { session.users.info(user_id: '1234') }
 
-          expect(existing_user.id).to eq '1234'
-          expect(existing_user.name).to eq 'Some User'
-          expect(existing_user.email).to eq 'some@user.com'
-          expect(existing_user).not_to be_email_verified
-          expect(existing_user.status).to eq 'online'
-          expect(existing_user.username).to eq 'some_user'
-          expect(existing_user).to be_active
-        end
+        it { expect(existing_user.id).to eq '1234' }
+        it { expect(existing_user.name).to eq 'Some User' }
+        it { expect(existing_user.email).to eq 'some@user.com' }
+        it { expect(existing_user).not_to be_email_verified }
+        it { expect(existing_user.status).to eq 'online' }
+        it { expect(existing_user.username).to eq 'some_user' }
+        it { expect(existing_user).to be_active }
       end
 
       context 'when searching by an existing username' do
-        it 'returns user' do
-          existing_user = session.users.info(username: 'some_user')
+        subject(:existing_user) { session.users.info(username: 'some_user') }
 
-          expect(existing_user.id).to eq '1234'
-          expect(existing_user.name).to eq 'Some User'
-          expect(existing_user.email).to eq 'some@user.com'
-          expect(existing_user).not_to be_email_verified
-          expect(existing_user.status).to eq 'online'
-          expect(existing_user.username).to eq 'some_user'
-          expect(existing_user).to be_active
-        end
+        it { expect(existing_user.id).to eq '1234' }
+        it { expect(existing_user.name).to eq 'Some User' }
+        it { expect(existing_user.email).to eq 'some@user.com' }
+        it { expect(existing_user).not_to be_email_verified }
+        it { expect(existing_user.status).to eq 'online' }
+        it { expect(existing_user.username).to eq 'some_user' }
+        it { expect(existing_user).to be_active }
       end
     end
 
