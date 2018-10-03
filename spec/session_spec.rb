@@ -39,6 +39,8 @@ describe RocketChat::Session do
   end
 
   describe '#me' do
+    subject(:me) { session.me }
+
     before do
       # Stubs for /api/v1/me REST API
       stub_unauthed_request :get, '/api/v1/me'
@@ -67,18 +69,15 @@ describe RocketChat::Session do
     end
 
     context 'with a valid session' do
-      it 'returns user session' do
-        me = session.me
-        expect(me.id).to eq USER_ID
-        expect(me.name).to eq 'Example User'
-        expect(me.email).to eq 'example@example.com'
-        expect(me).to be_email_verified
-        expect(me.status).to eq 'online'
-        expect(me.status_connection).to eq 'offline'
-        expect(me.username).to eq USERNAME
-        expect(me.utc_offset).to eq 0
-        expect(me).to be_active
-      end
+      it { expect(me.id).to eq USER_ID }
+      it { expect(me.name).to eq 'Example User' }
+      it { expect(me.email).to eq 'example@example.com' }
+      it { expect(me).to be_email_verified }
+      it { expect(me.status).to eq 'online' }
+      it { expect(me.status_connection).to eq 'offline' }
+      it { expect(me.username).to eq USERNAME }
+      it { expect(me.utc_offset).to eq 0 }
+      it { expect(me).to be_active }
     end
 
     context 'with an invalid session token' do
@@ -86,7 +85,7 @@ describe RocketChat::Session do
 
       it 'raises a status error' do
         expect do
-          session.me
+          me
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end

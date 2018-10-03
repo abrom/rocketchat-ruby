@@ -50,20 +50,20 @@ describe RocketChat::Messages::User do
     end
 
     context 'with a valid session' do
-      it 'returns user' do
-        new_user = session.users.create(
+      subject(:users_create) do
+        session.users.create(
           'new_user', 'new@user.com', 'New User', '1236',
           active: true, join_default_channels: false
         )
-
-        expect(new_user.id).to eq '1234'
-        expect(new_user.name).to eq 'New User'
-        expect(new_user.email).to eq 'new@user.com'
-        expect(new_user).not_to be_email_verified
-        expect(new_user.status).to eq 'online'
-        expect(new_user.username).to eq 'new_user'
-        expect(new_user).to be_active
       end
+
+      it { expect(users_create.id).to eq '1234' }
+      it { expect(users_create.name).to eq 'New User' }
+      it { expect(users_create.email).to eq 'new@user.com' }
+      it { is_expected.not_to be_email_verified }
+      it { expect(users_create.status).to eq 'online' }
+      it { expect(users_create.username).to eq 'new_user' }
+      it { is_expected.to be_active }
 
       context 'with an existing user' do
         it 'raises a status error' do
@@ -120,17 +120,17 @@ describe RocketChat::Messages::User do
     end
 
     context 'with a valid session' do
-      it 'returns user' do
-        existing_user = session.users.update('1234', email: 'updated@user.com', name: 'Updated User', active: false)
-
-        expect(existing_user.id).to eq '1234'
-        expect(existing_user.name).to eq 'Updated User'
-        expect(existing_user.email).to eq 'updated@user.com'
-        expect(existing_user).not_to be_email_verified
-        expect(existing_user.status).to eq 'online'
-        expect(existing_user.username).to eq 'new_user'
-        expect(existing_user).not_to be_active
+      subject(:users_update) do
+        session.users.update('1234', email: 'updated@user.com', name: 'Updated User', active: false)
       end
+
+      it { expect(users_update.id).to eq '1234' }
+      it { expect(users_update.name).to eq 'Updated User' }
+      it { expect(users_update.email).to eq 'updated@user.com' }
+      it { is_expected.not_to be_email_verified }
+      it { expect(users_update.status).to eq 'online' }
+      it { expect(users_update.username).to eq 'new_user' }
+      it { is_expected.not_to be_active }
 
       context 'with an existing email' do
         it 'raises a status error' do
