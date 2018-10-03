@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RocketChat::Session do
   let(:server) { RocketChat::Server.new(SERVER_URI) }
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
-  let(:session) { RocketChat::Session.new(server, token) }
+  let(:session) { described_class.new(server, token) }
 
   describe '#logout' do
     before do
@@ -22,7 +22,7 @@ describe RocketChat::Session do
     end
 
     context 'valid session' do
-      it 'should be success' do
+      it 'returns nil (success)' do
         expect(session.logout).to be_nil
       end
     end
@@ -30,7 +30,7 @@ describe RocketChat::Session do
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.logout
         end.to raise_error RocketChat::StatusError
@@ -67,7 +67,7 @@ describe RocketChat::Session do
     end
 
     context 'valid session' do
-      it 'should be success' do
+      it 'returns user session' do
         me = session.me
         expect(me.id).to eq USER_ID
         expect(me.name).to eq 'Example User'
@@ -84,7 +84,7 @@ describe RocketChat::Session do
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.me
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'

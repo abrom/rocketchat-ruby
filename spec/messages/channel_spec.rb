@@ -26,12 +26,12 @@ describe RocketChat::Messages::Channel do
     end
 
     context 'valid session' do
-      it 'should be success' do
+      it 'returns success' do
         expect(scope.join(name: 'a-room')).to be_truthy
       end
 
       context 'about a missing room' do
-        it 'should raise an error' do
+        it 'raises a status error' do
           expect do
             scope.join(name: 'missing-room')
           end.to raise_error(
@@ -45,7 +45,7 @@ describe RocketChat::Messages::Channel do
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           scope.join(name: 'a-room')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -109,7 +109,7 @@ describe RocketChat::Messages::Channel do
 
     context 'valid session' do
       context 'online users request with an invalid room name' do
-        it 'raises a channel existance error' do
+        it 'raises a channel existence error' do
           expect do
             scope.online(name: 'wrong-room')
           end.to raise_error RocketChat::StatusError, 'Channel does not exists'

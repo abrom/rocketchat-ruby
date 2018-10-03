@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe RocketChat::Server do
-  let(:server) { RocketChat::Server.new(SERVER_URI) }
-  let(:server_with_opts) { RocketChat::Server.new(SERVER_URI, headers: { 'X_TEST' => '1' }) }
+  let(:server) { described_class.new(SERVER_URI) }
+  let(:server_with_opts) { described_class.new(SERVER_URI, headers: { 'X_TEST' => '1' }) }
 
   describe '#info' do
     before do
@@ -66,7 +66,7 @@ describe RocketChat::Server do
     end
 
     context 'correct password' do
-      it 'should be success' do
+      it 'returns new session' do
         rc = server.login(USERNAME, PASSWORD)
         expect(rc.token.auth_token).to eq AUTH_TOKEN
         expect(rc.token.user_id).to eq USER_ID
@@ -74,7 +74,7 @@ describe RocketChat::Server do
     end
 
     context 'incorrect password' do
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           server.login(USERNAME, PASSWORD + PASSWORD)
         end.to raise_error RocketChat::StatusError, 'Unauthorized'

@@ -17,7 +17,7 @@ describe RocketChat::Message do
       '_id' => 'jC9chsFddTvsbFQG7'
     }
   end
-  let(:message) { RocketChat::Message.new data }
+  let(:message) { described_class.new data }
 
   describe '#id' do
     it { expect(message.id).to eq 'jC9chsFddTvsbFQG7' }

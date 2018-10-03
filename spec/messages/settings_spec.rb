@@ -22,7 +22,7 @@ describe RocketChat::Messages::Settings do
     end
 
     context 'valid session' do
-      it 'should return the value' do
+      it 'returns the value' do
         expect(session.settings['foo']).to eq 'some value'
       end
     end
@@ -30,7 +30,7 @@ describe RocketChat::Messages::Settings do
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.settings['foo']
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
@@ -58,7 +58,7 @@ describe RocketChat::Messages::Settings do
     end
 
     context 'valid session' do
-      it 'should return value' do
+      it 'returns value' do
         expect(session.settings['foo'] = '1234').to eq '1234'
       end
     end
@@ -66,7 +66,7 @@ describe RocketChat::Messages::Settings do
     context 'invalid session token' do
       let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
 
-      it 'should be failure' do
+      it 'raises a status error' do
         expect do
           session.settings['foo'] = '1234'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
