@@ -42,6 +42,10 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/chat.postMessage](docs/chat.md#postmessage)
 * [/api/v1/chat.update](docs/chat.md#update)
 
+#### IM
+* [/api/v1/im.create](docs/im.md#create)
+* [/api/v1/im.counters](docs/im.md#counters)
+
 #### Channels
 * /api/v1/channels.archive
 * [/api/v1/channels.create](docs/channels.md#channelscreate)
