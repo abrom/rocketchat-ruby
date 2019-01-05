@@ -30,7 +30,7 @@ module RocketChat
       # im.counters REST API
       # @param [String] room_id Rocket.Chat roomId
       # @param [String] username Rocket.Chat username
-      # @return [RocketChat::Im]
+      # @return [RocketChat::ImSummary]
       # @raise [HTTPError, StatusError]
       #
       def counters(room_id:, username: nil)

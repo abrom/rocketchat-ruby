@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.1.18](releases/tag/v0.1.18) - 2018-01-05
+### Added
+- [#29] Support for im.create and im.counters ([@christianmoretti][])
+
 ## [0.1.17](releases/tag/v0.1.17) - 2019-01-05
 ### Deprecation
 - Drop Ruby 2.1 from build matrix

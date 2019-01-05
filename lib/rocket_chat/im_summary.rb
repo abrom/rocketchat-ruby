@@ -1,6 +1,6 @@
 module RocketChat
   #
-  # Rocket.Chat Info
+  # Rocket.Chat IM Summary
   #
   class ImSummary
     # Raw info data
