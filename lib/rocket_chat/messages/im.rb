@@ -17,7 +17,7 @@ module RocketChat
       # @return [RocketChat::Room]
       # @raise [HTTPError, StatusError]
       #
-      def create(username: nil)
+      def create(username:)
         response = session.request_json(
           '/api/v1/im.create',
           method: :post,
@@ -33,11 +33,15 @@ module RocketChat
       # @return [RocketChat::Im]
       # @raise [HTTPError, StatusError]
       #
-      def counters(room_id: nil, username: nil)
+      def counters(room_id:, username: nil)
         response = session.request_json(
-          "/api/v1/im.counters?roomId=#{room_id}&username=#{username}"
+          '/api/v1/im.counters',
+          body: {
+            roomId: room_id,
+            username: username
+          }
         )
-        RocketChat::Im.new response
+        RocketChat::ImSummary.new response
       end
 
       private

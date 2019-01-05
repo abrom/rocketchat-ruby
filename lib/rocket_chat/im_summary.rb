@@ -2,7 +2,7 @@ module RocketChat
   #
   # Rocket.Chat Info
   #
-  class Im
+  class ImSummary
     # Raw info data
     attr_reader :data
 

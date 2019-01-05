@@ -1,6 +1,6 @@
 ### IM API
 
-RocketChat's Im Messages.
+RocketChat's IM interface.
 
 #### im.create
 
@@ -11,7 +11,7 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-im = session.im.create(username: 'rocket.cat')
+room = session.im.create(username: 'rocket.cat')
 ```
 
 #### im.counters
@@ -23,5 +23,5 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-im = session.im.counters(room_id: 'room_id', username: 'rocket.cat')
+im_summary = session.im.counters(room_id: 'room_id', username: 'rocket.cat')
 ```

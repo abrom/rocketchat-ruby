@@ -59,7 +59,7 @@ describe RocketChat::Messages::Im do
 
       it 'does not send attributes' do
         expect do
-          session.im.create
+          session.im.create(username: nil)
         end.to raise_error RocketChat::StatusError
       end
     end
@@ -69,7 +69,7 @@ describe RocketChat::Messages::Im do
 
       it 'raises a status error' do
         expect do
-          session.im.create username: 'rocket.chat'
+          session.im.create username: 'rocket.cat'
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
@@ -85,7 +85,7 @@ describe RocketChat::Messages::Im do
 
   describe '#counters' do
     before do
-      stub_unauthed_request :get, '/api/v1/im.counters'
+      stub_unauthed_request :get, '/api/v1/im.counters?roomId=rocket.cat&username='
 
       stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat&username=')
         .to_return(
@@ -96,6 +96,21 @@ describe RocketChat::Messages::Im do
             unreadsFrom: '2019-01-04T21:40:11.251Z',
             msgs: 0,
             latest: '2019-01-04T21:40:11.251Z',
+            userMentions: 0,
+            success: true
+          }.to_json,
+          status: 200
+        )
+
+      stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat&username=user.test')
+        .to_return(
+          body: {
+            joined: true,
+            members: 2,
+            unreads: 1,
+            unreadsFrom: '2019-01-05T20:37:09.130Z',
+            msgs: 0,
+            latest: '2019-01-05T20:37:09.130Z',
             userMentions: 0,
             success: true
           }.to_json,
@@ -123,14 +138,32 @@ describe RocketChat::Messages::Im do
         )
     end
 
+    context 'with an invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
+
+      it 'raises a status error' do
+        expect do
+          session.im.counters room_id: 'rocket.cat'
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+
     context 'with a valid session' do
-      it 'get qty of messages' do
+      it 'get quantity of messages' do
         im = session.im.counters room_id: 'rocket.cat'
-        expect(im).to be_a RocketChat::Im
+        expect(im).to be_a RocketChat::ImSummary
         expect(im.members).to eq 2
         expect(im.unreads).to eq 0
         expect(im.msgs).to eq 0
         expect(im.user_mentions).to eq 0
+      end
+
+      it 'get quantity of messages specifying the username' do
+        im = session.im.counters room_id: 'rocket.cat', username: 'user.test'
+        expect(im.joined).to eq true
+        expect(im.unreads_from).to eq '2019-01-05T20:37:09.130Z'
+        expect(im.latest).to eq '2019-01-05T20:37:09.130Z'
+        expect(im.success).to eq true
       end
 
       it 'does not send valid attributes' do
