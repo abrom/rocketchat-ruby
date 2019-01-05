@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.1.17](releases/tag/v0.1.17) - 2019-01-05
+### Deprecation
+- Drop Ruby 2.1 from build matrix
+
 ## [0.1.16](releases/tag/v0.1.16) - 2018-10-3
 ### Deprecation
 - Drop Ruby 2.0 from build matrix
