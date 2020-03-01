@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.1.19](releases/tag/v0.1.19) - 2019-03-01
+### Fixed
+- Address CVE-2020-8130 - `rake` OS command injection vulnerability
+
 ## [0.1.18](releases/tag/v0.1.18) - 2018-01-05
 ### Added
 - [#29] Support for im.create and im.counters ([@christianmoretti][])

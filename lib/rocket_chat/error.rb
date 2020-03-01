@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RocketChat
   class Error < StandardError; end
   class HTTPError < Error; end

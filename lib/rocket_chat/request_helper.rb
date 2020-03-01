@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'uri'
 require 'openssl'
 require 'net/http'
@@ -30,7 +32,7 @@ module RocketChat
       check_response response, fail_unless_ok
 
       response_json = parse_response(response.body)
-      options[:debug].puts("Response: #{response_json.inspect}") if options[:debug]
+      options[:debug]&.puts("Response: #{response_json.inspect}")
       check_response_json response_json, upstreamed_errors
 
       response_json

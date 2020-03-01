@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rocket_chat/gem_version'
 
 require 'json'

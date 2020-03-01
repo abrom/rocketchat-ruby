@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'simplecov'
 SimpleCov.start
 
@@ -10,11 +12,11 @@ require 'webmock/rspec'
 require 'shared/room_behaviors'
 
 SERVER_URI = URI.parse('http://www.example.com/')
-AUTH_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'.freeze
-USER_ID = 'AAAAAAAAAAAAAAAAA'.freeze
-OTHER_USER_ID = 'BBBBBBBBBBBBBBBBB'.freeze
-USERNAME = 'user'.freeze
-PASSWORD = 'password'.freeze
+AUTH_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+USER_ID = 'AAAAAAAAAAAAAAAAA'
+OTHER_USER_ID = 'BBBBBBBBBBBBBBBBB'
+USERNAME = 'user'
+PASSWORD = 'password'
 UNAUTHORIZED_BODY = {
   status: :error,
   message: 'You must be logged in to do this.'
