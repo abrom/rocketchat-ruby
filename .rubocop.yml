@@ -1,5 +1,23 @@
 require: rubocop-rspec
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
@@ -13,12 +31,33 @@ Metrics/MethodLength:
   Exclude:
     - "**/*_spec.rb"
 
-Style/NumericLiterals:
-  Exclude:
-    - "**/*_spec.rb"
-
 RSpec/ExampleLength:
   Max: 10
 
 RSpec/MultipleExpectations:
   Max: 5
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/NumericLiterals:
+  Exclude:
+    - "**/*_spec.rb"
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
