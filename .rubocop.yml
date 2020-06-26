@@ -3,6 +3,9 @@ require: rubocop-rspec
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 
+Layout/LineLength:
+  Max: 120
+
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
 
@@ -22,9 +25,6 @@ Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
     - "spec/shared/*.rb"
-
-Metrics/LineLength:
-  Max: 120
 
 Metrics/MethodLength:
   Max: 15
@@ -55,6 +55,9 @@ Style/HashTransformValues:
 Style/NumericLiterals:
   Exclude:
     - "**/*_spec.rb"
+
+Style/RedundantFetchBlock:
+  Enabled: true
 
 Style/RedundantRegexpCharacterClass:
   Enabled: true

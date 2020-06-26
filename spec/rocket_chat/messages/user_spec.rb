@@ -171,6 +171,19 @@ describe RocketChat::Messages::User do
 
       stub_authed_request(:get, '/api/v1/users.info?username=some_user')
         .to_return(expected)
+
+      stub_authed_request(:get, '/api/v1/users.info?fields=%7B%22userRooms%22:1%7D&username=some_user')
+        .to_return(
+          body: {
+            success: true,
+            user: {
+              _id: '1234',
+              name: 'Some user with rooms',
+              rooms: [{ _id: 'sub.id', rid: 'room.id', name: 'Room name', t: 'c' }]
+            }
+          }.to_json,
+          status: 200
+        )
     end
 
     context 'with no user information' do
@@ -215,6 +228,15 @@ describe RocketChat::Messages::User do
       it { expect(existing_user.status).to eq 'online' }
       it { expect(existing_user.username).to eq 'some_user' }
       it { expect(existing_user).to be_active }
+    end
+
+    context 'when including rooms' do
+      subject(:with_rooms) { session.users.info(username: 'some_user', include_rooms: true) }
+
+      it { expect(with_rooms.id).to eq '1234' }
+      it { expect(with_rooms.name).to eq 'Some user with rooms' }
+      it { expect(with_rooms.rooms.map(&:class)).to eq [RocketChat::Room] }
+      it { expect(with_rooms.rooms.map(&:id)).to eq ['room.id'] }
     end
 
     context 'with an invalid session token' do

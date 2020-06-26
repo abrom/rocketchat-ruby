@@ -100,4 +100,28 @@ describe RocketChat::User do
   describe '#roles' do
     it { expect(user.roles).to eq ['user'] }
   end
+
+  describe '#rooms' do
+    it { expect(user.rooms).to eq [] }
+
+    context 'when rooms hash is available' do
+      let(:user) { described_class.new data_with_rooms }
+      let(:data_with_rooms) do
+        data.merge(
+          'rooms' => [
+            { '_id' => 'sub1.id', 'rid' => 'room1.id', 'name' => 'Room 1 name', 't' => 'c' },
+            { '_id' => 'sub2.id', 'rid' => 'room2.id', 'name' => 'Room 2 name', 't' => 'd' },
+            { '_id' => 'sub3.id', 'rid' => 'room3.id', 'name' => 'Room 3 name', 't' => 'p' }
+          ]
+        )
+      end
+
+      it 'returns an array of rooms' do
+        expect(user.rooms.length).to eq 3
+        expect(user.rooms.map(&:class)).to eq [RocketChat::Room, RocketChat::Room, RocketChat::Room]
+        expect(user.rooms.map(&:id)).to eq %w[room1.id room2.id room3.id]
+        expect(user.rooms.map(&:type)).to eq %w[public IM private]
+      end
+    end
+  end
 end

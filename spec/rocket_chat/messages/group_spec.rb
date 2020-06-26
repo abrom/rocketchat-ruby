@@ -73,9 +73,9 @@ describe RocketChat::Messages::Group do
         .with(
           body: { roomId: 'a-room', userId: '1' }
         ).to_return(
-        body: { success: true }.to_json,
-        status: 200
-      )
+          body: { success: true }.to_json,
+          status: 200
+        )
     end
 
     context 'with a valid session' do
