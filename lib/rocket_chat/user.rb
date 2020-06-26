@@ -70,6 +70,13 @@ module RocketChat
       data['roles']
     end
 
+    # User rooms
+    def rooms
+      return [] unless data['rooms'].is_a? Array
+
+      data['rooms'].map { |hash| RocketChat::Room.new hash }
+    end
+
     def inspect
       format(
         '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @active="%<active>s">',
