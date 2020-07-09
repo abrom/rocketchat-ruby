@@ -74,6 +74,21 @@ module RocketChat
         response['groups'].map { |hash| RocketChat::Room.new hash } if response['success']
       end
 
+      #
+      # groups.online REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @return [Users[]]
+      # @raise [HTTPError, StatusError]
+      #
+      def online(room_id: nil, name: nil)
+        response = session.request_json(
+          '/api/v1/groups.online',
+          body: room_params(room_id, name)
+        )
+
+        response['online'].map { |hash| RocketChat::User.new hash } if response['success']
+      end
+
       # Keys for set_attr:
       # * [String] description A room's description
       # * [String] purpose Alias for description
