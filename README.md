@@ -68,6 +68,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/channels.setTopic](docs/channels.md#channelsset_attr)
 * [/api/v1/channels.setType](docs/channels.md#channelsset_attr)
 * [/api/v1/channels.online](docs/channels.md#channelsonline)
+* [/api/v1/channels.members](docs/channels.md#channelsmembers)
 * /api/v1/channels.unarchive
 
 #### Groups

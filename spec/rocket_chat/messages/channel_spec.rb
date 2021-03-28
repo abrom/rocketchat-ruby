@@ -141,4 +141,92 @@ describe RocketChat::Messages::Channel do
       end
     end
   end
+
+  describe '#members' do
+    let(:members_response) {
+      {
+        body: {
+          success: true,
+          members: [
+            {
+              _id: 'rocketID1',
+              username: 'rocketUserName1'
+            },
+            {
+              _id: 'rocketID2',
+              username: 'rocketUserName2'
+            }
+          ]
+        }.to_json,
+        status: 200
+      }
+    }
+    let(:empty_channel_response) do
+      {
+        body: {
+          success: true,
+          members: []
+        }.to_json,
+        status: 200
+      }
+    end
+
+    let(:invalid_channel_response) do
+      {
+        body: {
+          success: false,
+          error: 'Channel does not exists'
+        }.to_json,
+        status: 400
+      }
+    end
+
+    before do
+      # Stubs for /api/v1/channels.members REST API
+      stub_unauthed_request :get, described_class.api_path('members?query=%7B%7D&roomName=authed')
+
+      stub_authed_request(:get, described_class.api_path('members?query=%7B%7D&roomName=wrong-room'))
+        .to_return(invalid_channel_response)
+
+      stub_authed_request(:get, described_class.api_path('members?query=%7B%7D&roomName=room-one'))
+        .to_return(members_response)
+
+      stub_authed_request(:get, described_class.api_path('members?query=%7B%7D&roomName=empty-room'))
+        .to_return(empty_channel_response)
+    end
+
+    context 'with an invalid room name' do
+      it 'raises a channel existence error' do
+        expect do
+          scope.members(name: 'wrong-room')
+        end.to raise_error RocketChat::StatusError, 'Channel does not exists'
+      end
+    end
+
+    context 'with a valid room name' do
+      it 'returns no users for an empty room' do
+        expect(scope.members(name: 'empty-room')).to eq []
+      end
+
+      it 'returns online users for a filled room' do
+        members = scope.members(name: 'room-one')
+
+        expect(members.map(&:class)).to eq [RocketChat::User, RocketChat::User]
+        expect(members[0].id).to eq 'rocketID1'
+        expect(members[0].username).to eq 'rocketUserName1'
+        expect(members[1].id).to eq 'rocketID2'
+        expect(members[1].username).to eq 'rocketUserName2'
+      end
+    end
+
+    context 'with an invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
+
+      it 'raises an authentication status error' do
+        expect do
+          scope.members(name: 'authed')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
 end

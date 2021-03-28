@@ -58,6 +58,27 @@ module RocketChat
         response['online'].map { |hash| RocketChat::User.new hash } if response['success']
       end
 
+      #
+      # channels.members REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name
+      # @param [Integer] offset Query offset
+      # @param [Integer] count Query count/limit
+      # @param [Hash] sort Query field sort hash. eg `{ msgs: 1, name: -1 }`
+      # @param [Hash] fields Query fields to return. eg `{ name: 1, ro: 0 }`
+      # @param [Hash] query The query. `{ active: true, type: { '$in': ['name', 'general'] } }`
+      # @return [Room[]]
+      # @raise [HTTPError, StatusError]
+      #
+      def members(room_id: nil, name: nil, offset: nil, count: nil, sort: nil, fields: nil, query: {})
+        response = session.request_json(
+          '/api/v1/channels.members',
+          body: build_list_body(offset, count, sort, fields, query).merge(room_params(room_id, name))
+        )
+
+        response['members'].map { |hash| RocketChat::User.new hash } if response['success']
+      end
+
       # Keys for set_attr:
       # * [String] description A room's description
       # * [String] join_code Code to join a channel
