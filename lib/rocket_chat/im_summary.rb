@@ -19,7 +19,7 @@ module RocketChat
       data['joined']
     end
 
-    # Qty of menbers in the chat
+    # Qty of members in the chat
     def members
       data['members']
     end

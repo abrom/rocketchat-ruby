@@ -1,7 +1,17 @@
-require: rubocop-rspec
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.5
 
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
+
+Layout/LineLength:
+  Max: 120
 
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
@@ -23,9 +33,6 @@ Metrics/BlockLength:
     - "**/*_spec.rb"
     - "spec/shared/*.rb"
 
-Metrics/LineLength:
-  Max: 120
-
 Metrics/MethodLength:
   Max: 15
   Exclude:
@@ -36,6 +43,9 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 15
 
 Style/ExponentialNotation:
   Enabled: true
