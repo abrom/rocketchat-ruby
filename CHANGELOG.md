@@ -3,9 +3,16 @@
 ## Unreleased
 - None
 
+## [0.1.20](releases/tag/v0.1.20) - 2021-03-29
+### Added
+- [#34] Support for channels.members and groups.members ([@alinavancea][])
+
+### Deprecation
+- [#35] Drop Ruby 2.3 and 2.4 support ([@abrom][])
+
 ## [0.1.19](releases/tag/v0.1.19) - 2019-03-01
 ### Fixed
-- Address CVE-2020-8130 - `rake` OS command injection vulnerability
+- Address CVE-2020-8130 - `rake` OS command injection vulnerability ([@abrom][])
 
 ## [0.1.18](releases/tag/v0.1.18) - 2018-01-05
 ### Added
@@ -13,19 +20,19 @@
 
 ## [0.1.17](releases/tag/v0.1.17) - 2019-01-05
 ### Deprecation
-- Drop Ruby 2.1 from build matrix
+- Drop Ruby 2.1 from build matrix ([@abrom][])
 
 ## [0.1.16](releases/tag/v0.1.16) - 2018-10-3
 ### Deprecation
-- Drop Ruby 2.0 from build matrix
+- Drop Ruby 2.0 from build matrix ([@abrom][])
 
 ### Added
 - [#27] Support for channels.online ([@chrisstime][])
-- `rubocop-rspec` dependency and fixed new lints
+- [#28] `rubocop-rspec` dependency and fixed new lints ([@abrom][])
 
 ## [0.1.15](releases/tag/v0.1.15) - 2017-12-21
 ### Fixed
-- Updated yard to resolve potential security vulnerability
+- Updated yard to resolve potential security vulnerability ([@abrom][])
 
 ## [0.1.14](releases/tag/v0.1.14) - 2017-10-9
 ### Added
@@ -33,16 +40,16 @@
 
 ## [0.1.13](releases/tag/v0.1.13) - 2017-10-9
 ### Added
-- Support for channel/group addAll endpoint
+- Support for channel/group addAll endpoint ([@abrom][])
 
 ## [0.1.12](releases/tag/v0.1.12) - 2017-08-28
 ### Fixed
-- GET request parameter encoding
+- GET request parameter encoding ([@abrom][])
 
 ## [0.1.11](releases/tag/v0.1.11) - 2017-08-22
 ### Fixed
 - [#15] Response parser improvements ([@reist][],[@danischreiber][])
-- [#17] Fixed a missing dependency issue with `net/http`
+- [#17] Fixed a missing dependency issue with `net/http` ([@abrom][])
 
 ### Added
 - [#14] Add/remove moderator from room ([@danischreiber][])
@@ -53,11 +60,11 @@
 
 ## [0.1.9](releases/tag/v0.1.9) - 2017-07-16
 ### Fixed
-- Update chat message handlers to support Ruby 2.0
+- Update chat message handlers to support Ruby 2.0 ([@abrom][])
 
 ## [0.1.8](releases/tag/v0.1.8) - 2017-07-16
 ### Added
-- Messages chat API support
+- Messages chat API support ([@abrom][])
 
 ## [0.1.7](releases/tag/v0.1.7) - 2017-07-16
 ### Added
@@ -74,7 +81,7 @@
 
 ## [0.1.4](releases/tag/v0.1.4) - 2017-07-9
 ### Fixed
-- Fixed a missing dependency issue with `uri`
+- Fixed a missing dependency issue with `uri` ([@abrom][])
 
 ## [0.1.2](releases/tag/v0.1.2) - 2017-05-24
 ### Added
@@ -82,15 +89,15 @@
 
 ## [0.1.1](releases/tag/v0.1.1) - 2017-05-1
 ### Added
-- Support for settings get/set endpoints
+- Support for settings get/set endpoints ([@abrom][])
 
 ## [0.0.8](releases/tag/v0.0.8) - 2017-04-30
 ### Added
-- Support for Users `getPresence` endpoint
+- Support for Users `getPresence` endpoint ([@abrom][])
 
 ## [0.0.7](releases/tag/v0.0.7) - 2017-04-30
 ### Added
-- Support for Users `list` endpoint
+- Support for Users `list` endpoint ([@abrom][])
 
 ## [0.0.6](releases/tag/v0.0.6) - 2017-04-25
 ### Fixed
@@ -99,3 +106,12 @@
 ## [0.0.5](releases/tag/v0.0.5) - 2017-04-25
 ### Added
 - [#1] Added Users `info` and `delete` endpoints ([@reist][])
+
+[@abrom]: https://github.com/abrom
+[@reist]: https://github.com/reist
+[@danischreiber]: https://github.com/danischreiber
+[@hardik127]: https://github.com/hardik127
+[@chrisstime]: https://github.com/chrisstime
+[@christianmoretti]: https://github.com/christianmoretti
+[@alinavancea]: https://github.com/alinavancea
+              
