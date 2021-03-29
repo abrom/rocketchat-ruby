@@ -623,7 +623,7 @@ describe RocketChat::Messages::User do
   ### User request/response helpers
 
   def user_for_request(name, extras = {})
-    split = name.downcase.split(' ')
+    split = name.downcase.split
     {
       username: split.join('_'),
       email: extras[:email] || "#{split.join('@')}.com",

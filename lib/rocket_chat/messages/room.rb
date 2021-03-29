@@ -11,9 +11,11 @@ module RocketChat
 
       def self.inherited(subclass)
         field = subclass.name.split('::')[-1].downcase
-        collection = field + 's'
+        collection = "#{field}s"
         subclass.send(:define_singleton_method, :field) { field }
         subclass.send(:define_singleton_method, :collection) { collection }
+
+        super
       end
 
       #
