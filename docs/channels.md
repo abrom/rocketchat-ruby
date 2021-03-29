@@ -169,3 +169,16 @@ session = rocket_server.login('username', 'password')
 session.channels.online(name: 'some_channel_name')
 
 ```
+
+### channels.members
+
+This method returns all members in a channel.
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.channels.members(name: 'some_channel_name')
+
+```
