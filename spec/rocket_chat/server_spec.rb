@@ -9,7 +9,7 @@ describe RocketChat::Server do
   describe '#info' do
     before do
       # Stub for /api/v1/info REST API
-      stub_request(:get, "#{SERVER_URI}/api/v1/info").to_return(
+      stub_request(:get, "#{SERVER_URI}api/v1/info").to_return(
         body: {
           status: :success,
           info: {
@@ -19,7 +19,7 @@ describe RocketChat::Server do
         status: 200
       )
 
-      stub_request(:get, "#{SERVER_URI}/api/v1/info")
+      stub_request(:get, "#{SERVER_URI}api/v1/info")
         .with(headers: { 'X_TEST' => '1' })
         .to_return(
           body: {
@@ -48,7 +48,7 @@ describe RocketChat::Server do
   describe '#login' do
     before do
       # Stubs for /api/v1/login REST API
-      stub_request(:post, "#{SERVER_URI}/api/v1/login").to_return(
+      stub_request(:post, "#{SERVER_URI}api/v1/login").to_return(
         body: {
           status: :error,
           message: 'Unauthorized'
@@ -56,7 +56,7 @@ describe RocketChat::Server do
         status: 401
       )
 
-      stub_request(:post, "#{SERVER_URI}/api/v1/login")
+      stub_request(:post, "#{SERVER_URI}api/v1/login")
         .with(body: { username: USERNAME, password: PASSWORD })
         .to_return(
           body: {
