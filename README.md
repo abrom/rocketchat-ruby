@@ -90,6 +90,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/groups.setReadOnly
 * /api/v1/groups.setTopic
 * /api/v1/groups.setType
+* [/api/v1/groups.members](docs/groups.md#groupsmembers)
 * /api/v1/groups.unarchive
 
 #### Users

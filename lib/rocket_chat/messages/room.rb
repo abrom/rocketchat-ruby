@@ -283,6 +283,25 @@ module RocketChat
         )['success']
       end
 
+      #
+      # *.members* REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name
+      # @param [Integer] offset Query offset
+      # @param [Integer] count Query count/limit
+      # @param [Hash] sort Query field sort hash. eg `{ msgs: 1, name: -1 }`
+      # @return [Users[]]
+      # @raise [HTTPError, StatusError]
+      #
+      def members(room_id: nil, name: nil, offset: nil, count: nil, sort: nil)
+        response = session.request_json(
+          self.class.api_path('members'),
+          body: room_params(room_id, name).merge(build_list_body(offset, count, sort, nil, nil))
+        )
+
+        response['members'].map { |hash| RocketChat::User.new hash } if response['success']
+      end
+
       private
 
       attr_reader :session

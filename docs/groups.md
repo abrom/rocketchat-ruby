@@ -57,3 +57,16 @@ To add a moderator to a group, the same options as an `add_owner` request can be
 #### groups.removeModerator
 
 To remove a moderator from a group, the same options as an `add_owner` request can be used.
+
+### groups.members
+
+This method returns the users of participants of a private group.
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.groups.members(name: 'some_channel_name')
+
+```
