@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.1.21](releases/tag/v0.1.21) - 2021-08-30
+### Added
+- [#36] Improve support for various REST APIs ([@abrom][])
+
 ## [0.1.20](releases/tag/v0.1.20) - 2021-03-29
 ### Added
 - [#34] Support for channels.members and groups.members ([@alinavancea][])
