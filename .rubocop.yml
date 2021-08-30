@@ -1,4 +1,11 @@
-require: rubocop-rspec
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.5
 
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
@@ -36,6 +43,9 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 15
 
 RSpec/NestedGroups:
   Max: 4

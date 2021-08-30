@@ -11,9 +11,11 @@ module RocketChat
 
       def self.inherited(subclass)
         field = subclass.name.split('::')[-1].downcase
-        collection = field + 's'
+        collection = "#{field}s"
         subclass.send(:define_singleton_method, :field) { field }
         subclass.send(:define_singleton_method, :collection) { collection }
+
+        super
       end
 
       #
@@ -281,6 +283,25 @@ module RocketChat
           body: room_params(room_id, name)
             .merge(Util.camelize(attribute) => value)
         )['success']
+      end
+
+      #
+      # *.members* REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name
+      # @param [Integer] offset Query offset
+      # @param [Integer] count Query count/limit
+      # @param [Hash] sort Query field sort hash. eg `{ msgs: 1, name: -1 }`
+      # @return [Users[]]
+      # @raise [HTTPError, StatusError]
+      #
+      def members(room_id: nil, name: nil, offset: nil, count: nil, sort: nil)
+        response = session.request_json(
+          self.class.api_path('members'),
+          body: room_params(room_id, name).merge(build_list_body(offset, count, sort, nil, nil))
+        )
+
+        response['members'].map { |hash| RocketChat::User.new hash } if response['success']
       end
 
       private

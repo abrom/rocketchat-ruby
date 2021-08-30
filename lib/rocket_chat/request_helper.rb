@@ -111,7 +111,7 @@ module RocketChat
         add_body(req, body) if body
       else
         uri = path
-        uri += '?' + body.map { |k, v| "#{k}=#{v}" }.join('&') if body
+        uri += "?#{body.map { |k, v| "#{k}=#{v}" }.join('&')}" if body
         req = Net::HTTP::Get.new(uri, headers)
       end
 

@@ -69,7 +69,7 @@ module RocketChat
           method: :post,
           body: {
             userId: id,
-            data: user_option_hash(options, true)
+            data: user_option_hash(options, include_personal_fields: true)
           }
         )
         RocketChat::User.new response['user']
@@ -182,7 +182,7 @@ module RocketChat
 
       attr_reader :session
 
-      def user_option_hash(options, include_personal_fields = false)
+      def user_option_hash(options, include_personal_fields: false)
         args = [options, :active, :roles, :join_default_channels, :require_password_change,
                 :send_welcome_email, :verified, :custom_fields]
         args += %i[username email name password] if include_personal_fields

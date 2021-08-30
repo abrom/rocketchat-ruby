@@ -636,7 +636,7 @@ describe RocketChat::Messages::User do
 
       it 'raises a status error' do
         expect do
-          session.users.set_avatar(user_id: '1234')
+          session.users.set_avatar('some-image-url', user_id: '1234')
         end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
       end
     end
@@ -645,7 +645,7 @@ describe RocketChat::Messages::User do
   ### User request/response helpers
 
   def user_for_request(name, extras = {})
-    split = name.downcase.split(' ')
+    split = name.downcase.split
     {
       username: split.join('_'),
       email: extras[:email] || "#{split.join('@')}.com",
