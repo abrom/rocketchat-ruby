@@ -47,6 +47,9 @@ RSpec/MultipleExpectations:
 RSpec/MultipleMemoizedHelpers:
   Max: 15
 
+RSpec/NestedGroups:
+  Max: 4
+
 Style/ExponentialNotation:
   Enabled: true
 
@@ -62,6 +65,9 @@ Style/HashTransformValues:
 Style/NumericLiterals:
   Exclude:
     - "**/*_spec.rb"
+
+Style/RedundantFetchBlock:
+  Enabled: true
 
 Style/RedundantRegexpCharacterClass:
   Enabled: true

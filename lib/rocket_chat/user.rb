@@ -70,6 +70,21 @@ module RocketChat
       data['roles']
     end
 
+    # User rooms
+    def rooms
+      return [] unless data['rooms'].is_a? Array
+
+      data['rooms'].map do |hash|
+        # the users.info API returns the rooms data with the subscription ID as `_id` and room ID as `rid`
+        if hash['rid']
+          hash['subscription_id'] = hash['_id']
+          hash['_id'] = hash['rid']
+        end
+
+        RocketChat::Room.new hash
+      end
+    end
+
     def inspect
       format(
         '#<%<class_name>s:0x%<object_id>p @id="%<id>s" @username="%<username>s" @active="%<active>s">',

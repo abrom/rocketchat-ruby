@@ -114,13 +114,16 @@ module RocketChat
       # users.info REST API
       # @param [String] user_id Rocket.Chat user id
       # @param [String] username Username
+      # @param [Boolean] include_rooms Whether to include rooms in the response.
+      #                                Requires calling user to have the `view-other-user-channels` permission
       # @return [User]
       # @raise [HTTPError, StatusError]
       #
-      def info(user_id: nil, username: nil)
+      def info(user_id: nil, username: nil, include_rooms: false)
         response = session.request_json(
           '/api/v1/users.info',
-          body: user_params(user_id, username),
+          body: user_params(user_id, username)
+            .merge(include_rooms ? { fields: { userRooms: 1 }.to_json } : {}),
           upstreamed_errors: ['error-invalid-user']
         )
 
