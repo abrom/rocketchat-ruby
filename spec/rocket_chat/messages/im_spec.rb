@@ -200,7 +200,7 @@ describe RocketChat::Messages::Im do
 
       context 'when setting attribute for an invalid room' do
         it 'returns failure' do
-          expect(session.im.delete(room_id: '1236')).to eq false
+          expect(session.im.delete(room_id: '1236')).to be false
         end
       end
     end
@@ -388,10 +388,10 @@ describe RocketChat::Messages::Im do
 
       it 'get quantity of messages specifying the username' do
         im = session.im.counters room_id: 'rocket.cat', username: 'user.test'
-        expect(im.joined).to eq true
+        expect(im.joined).to be true
         expect(im.unreads_from).to eq '2019-01-05T20:37:09.130Z'
         expect(im.latest).to eq '2019-01-05T20:37:09.130Z'
-        expect(im.success).to eq true
+        expect(im.success).to be true
       end
 
       it 'does not send valid attributes' do

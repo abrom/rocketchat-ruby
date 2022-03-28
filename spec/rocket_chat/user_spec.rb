@@ -74,7 +74,7 @@ describe RocketChat::User do
   end
 
   describe '#email_verified?' do
-    it { expect(user.email_verified?).to eq true }
+    it { expect(user.email_verified?).to be true }
   end
 
   describe '#status' do
@@ -94,7 +94,7 @@ describe RocketChat::User do
   end
 
   describe '#active?' do
-    it { expect(user.active?).to eq true }
+    it { expect(user.active?).to be true }
   end
 
   describe '#roles' do

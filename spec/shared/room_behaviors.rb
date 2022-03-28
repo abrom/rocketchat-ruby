@@ -111,7 +111,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
 
       context 'when setting attribute for an invalid room' do
         it 'returns failure' do
-          expect(scope.delete(room_id: '1236')).to eq false
+          expect(scope.delete(room_id: '1236')).to be false
         end
       end
     end

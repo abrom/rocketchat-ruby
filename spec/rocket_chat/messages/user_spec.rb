@@ -500,8 +500,8 @@ describe RocketChat::Messages::User do
 
     context 'with an invalid user' do
       it 'returns false' do
-        expect(session.users.delete(user_id: '1236')).to eq false
-        expect(session.users.delete(username: 'invalid-user')).to eq false
+        expect(session.users.delete(user_id: '1236')).to be false
+        expect(session.users.delete(username: 'invalid-user')).to be false
       end
     end
 

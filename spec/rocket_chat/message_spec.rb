@@ -52,10 +52,10 @@ describe RocketChat::Message do
   end
 
   describe '#parse_urls' do
-    it { expect(message.parse_urls).to eq true }
+    it { expect(message.parse_urls).to be true }
   end
 
   describe '#groupable' do
-    it { expect(message.groupable).to eq false }
+    it { expect(message.groupable).to be false }
   end
 end
