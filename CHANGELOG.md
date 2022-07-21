@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.1.22](releases/tag/v0.1.22) - 2022-07-21
+### Fixed
+- [#38] Fix room (channel/group) online API queries (use `query` instead of `roomId`) ([@abrom][])
+
 ## [0.1.21](releases/tag/v0.1.21) - 2021-08-30
 ### Added
 - [#36] Improve support for various REST APIs ([@abrom][])
