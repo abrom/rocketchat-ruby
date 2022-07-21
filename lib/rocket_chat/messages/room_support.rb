@@ -15,6 +15,16 @@ module RocketChat
           {}
         end
       end
+
+      def room_query_params(id, name)
+        if id
+          { _id: id }
+        elsif name
+          { name: name }
+        else
+          {}
+        end.to_json
+      end
     end
   end
 end
