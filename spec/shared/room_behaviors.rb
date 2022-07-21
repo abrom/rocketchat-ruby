@@ -17,8 +17,8 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
     }
   end
   let(:invalid_room_message) do
-    %(The required "roomId" or "roomName" param provided does not match any #{described_class.field}) \
-      ' [error-room-not-found]'
+    %(The required "roomId" or "roomName" param provided does not match any #{described_class.field} ) \
+      '[error-room-not-found]'
   end
   let(:invalid_room_body) do
     {

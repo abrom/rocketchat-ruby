@@ -95,15 +95,18 @@ describe RocketChat::Messages::Channel do
 
     before do
       # Stubs for /api/v1/channels.online REST API
-      stub_unauthed_request :get, described_class.api_path('online?roomName=authed')
+      stub_unauthed_request :get, described_class.api_path('online?query=%7B%22name%22:%22authed%22%7D')
 
-      stub_authed_request(:get, described_class.api_path('online?roomName=wrong-room'))
+      stub_authed_request(:get, described_class.api_path('online?query=%7B%22name%22:%22wrong-room%22%7D'))
         .to_return(invalid_room_response)
 
-      stub_authed_request(:get, described_class.api_path('online?roomName=room-one'))
+      stub_authed_request(:get, described_class.api_path('online?query=%7B%22name%22:%22room-one%22%7D'))
         .to_return(online_users_response)
 
-      stub_authed_request(:get, described_class.api_path('online?roomName=empty-room'))
+      stub_authed_request(:get, described_class.api_path('online?query=%7B%22_id%22:%22TZtANZwQt369rR4UR%22%7D'))
+        .to_return(online_users_response)
+
+      stub_authed_request(:get, described_class.api_path('online?query=%7B%22name%22:%22empty-room%22%7D'))
         .to_return(empty_room_response)
     end
 
@@ -122,6 +125,18 @@ describe RocketChat::Messages::Channel do
 
       it 'returns online users for a filled room' do
         online_users = scope.online(name: 'room-one')
+
+        expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
+        expect(online_users[0].id).to eq 'rocketID1'
+        expect(online_users[0].username).to eq 'rocketUserName1'
+        expect(online_users[1].id).to eq 'rocketID2'
+        expect(online_users[1].username).to eq 'rocketUserName2'
+      end
+    end
+
+    context 'with a valid room id' do
+      it 'returns online users for a filled room' do
+        online_users = scope.online(room_id: 'TZtANZwQt369rR4UR')
 
         expect(online_users.map(&:class)).to eq [RocketChat::User, RocketChat::User]
         expect(online_users[0].id).to eq 'rocketID1'

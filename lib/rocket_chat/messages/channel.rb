@@ -46,13 +46,15 @@ module RocketChat
       #
       # channels.online REST API
       # @param [String] room_id Rocket.Chat room id
+      # @param [String] name Rocket.Chat room name
       # @return [Users[]]
+      # @note Must provide either `room_id` or `name` parameter. `room_id` will take precedence if providing both
       # @raise [HTTPError, StatusError]
       #
       def online(room_id: nil, name: nil)
         response = session.request_json(
           '/api/v1/channels.online',
-          body: room_params(room_id, name)
+          body: { query: room_query_params(room_id, name) }
         )
 
         response['online'].map { |hash| RocketChat::User.new hash } if response['success']
