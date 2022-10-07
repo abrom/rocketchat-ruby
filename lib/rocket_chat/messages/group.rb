@@ -40,6 +40,21 @@ module RocketChat
         )['success']
       end
 
+      #
+      # groups.kick REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [String] user_id Rocket.Chat user id
+      # @return [Boolean]
+      # @raise [HTTPError, StatusError]
+      #
+      def kick(room_id: nil, user_id: nil)
+        session.request_json(
+          '/api/v1/groups.kick',
+          method: :post,
+          body: room_params(room_id, nil).merge(user_params(user_id, nil))
+        )['success']
+      end
+
       # groups.list REST API
       # @param [Integer] offset Query offset
       # @param [Integer] count Query count/limit
