@@ -58,6 +58,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/channels.info](docs/channels.md#channelsinfo)
 * [/api/v1/channels.invite](docs/channels.md#channelsinvite)
 * [/api/v1/channels.join](docs/channels.md#channelsjoin)
+* [/api/v1/channels.kick](docs/channels.md#channelskick)
 * [/api/v1/channels.leave](docs/channels.md#channelsleave)
 * [/api/v1/channels.list](docs/channels.md#channelslist)
 * [/api/v1/channels.rename](docs/channels.md#channelsrename)
@@ -82,6 +83,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/groups.removeModerator](docs/groups.md#groupsremovemoderator)
 * /api/v1/groups.info
 * /api/v1/groups.invite
+* [/api/v1/groups.kick](docs/groups.md#groupskick)
 * /api/v1/groups.leave
 * [/api/v1/groups.list](docs/groups.md#groupslist)
 * /api/v1/groups.rename

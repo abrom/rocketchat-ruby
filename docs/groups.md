@@ -70,3 +70,13 @@ session = rocket_server.login('username', 'password')
 session.groups.members(name: 'some_channel_name')
 
 ```
+
+#### groups.kick
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channel = session.groups.kick(room_id: 'some-room-id', user_id: 'some-user-id')
+```

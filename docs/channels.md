@@ -105,6 +105,15 @@ channel = session.channels.join(name: 'some_channel_name')
 
 Either room_id (RocketChat's ID) or name can be used.
 
+#### channels.kick
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+channel = session.channels.kick(room_id: 'some-room-id', user_id: 'some-user-id')
+```
 
 #### channels.leave
 
