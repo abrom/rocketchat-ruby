@@ -61,6 +61,7 @@ module RocketChat
       end
 
       # Keys for set_attr:
+      # * [Hash] custom_fields Custom fields for the channel
       # * [String] description A room's description
       # * [String] join_code Code to join a channel
       # * [String] purpose Alias for description
@@ -68,7 +69,7 @@ module RocketChat
       # * [String] topic A room's topic
       # * [Strong] type c (channel) or p (private group)
       def self.settable_attributes
-        %i[description join_code purpose read_only topic type]
+        %i[custom_fields description join_code purpose read_only topic type]
       end
     end
   end
