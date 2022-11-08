@@ -309,7 +309,7 @@ module RocketChat
       attr_reader :session
 
       def room_option_hash(options)
-        args = [options, :members, :read_only, :custom_fields]
+        args = [options, :members, :read_only, :custom_fields, :extra_data]
 
         options = Util.slice_hash(*args)
         return {} if options.empty?
