@@ -14,7 +14,7 @@ channel = session.channels.create('new_channelname', members: ['username1', 'use
 
 Optional parameters for create are:
 
-:members, :read_only, :custom_fields
+:members, :read_only, :custom_fields, :extra_data
 
 
 #### channels.info

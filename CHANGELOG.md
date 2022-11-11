@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.1.23](releases/tag/v0.1.23) - 2022-11-11
+### Added
+- [#40] Add set_attr options for announcement, custom_fields and default for channels/groups ([@reist][],[@nmagedman][])
+
 ## [0.1.22](releases/tag/v0.1.22) - 2022-07-21
 ### Fixed
 - [#38] Fix room (channel/group) online API queries (use `query` instead of `roomId`) ([@abrom][])
@@ -122,4 +126,4 @@
 [@chrisstime]: https://github.com/chrisstime
 [@christianmoretti]: https://github.com/christianmoretti
 [@alinavancea]: https://github.com/alinavancea
-              
+[@nmagedman]: https://github.com/nmagedman
