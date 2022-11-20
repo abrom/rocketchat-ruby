@@ -104,7 +104,7 @@ module RocketChat
 
     def create_request(path, options)
       headers = get_headers(options)
-      body = options[:body]
+      body = options[:body]&.reject { |_key, value| value.nil? }
 
       if options[:method] == :post
         req = Net::HTTP::Post.new(path, headers)
