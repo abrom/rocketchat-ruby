@@ -313,9 +313,9 @@ describe RocketChat::Messages::Im do
 
   describe '#counters' do
     before do
-      stub_unauthed_request :get, '/api/v1/im.counters?roomId=rocket.cat&username='
+      stub_unauthed_request :get, '/api/v1/im.counters?roomId=rocket.cat'
 
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat&username=')
+      stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat')
         .to_return(
           body: {
             joined: true,
@@ -330,22 +330,7 @@ describe RocketChat::Messages::Im do
           status: 200
         )
 
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat&username=user.test')
-        .to_return(
-          body: {
-            joined: true,
-            members: 2,
-            unreads: 1,
-            unreadsFrom: '2019-01-05T20:37:09.130Z',
-            msgs: 0,
-            latest: '2019-01-05T20:37:09.130Z',
-            userMentions: 0,
-            success: true
-          }.to_json,
-          status: 200
-        )
-
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=1234&username=')
+      stub_authed_request(:get, '/api/v1/im.counters?roomId=1234')
         .to_return(
           body: {
             success: false,
@@ -355,7 +340,7 @@ describe RocketChat::Messages::Im do
           status: 400
         )
 
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=&username=')
+      stub_authed_request(:get, '/api/v1/im.counters?roomId=')
         .to_return(
           body: {
             success: false,
@@ -386,14 +371,6 @@ describe RocketChat::Messages::Im do
         expect(im.user_mentions).to eq 0
       end
 
-      it 'get quantity of messages specifying the username' do
-        im = session.im.counters room_id: 'rocket.cat', username: 'user.test'
-        expect(im.joined).to be true
-        expect(im.unreads_from).to eq '2019-01-05T20:37:09.130Z'
-        expect(im.latest).to eq '2019-01-05T20:37:09.130Z'
-        expect(im.success).to be true
-      end
-
       it 'does not send valid attributes' do
         expect do
           session.im.counters room_id: '1234'
@@ -402,7 +379,7 @@ describe RocketChat::Messages::Im do
 
       it 'does not send any attributes' do
         expect do
-          session.im.counters room_id: '', username: ''
+          session.im.counters room_id: ''
         end.to raise_error RocketChat::StatusError
       end
     end
