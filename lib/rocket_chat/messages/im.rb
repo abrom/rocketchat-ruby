@@ -78,14 +78,16 @@ module RocketChat
       #
       # im.counters REST API
       # @param [String] room_id Rocket.Chat roomId
+      # @param [String] user_id Rocket.Chat userId [optional]
       # @return [RocketChat::ImSummary]
       # @raise [HTTPError, StatusError]
       #
-      def counters(room_id:)
+      def counters(room_id:, user_id: nil)
         response = session.request_json(
           '/api/v1/im.counters',
           body: {
-            roomId: room_id
+            roomId: room_id,
+            userId: user_id
           }
         )
         RocketChat::ImSummary.new response
