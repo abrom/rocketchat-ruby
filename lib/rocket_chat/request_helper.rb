@@ -104,14 +104,14 @@ module RocketChat
 
     def create_request(path, options)
       headers = get_headers(options)
-      body = options[:body]
+      body = options[:body]&.reject { |_key, value| value.nil? }
 
       if options[:method] == :post
         req = Net::HTTP::Post.new(path, headers)
         add_body(req, body) if body
       else
         uri = path
-        uri += "?#{body.map { |k, v| "#{k}=#{v}" }.join('&')}" if body
+        uri += "?#{URI.encode_www_form(body)}" if body
         req = Net::HTTP::Get.new(uri, headers)
       end
 

@@ -326,12 +326,12 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
 
       stub_authed_request(:post, described_class.api_path('rename'))
         .with(
-          body: { roomId: nil, name: 'new_room_name' }.to_json
+          body: { name: 'new_room_name' }.to_json
         ).to_return(not_provided_room_body)
 
       stub_authed_request(:post, described_class.api_path('rename'))
         .with(
-          body: { roomId: nil, name: nil }.to_json
+          body: {}.to_json
         ).to_return(
           body: {
             success: false,

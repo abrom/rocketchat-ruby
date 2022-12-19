@@ -313,97 +313,95 @@ describe RocketChat::Messages::Im do
 
   describe '#counters' do
     before do
-      stub_unauthed_request :get, '/api/v1/im.counters?roomId=rocket.cat&username='
+      stub_unauthed_request :get, "/api/v1/im.counters?roomId=#{ROOM_ID}"
 
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat&username=')
+      stub_authed_request(:get, "/api/v1/im.counters?roomId=#{ROOM_ID}")
         .to_return(
           body: {
             joined: true,
             members: 2,
-            unreads: 0,
-            unreadsFrom: '2019-01-04T21:40:11.251Z',
-            msgs: 0,
-            latest: '2019-01-04T21:40:11.251Z',
-            userMentions: 0,
+            unreads: 3,
+            unreadsFrom: '2019-01-01T12:34:56.789Z',
+            msgs: 4,
+            latest: '2019-01-23T01:23:45.678Z',
+            userMentions: 5,
             success: true
           }.to_json,
           status: 200
         )
 
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=rocket.cat&username=user.test')
-        .to_return(
-          body: {
-            joined: true,
-            members: 2,
-            unreads: 1,
-            unreadsFrom: '2019-01-05T20:37:09.130Z',
-            msgs: 0,
-            latest: '2019-01-05T20:37:09.130Z',
-            userMentions: 0,
-            success: true
-          }.to_json,
-          status: 200
-        )
+      stub_authed_request(:get, "/api/v1/im.counters?roomId=#{BOGUS_ROOM_ID}")
+        .to_return(UNAUTHORIZED)
 
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=1234&username=')
+      stub_authed_request(:get, '/api/v1/im.counters?roomId=')
         .to_return(
           body: {
             success: false,
-            error: '[invalid-channel]',
-            errorType: 'invalid-channel'
-          }.to_json,
-          status: 400
-        )
-
-      stub_authed_request(:get, '/api/v1/im.counters?roomId=&username=')
-        .to_return(
-          body: {
-            success: false,
-            error: 'Body param "roomId" or "username" is required [error-room-param-not-provided]',
+            error: 'Query param "roomId" is required [error-room-param-not-provided]',
             errorType: 'error-room-param-not-provided'
           }.to_json,
           status: 400
         )
+
+      stub_authed_request(:get, "/api/v1/im.counters?roomId=#{ROOM_ID}&userId=#{USER_ID}")
+        .to_return(UNAUTHORIZED)
     end
 
-    context 'with an invalid session token' do
-      let(:token) { RocketChat::Token.new(authToken: nil, userId: nil) }
-
-      it 'raises a status error' do
-        expect do
-          session.im.counters room_id: 'rocket.cat'
-        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+    context 'when called with valid room_id' do
+      it 'returns counters for that DM room' do # rubocop:disable RSpec/MultipleExpectations
+        counters = session.im.counters room_id: ROOM_ID
+        expect(counters).to be_a RocketChat::ImSummary
+        expect(counters.joined).to be true
+        expect(counters.members).to eq 2
+        expect(counters.unreads).to eq 3
+        expect(counters.unreads_from).to eq '2019-01-01T12:34:56.789Z'
+        expect(counters.msgs).to eq 4
+        expect(counters.latest).to eq '2019-01-23T01:23:45.678Z'
+        expect(counters.user_mentions).to eq 5
       end
     end
 
-    context 'with a valid session' do
-      it 'get quantity of messages' do
-        im = session.im.counters room_id: 'rocket.cat'
-        expect(im).to be_a RocketChat::ImSummary
-        expect(im.members).to eq 2
-        expect(im.unreads).to eq 0
-        expect(im.msgs).to eq 0
-        expect(im.user_mentions).to eq 0
-      end
-
-      it 'get quantity of messages specifying the username' do
-        im = session.im.counters room_id: 'rocket.cat', username: 'user.test'
-        expect(im.joined).to be true
-        expect(im.unreads_from).to eq '2019-01-05T20:37:09.130Z'
-        expect(im.latest).to eq '2019-01-05T20:37:09.130Z'
-        expect(im.success).to be true
-      end
-
-      it 'does not send valid attributes' do
+    context 'when called with bogus room_id' do
+      it 'raises StatusError' do
         expect do
-          session.im.counters room_id: '1234'
-        end.to raise_error RocketChat::StatusError
+          session.im.counters room_id: BOGUS_ROOM_ID
+        end.to raise_error RocketChat::StatusError, UNAUTHORIZED_MESSAGE
       end
+    end
 
-      it 'does not send any attributes' do
+    context 'when called with blank room_id' do
+      it 'raises StatusError' do
         expect do
-          session.im.counters room_id: '', username: ''
-        end.to raise_error RocketChat::StatusError
+          session.im.counters room_id: ''
+        end.to raise_error RocketChat::StatusError, 'Query param "roomId" is required [error-room-param-not-provided]'
+      end
+    end
+
+    context 'when called without room_id' do
+      it 'raises ArgumentError' do
+        expect do
+          session.im.counters
+        end.to raise_error ArgumentError
+      end
+    end
+
+    context 'when called with user_id' do
+      context 'when you do not have view-room-administration permission' do
+        it 'raises error' do
+          expect do
+            session.im.counters room_id: ROOM_ID, user_id: USER_ID
+          end.to raise_error RocketChat::StatusError, UNAUTHORIZED_MESSAGE
+        end
+      end
+    end
+
+    context 'when called with an invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: 'bogus-token', userId: USER_ID) }
+
+      it 'raises error' do
+        expect do
+          session.im.counters room_id: ROOM_ID
+        end.to raise_error RocketChat::StatusError, UNAUTHORIZED_MESSAGE
       end
     end
   end

@@ -15,12 +15,18 @@ SERVER_URI = URI.parse('http://www.example.com/')
 AUTH_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 USER_ID = 'AAAAAAAAAAAAAAAAA'
 OTHER_USER_ID = 'BBBBBBBBBBBBBBBBB'
+ROOM_ID = 'ValidRoomID'
+BOGUS_ROOM_ID = 'BogusRoomID'
 USERNAME = 'user'
 PASSWORD = 'password'
+
+UNAUTHORIZED_MESSAGE = 'You must be logged in to do this.'
 UNAUTHORIZED_BODY = {
   status: :error,
-  message: 'You must be logged in to do this.'
+  message: UNAUTHORIZED_MESSAGE
 }.to_json
+UNAUTHORIZED_STATUS = 401
+UNAUTHORIZED = { body: UNAUTHORIZED_BODY, status: UNAUTHORIZED_STATUS }.freeze
 
 ### Authenticated request helpers
 
@@ -31,5 +37,5 @@ end
 
 def stub_unauthed_request(method, action)
   stub_request(method, SERVER_URI + action)
-    .to_return(body: UNAUTHORIZED_BODY, status: 401)
+    .to_return(UNAUTHORIZED)
 end
