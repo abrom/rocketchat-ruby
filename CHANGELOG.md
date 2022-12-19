@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.2.1](releases/tag/v0.2.1) - 2022-12-19
+### Fixed
+- [#41] URL-encode param values in GET query strings ([@nmagedman][])
+
 ## [0.1.23](releases/tag/v0.1.23) - 2022-11-11
 ### Added
 - [#40] Add set_attr options for announcement, custom_fields and default for channels/groups ([@reist][],[@nmagedman][])
