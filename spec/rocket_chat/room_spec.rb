@@ -3,5 +3,7 @@
 require 'spec_helper'
 
 describe RocketChat::Room do
-  pending 'Add some specs for RocketChat::Room'
+  it 'RocketChat::Room spec', pending: 'Add some specs for RocketChat::Room' do
+    raise NotImplementedError, 'Add some specs for RocketChat::Room'
+  end
 end
