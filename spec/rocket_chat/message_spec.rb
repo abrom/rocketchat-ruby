@@ -16,7 +16,8 @@ describe RocketChat::Message do
       },
       'rid' => 'GENERAL',
       '_updatedAt' => '2016-12-14T20:57:05.119Z',
-      '_id' => 'jC9chsFddTvsbFQG7'
+      '_id' => 'jC9chsFddTvsbFQG7',
+      'tmid' => 'gcGai9bRREqokjyPc'
     }
   end
   let(:message) { described_class.new data }
@@ -57,5 +58,9 @@ describe RocketChat::Message do
 
   describe '#groupable' do
     it { expect(message.groupable).to be false }
+  end
+
+  describe '#tmid' do
+    it { expect(message.tmid).to be 'gcGai9bRREqokjyPc' }
   end
 end
