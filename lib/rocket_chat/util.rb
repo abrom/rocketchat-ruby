@@ -32,7 +32,7 @@ module RocketChat
     # @return Hash filtered by keys
     #
     def slice_hash(hash, *keys)
-      return {} if keys.length.zero?
+      return {} if keys.empty?
 
       new_hash = {}
       hash.each do |key, value|

@@ -41,6 +41,9 @@ Metrics/MethodLength:
 RSpec/ExampleLength:
   Max: 10
 
+RSpec/IndexedLet:
+  Max: 2
+
 RSpec/MultipleExpectations:
   Max: 5
 
