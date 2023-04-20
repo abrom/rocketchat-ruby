@@ -222,6 +222,37 @@ describe RocketChat::Messages::Chat do
           body: {
             roomId: '1234',
             channel: '#general',
+            text: 'Test message',
+            tmid: 'thread-12345'
+          }.to_json
+        ).to_return(
+          body: {
+            success: true,
+            channel: 'general',
+            message: {
+              alias: '',
+              msg: 'Test message',
+              parseUrls: true,
+              groupable: false,
+              ts: '2016-12-14T20:56:05.117Z',
+              u: {
+                _id: 'y65tAmHs93aDChMWu',
+                username: 'graywolf336'
+              },
+              rid: '1234',
+              _updatedAt: '2016-12-14T20:56:05.119Z',
+              _id: 'jC9chsFddTvsbFQG7',
+              tmid: 'thread-12345'
+            }
+          }.to_json,
+          status: 200
+        )
+
+      stub_authed_request(:post, '/api/v1/chat.postMessage')
+        .with(
+          body: {
+            roomId: '1234',
+            channel: '#general',
             text: 'Other message'
           }.to_json
         ).to_return(
@@ -251,6 +282,15 @@ describe RocketChat::Messages::Chat do
       it 'returns message for room id' do
         message = session.chat.post_message room_id: '1234', channel: '#general', text: 'Test message'
         expect(message).to be_a RocketChat::Message
+        expect(message.message).to eq 'Test message'
+      end
+
+      it 'returns message for thread in room id' do
+        message = session.chat.post_message(
+          room_id: '1234', channel: '#general', text: 'Test message', tmid: 'thread-12345'
+        )
+        expect(message).to be_a RocketChat::Message
+        expect(message.tmid).to eq 'thread-12345'
         expect(message.message).to eq 'Test message'
       end
 

@@ -104,14 +104,14 @@ describe RocketChat::Messages::Group do
   end
 
   describe '#list_all' do
-    let(:room1) do
+    let(:room_one) do
       {
         _id: 123,
         name: 'room-one'
       }
     end
 
-    let(:room2) do
+    let(:room_two) do
       {
         _id: 124,
         name: 'room-two'
@@ -132,7 +132,7 @@ describe RocketChat::Messages::Group do
       {
         body: {
           success: true,
-          groups: [room1]
+          groups: [room_one]
         }.to_json,
         status: 200
       }
@@ -142,7 +142,7 @@ describe RocketChat::Messages::Group do
       {
         body: {
           success: true,
-          groups: [room1, room2]
+          groups: [room_one, room_two]
         }.to_json,
         status: 200
       }
@@ -176,7 +176,7 @@ describe RocketChat::Messages::Group do
       end
 
       context 'when searching for a valid room name' do
-        it 'returns room1' do
+        it 'returns room_one' do
           rooms = scope.list_all(query: { name: 'room-one' })
 
           expect(rooms.length).to eq 1

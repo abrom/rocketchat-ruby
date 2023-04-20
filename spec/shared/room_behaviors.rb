@@ -205,14 +205,14 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
 
   describe '#list' do
     let(:rooms_key) { described_class.collection.to_sym }
-    let(:room1) do
+    let(:room_one) do
       {
         _id: 123,
         name: 'room-one'
       }
     end
 
-    let(:room2) do
+    let(:room_two) do
       {
         _id: 124,
         name: 'room-two'
@@ -233,7 +233,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       {
         body: {
           success: true,
-          rooms_key => [room1]
+          rooms_key => [room_one]
         }.to_json,
         status: 200
       }
@@ -243,7 +243,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       {
         body: {
           success: true,
-          rooms_key => [room1, room2]
+          rooms_key => [room_one, room_two]
         }.to_json,
         status: 200
       }
@@ -280,7 +280,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         end
 
         context 'when searching for a valid room name' do
-          it 'returns room1' do
+          it 'returns room_one' do
             rooms = scope.list(query: { name: 'room-one' })
 
             expect(rooms.length).to eq 1

@@ -20,6 +20,11 @@ module RocketChat
       data['_id']
     end
 
+    # Message thread id
+    def tmid
+      data['tmid']
+    end
+
     # Timestamp
     def timestamp
       Time.parse data['ts']
@@ -67,7 +72,8 @@ module RocketChat
         object_id: object_id,
         id: id,
         room_id: room_id,
-        message: message
+        message: message,
+        tmid: tmid
       )
     end
   end
