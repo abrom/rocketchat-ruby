@@ -55,7 +55,7 @@ module RocketChat
       # @param [String] room_id Rocket.Chat room id
       # @param [String] name Rocket.Chat room name (coming soon)
       # @param [String] channel Rocket.Chat channel name
-      # @param [Hash] params Optional params (text, alias, emoji, avatar & attachments)
+      # @param [Hash] params Optional params (text, alias, emoji, tmid, avatar & attachments)
       # @return [RocketChat::Message]
       # @raise [HTTPError, StatusError]
       #
