@@ -3,6 +3,15 @@
 ## Unreleased
 - None
 
+## [0.2.2](releases/tag/v0.2.2) - 2023-04-21
+### Added
+- [#43] Add Ruby 3.2 support ([@MrRTI][])
+- [#44] Add support for thread messages ([@MrRTI][])
+
+### Fixed
+- [#45] Fixed some rubocop lints ([@abrom][])
+
+
 ## [0.2.1](releases/tag/v0.2.1) - 2022-12-19
 ### Fixed
 - [#41] URL-encode param values in GET query strings ([@nmagedman][])
@@ -131,3 +140,4 @@
 [@christianmoretti]: https://github.com/christianmoretti
 [@alinavancea]: https://github.com/alinavancea
 [@nmagedman]: https://github.com/nmagedman
+[@MrRTI]: https://github.com/MrRTi 

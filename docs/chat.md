@@ -40,6 +40,18 @@ message = session.chat.post_message(room_id: 'some_message_id',
                                     text: 'hello, rocket.chat')
 ```
 
+Post a message in a thread.
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+message = session.chat.post_message(room_id: 'some_message_id',
+                                    text: 'hello, rocket.chat',
+                                    tmid: 'gcGai9bRREqokjyPc')
+```
+
 #### chat.update
 
 Update an existing message.
