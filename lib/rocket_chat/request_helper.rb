@@ -104,11 +104,14 @@ module RocketChat
 
     def create_request(path, options)
       headers = get_headers(options)
-      body = options[:body]&.reject { |_key, value| value.nil? }
+      body = reject_nils(options[:body])
 
       if options[:method] == :post
         req = Net::HTTP::Post.new(path, headers)
         add_body(req, body) if body
+        
+        form_data = reject_nils(options[:form_data])
+        add_form_data(req, form_data) if form_data
       else
         uri = path
         uri += "?#{URI.encode_www_form(body)}" if body
@@ -125,6 +128,14 @@ module RocketChat
       else
         request.body = body.to_s
       end
+    end
+
+    def add_form_data(request, form_data)
+      request.set_form(form_data, 'multipart/form-data')
+    end
+
+    def reject_nils(data)
+      data&.reject { |_key, value| value.nil? }
     end
   end
 end
