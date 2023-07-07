@@ -9,7 +9,7 @@ module RocketChat
       include RoomSupport
       include UserSupport
 
-      API_PREFIX = "/api/v1"
+      API_PREFIX = '/api/v1'
 
       def self.inherited(subclass)
         field = subclass.name.split('::')[-1].downcase
@@ -319,7 +319,7 @@ module RocketChat
         response = session.request_json(
           "#{API_PREFIX}/rooms.upload/#{room_id}",
           method: :post,
-          form_data: file_upload_hash(file:, **rest_params)
+          form_data: file_upload_hash(file: file, **rest_params)
         )
 
         RocketChat::Message.new response['message'] if response['success']
@@ -346,8 +346,8 @@ module RocketChat
       end
 
       def file_upload_hash(**params)
-        permited_keys_for_file_upload = [:file, :msg, :description, :tmid]
-        valid_params = Util.slice_hash(params, *permited_keys_for_file_upload)
+        permited_keys_for_file_upload = %i[file msg description tmid]
+        Util.slice_hash(params, *permited_keys_for_file_upload)
       end
     end
   end
