@@ -1,0 +1,5 @@
+{
+    "success": false,
+    "error": "File type is not accepted. [error-invalid-file-type]",
+    "errorType": "error-invalid-file-type"
+}

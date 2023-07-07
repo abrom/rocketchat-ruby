@@ -1,0 +1,40 @@
+
+{
+    "message": {
+        "_id": "%{message_id}",
+        "rid": "%{room_id}",
+        "ts": "2023-07-07T10:03:44.048Z",
+        "file": {
+            "_id": "%{file_id}",
+            "name": "%{file_name}",
+            "type": "application/octet-stream"
+        },
+        "files": [
+            {
+                "_id": "%{file_id}",
+                "name": "%{file_name}",
+                "type": "application/octet-stream"
+            }
+        ],
+        "attachments": [
+            {
+                "ts": "1970-01-01T00:00:00.000Z",
+                "title": "%{file_name}",
+                "title_link": "/file-upload/%{file_id}/%{file_name}",
+                "title_link_download": true,
+                "type": "file",
+                "format": "%{format}",
+                "size": 8347
+            }
+        ],
+        "msg": "",
+        "u": {
+            "_id": "%{user_id}",
+            "username": "rocket_admin",
+            "name": "Admin"
+        },
+        "_updatedAt": "2023-07-07T10:03:44.097Z",
+        "urls": []
+    },
+    "success": true
+}
