@@ -131,6 +131,7 @@ module RocketChat
     end
 
     def add_form_data(request, form_data)
+      form_data.stringify_keys! if form_data.is_a? Hash  
       request.set_form(form_data, 'multipart/form-data')
     end
 

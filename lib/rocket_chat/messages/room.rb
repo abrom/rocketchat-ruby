@@ -9,6 +9,8 @@ module RocketChat
       include RoomSupport
       include UserSupport
 
+      API_PREFIX = "/api/v1"
+
       def self.inherited(subclass)
         field = subclass.name.split('::')[-1].downcase
         collection = "#{field}s"
@@ -27,7 +29,7 @@ module RocketChat
 
       # Full API path to call
       def self.api_path(method)
-        "/api/v1/#{collection}.#{method}"
+        "#{API_PREFIX}/#{collection}.#{method}"
       end
 
       #
@@ -304,6 +306,25 @@ module RocketChat
         response['members'].map { |hash| RocketChat::User.new hash } if response['success']
       end
 
+      #
+      # *.upload* REST API
+      # @param [String] room_id Rocket.Chat room id
+      # @param [File] file that should be uploaded to Rocket.Chat room
+      # @param [Hash] rest_params Optional params (msg, description, tmid)
+      # @return [RocketChat::Message]
+      # @raise [HTTPError, StatusError]
+      #
+      # https://developer.rocket.chat/reference/api/rest-api/endpoints/rooms-endpoints/upload-file-to-a-room
+      def upload_file(room_id:, file:, **rest_params)
+        response = session.request_json(
+          "#{API_PREFIX}/rooms.upload/#{room_id}",
+          method: :post,
+          form_data: file_upload_hash(file:, **rest_params)
+        )
+
+        RocketChat::Message.new response['message'] if response['success']
+      end
+
       private
 
       attr_reader :session
@@ -322,6 +343,11 @@ module RocketChat
       def validate_attribute(attribute)
         raise ArgumentError, "Unsettable attribute: #{attribute || 'nil'}" unless \
           self.class.settable_attributes.include?(attribute)
+      end
+
+      def file_upload_hash(**params)
+        permited_keys_for_file_upload = [:file, :msg, :description, :tmid]
+        valid_params = Util.slice_hash(params, *permited_keys_for_file_upload)
       end
     end
   end
