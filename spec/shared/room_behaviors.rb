@@ -700,6 +700,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
 
       context 'with text message' do
         it { expect { upload }.not_to raise_error }
+        it { expect(upload).to be_a(RocketChat::Message) }
       end
 
       context 'without text message' do
@@ -707,6 +708,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
         let(:response) { file_upload_without_message_response(room_id: room_id) }
 
         it { expect { upload }.not_to raise_error }
+        it { expect(upload).to be_a(RocketChat::Message) }
       end
     end
 
@@ -719,6 +721,7 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       end
 
       it { expect { upload }.not_to raise_error }
+      it { expect(upload).to be_a(RocketChat::Message) }
     end
 
     context 'when not accepted error is raised' do
