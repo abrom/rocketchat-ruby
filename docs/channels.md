@@ -182,3 +182,17 @@ session = rocket_server.login('username', 'password')
 session.channels.members(name: 'some_channel_name')
 
 ```
+
+
+### channels.upload_file
+
+Upload file to the room
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login('username', 'password')
+session.channels.upload_file(room_id: 'GENERAL', file: File, msg: "Optional Message", description: "Optional Description", tmid: "Optional thread message id")
+
+```
