@@ -156,4 +156,51 @@ describe RocketChat::Messages::Channel do
       end
     end
   end
+
+  describe '#kick' do
+    before do
+      # Stubs for /api/v1/channels.kick REST API
+      stub_unauthed_request :post, '/api/v1/channels.kick'
+
+      stub_authed_request(:post, '/api/v1/channels.kick')
+        .to_return(not_provided_room_body)
+
+      stub_authed_request(:post, '/api/v1/channels.kick')
+        .with(
+          body: { roomId: 'missing-room', userId: '1' }
+        ).to_return(invalid_room_body)
+
+      stub_authed_request(:post, '/api/v1/channels.kick')
+        .with(
+          body: { roomId: 'a-room', userId: '1' }
+        ).to_return(
+          body: { success: true }.to_json,
+          status: 200
+        )
+    end
+
+    context 'with a valid session' do
+      it 'returns success' do
+        expect(scope.kick(room_id: 'a-room', user_id: '1')).to be_truthy
+      end
+
+      context 'with a missing room' do
+        it 'raises a status error' do
+          expect do
+            scope.kick(room_id: 'missing-room', user_id: '1')
+          end.to raise_error RocketChat::StatusError, invalid_room_message
+        end
+      end
+    end
+
+    context 'with an invalid session token' do
+      let(:token) { RocketChat::Token.new(authToken: nil, roomId: nil) }
+
+      it 'raises a status error' do
+        expect do
+          scope.kick(room_id: 'a-room', user_id: 'test')
+        end.to raise_error RocketChat::StatusError, 'You must be logged in to do this.'
+      end
+    end
+  end
 end
