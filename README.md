@@ -70,6 +70,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * [/api/v1/channels.online](docs/channels.md#channelsonline)
 * [/api/v1/channels.members](docs/channels.md#channelsmembers)
 * /api/v1/channels.unarchive
+* [/api/v1/rooms.upload](docs/channels.md#channelsupload_file)
 
 #### Groups
 * /api/v1/groups.archive
@@ -92,6 +93,7 @@ This gem supports the following Rocket.Chat APIs (Tested against Rocket.Chat v0.
 * /api/v1/groups.setType
 * [/api/v1/groups.members](docs/groups.md#groupsmembers)
 * /api/v1/groups.unarchive
+* [/api/v1/rooms.upload](docs/groups.md#groupsupload_file)
 
 #### Users
 * [/api/v1/users.create](docs/users.md#userscreate)

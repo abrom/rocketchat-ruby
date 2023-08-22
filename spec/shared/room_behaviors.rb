@@ -682,6 +682,109 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
     end
   end
 
+  describe '#upload_file' do
+    subject(:upload) { scope.upload_file(room_id: room_id, file: file, **rest_params) }
+
+    let(:file) { '' }
+    let(:room_id) { 'rmid12345' }
+    let(:path) { "#{described_class::API_PREFIX}/rooms.upload/#{room_id}" }
+    let(:rest_params) { { msg: 'Text message', description: 'Description' } }
+    let(:response) { file_upload_response(room_id: room_id) }
+
+    context 'with file upload' do
+      let(:file) { File.open('spec/fixtures/files/iterm-theme.itermcolors') }
+
+      before do
+        stub_authed_request(:post, path).to_return(body: response, status: 200)
+      end
+
+      context 'with text message' do
+        it { expect { upload }.not_to raise_error }
+        it { expect(upload).to be_a(RocketChat::Message) }
+      end
+
+      context 'without text message' do
+        let(:rest_params) { {} }
+        let(:response) { file_upload_without_message_response(room_id: room_id) }
+
+        it { expect { upload }.not_to raise_error }
+        it { expect(upload).to be_a(RocketChat::Message) }
+      end
+    end
+
+    context 'with image upload' do
+      let(:file) { File.open('spec/fixtures/files/image.png') }
+      let(:response) { png_upload_response(room_id: room_id) }
+
+      before do
+        stub_authed_request(:post, path).to_return(body: response, status: 200)
+      end
+
+      it { expect { upload }.not_to raise_error }
+      it { expect(upload).to be_a(RocketChat::Message) }
+    end
+
+    context 'when not accepted error is raised' do
+      before do
+        stub_authed_request(:post, path).to_return(body: response, status: 400)
+      end
+
+      let(:file) { File.open('spec/fixtures/files/not_accepted.svg') }
+      let(:response) { upload_response('no_accepted_error.json') }
+      let(:error_message) { 'File type is not accepted. [error-invalid-file-type]' }
+
+      it 'raises not accepted error' do
+        expect { upload }.to(
+          raise_error(RocketChat::StatusError, error_message)
+        )
+      end
+    end
+
+    context 'when no-file-error is raised' do
+      before do
+        stub_authed_request(:post, path).to_return(body: response, status: 400)
+      end
+
+      let(:error_message) { '[No file uploaded]' }
+
+      context 'when no file is sent' do
+        let(:file) { nil }
+        let(:response) { upload_response('no_file_error.json') }
+
+        it 'raises a no file error' do
+          expect { upload }.to(
+            raise_error(RocketChat::StatusError, error_message)
+          )
+        end
+      end
+
+      context 'when string is used instead of file object' do
+        let(:file) { 'abc' }
+        let(:response) { upload_response('no_file_error.json') }
+
+        it 'raises a no file error' do
+          expect { upload }.to(
+            raise_error(RocketChat::StatusError, error_message)
+          )
+        end
+      end
+    end
+
+    context 'with an invalid session token' do
+      before do
+        stub_unauthed_request(:post, path)
+      end
+
+      let(:token) { RocketChat::Token.new(authToken: nil, groupId: nil) }
+
+      it 'raises an authentication status error' do
+        expect { upload }.to(
+          raise_error(RocketChat::StatusError, 'You must be logged in to do this.')
+        )
+      end
+    end
+  end
+
   ### Room request/response helpers
 
   def room_response(name)
@@ -696,5 +799,50 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       }.to_json,
       status: 200
     }
+  end
+
+  ### File response helpers
+
+  def reusable_upload_response_params
+    {
+      msg: 'Text message',
+      description: 'Description',
+      room_id: 'GENERAL',
+      file_id: 'f1234',
+      user_id: 'u1234',
+      message_id: 'm1234'
+    }
+  end
+
+  def file_params
+    {
+      **reusable_upload_response_params,
+      file_name: 'iterm-theme.itermcolors',
+      format: 'ITERMCOLORS'
+    }
+  end
+
+  def file_upload_response(params_override = {})
+    upload_response('file_upload_success.json', file_params.merge(params_override))
+  end
+
+  def file_upload_without_message_response(params_override = {})
+    upload_response('file_upload_without_message_success.json', file_params.merge(params_override))
+  end
+
+  def image_params
+    {
+      **reusable_upload_response_params,
+      file_name: 'image.png',
+      preview_file_id: 'fp1234'
+    }
+  end
+
+  def png_upload_response(params_override = {})
+    upload_response('png_upload_success.json', image_params.merge(params_override))
+  end
+
+  def upload_response(file_name, params = {})
+    File.read("spec/fixtures/messages/room/upload/#{file_name}") % params
   end
 end
