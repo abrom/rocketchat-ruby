@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.2.3](releases/tag/v0.2.3) - 2023-08-22
+### Added
+- [#46] Add file upload support using rooms.upload endpoint ([@MrRTI][])
+
 ## [0.2.2](releases/tag/v0.2.2) - 2023-04-21
 ### Added
 - [#43] Add Ruby 3.2 support ([@MrRTI][])
