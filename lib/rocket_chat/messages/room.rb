@@ -352,9 +352,9 @@ module RocketChat
         # NOTE: https://www.rubydoc.info/github/ruby/ruby/Net/HTTPHeader:set_form
         file_options = params.slice(:filename, :content_type).compact
         hash.map do |key, value|
-          next [key, value] unless key == :file && file_options.keys.any?
+          next [key, value, file_options] if key == :file && file_options.keys.any?
 
-          [key, value, file_options]
+          [key, value] 
         end
       end
     end
