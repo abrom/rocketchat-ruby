@@ -354,7 +354,7 @@ module RocketChat
         hash.map do |key, value|
           next [key, value, file_options] if key == :file && file_options.keys.any?
 
-          [key, value] 
+          [key, value]
         end
       end
     end
