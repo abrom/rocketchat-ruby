@@ -347,7 +347,15 @@ module RocketChat
 
       def file_upload_hash(**params)
         permited_keys_for_file_upload = %i[file msg description tmid]
-        Util.slice_hash(params, *permited_keys_for_file_upload)
+        hash = Util.slice_hash(params, *permited_keys_for_file_upload)
+
+        # NOTE: https://www.rubydoc.info/github/ruby/ruby/Net/HTTPHeader:set_form
+        file_options = params.slice(:filename, :content_type).compact
+        hash.map do |key, value|
+          next [key, value] unless key == :file && file_options.keys.any?
+
+          [key, value, file_options]
+        end
       end
     end
   end
