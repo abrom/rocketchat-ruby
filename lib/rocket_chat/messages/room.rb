@@ -319,7 +319,7 @@ module RocketChat
         response = session.request_json(
           "#{API_PREFIX}/rooms.upload/#{room_id}",
           method: :post,
-          form_data: file_upload_hash(file: file, **rest_params)
+          form_data: file_upload_array(file: file, **rest_params)
         )
 
         RocketChat::Message.new response['message'] if response['success']
@@ -345,16 +345,16 @@ module RocketChat
           self.class.settable_attributes.include?(attribute)
       end
 
-      def file_upload_hash(**params)
+      def file_upload_array(**params)
         permited_keys_for_file_upload = %i[file msg description tmid]
-        hash = Util.slice_hash(params, *permited_keys_for_file_upload)
+        hash = Util.slice_hash(params, *permited_keys_for_file_upload).compact
 
         # NOTE: https://www.rubydoc.info/github/ruby/ruby/Net/HTTPHeader:set_form
         file_options = params.slice(:filename, :content_type).compact
         hash.map do |key, value|
-          next [key, value, file_options] if key == :file && file_options.keys.any?
+          next [key.to_s, value, file_options] if key == :file && file_options.keys.any?
 
-          [key, value]
+          [key.to_s, value]
         end
       end
     end
