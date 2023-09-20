@@ -193,6 +193,6 @@ require 'rocketchat'
 
 rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
-session.channels.upload_file(room_id: 'GENERAL', file: File, msg: "Optional Message", description: "Optional Description", tmid: "Optional thread message id")
+session.channels.upload_file(room_id: 'GENERAL', file: File, filename: "Optional. The name of the file to use.", content_type: "Optional. The content type of the uploaded file", msg: "Optional Message", description: "Optional Description", tmid: "Optional thread message id")
 
 ```
