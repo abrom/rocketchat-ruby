@@ -135,7 +135,7 @@ module RocketChat
     end
 
     def reject_nils(data)
-      data&.reject { |_key, value| value.nil? }
+      data&.compact
     end
   end
 end
