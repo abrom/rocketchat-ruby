@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.2.4](releases/tag/v0.2.4) - 2023-12-22
+### Added
+- [#47] Add content-type and filename params for file upload ([@MrRTI][])
+
 ## [0.2.3](releases/tag/v0.2.3) - 2023-08-22
 ### Added
 - [#46] Add file upload support using rooms.upload endpoint ([@MrRTI][])
