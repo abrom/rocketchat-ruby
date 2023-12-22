@@ -724,6 +724,21 @@ shared_examples 'room_behavior' do |room_type: nil, query: false|
       it { expect(upload).to be_a(RocketChat::Message) }
     end
 
+    context 'with content_type params' do
+      subject(:upload) { scope.upload_file(room_id: room_id, file: file, content_type: content_type, **rest_params) }
+
+      let(:content_type) { 'image/png' }
+      let(:file) { File.open('spec/fixtures/files/image.png') }
+      let(:response) { png_upload_response(room_id: room_id) }
+
+      before do
+        stub_authed_request(:post, path).to_return(body: response, status: 200)
+      end
+
+      it { expect { upload }.not_to raise_error }
+      it { expect(upload).to be_a(RocketChat::Message) }
+    end
+
     context 'when not accepted error is raised' do
       before do
         stub_authed_request(:post, path).to_return(body: response, status: 400)

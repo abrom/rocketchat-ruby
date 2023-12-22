@@ -110,7 +110,7 @@ module RocketChat
         req = Net::HTTP::Post.new(path, headers)
         add_body(req, body) if body
 
-        form_data = reject_nils(options[:form_data])
+        form_data = options[:form_data]
         add_form_data(req, form_data) if form_data
       else
         uri = path
@@ -131,7 +131,6 @@ module RocketChat
     end
 
     def add_form_data(request, form_data)
-      form_data = form_data.transform_keys(&:to_s) if form_data.is_a? Hash
       request.set_form(form_data, 'multipart/form-data')
     end
 
