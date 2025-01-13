@@ -36,7 +36,7 @@ module RocketChat
           }
         )
 
-        value if response['success']
+        value if response['success'] # rubocop:disable Lint/Void
       end
 
       private
