@@ -3,6 +3,14 @@
 ## Unreleased
 - None
 
+## [0.2.6](releases/tag/v0.2.6) - 2025-01-14
+### Added
+- [#49] Add Ruby 3.4 support ([@abrom][])
+
+## [0.2.5](releases/tag/v0.2.5) - 2024-04-15
+### Added
+- [#48] Add Ruby 3.3 support ([@reist][])
+
 ## [0.2.4](releases/tag/v0.2.4) - 2023-12-22
 ### Added
 - [#47] Add content-type and filename params for file upload ([@MrRTI][])
