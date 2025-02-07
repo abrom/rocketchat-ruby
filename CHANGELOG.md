@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.2.7](releases/tag/v0.2.7) - 2025-02-07
+### Fixed
+- [#50] Fix bug in group/channel online API where ID usage broken ([@abrom][])
+
 ## [0.2.6](releases/tag/v0.2.6) - 2025-01-14
 ### Added
 - [#49] Add Ruby 3.4 support ([@abrom][])
@@ -63,7 +67,7 @@
 ### Deprecation
 - Drop Ruby 2.1 from build matrix ([@abrom][])
 
-## [0.1.16](releases/tag/v0.1.16) - 2018-10-3
+## [0.1.16](releases/tag/v0.1.16) - 2018-10-03
 ### Deprecation
 - Drop Ruby 2.0 from build matrix ([@abrom][])
 
@@ -75,11 +79,11 @@
 ### Fixed
 - Updated yard to resolve potential security vulnerability ([@abrom][])
 
-## [0.1.14](releases/tag/v0.1.14) - 2017-10-9
+## [0.1.14](releases/tag/v0.1.14) - 2017-10-09
 ### Added
 - [#19] Room/channel kick function ([@hardik127][])
 
-## [0.1.13](releases/tag/v0.1.13) - 2017-10-9
+## [0.1.13](releases/tag/v0.1.13) - 2017-10-09
 ### Added
 - Support for channel/group addAll endpoint ([@abrom][])
 
@@ -115,12 +119,12 @@
 ### Added
 - [#8] Various channel/group (room) API support ([@reist][],[@danischreiber][])
 
-## [0.1.5](releases/tag/v0.1.5) - 2017-07-9
+## [0.1.5](releases/tag/v0.1.5) - 2017-07-09
 ### Added
 - [#6] User createToken and resetAvatar endpoints ([@reist][])
 - [#7] Support for debugging server calls ([@reist][])
 
-## [0.1.4](releases/tag/v0.1.4) - 2017-07-9
+## [0.1.4](releases/tag/v0.1.4) - 2017-07-09
 ### Fixed
 - Fixed a missing dependency issue with `uri` ([@abrom][])
 
@@ -128,7 +132,7 @@
 ### Added
 - [#3] Initial support for 'Room' endpoints ([@reist][])
 
-## [0.1.1](releases/tag/v0.1.1) - 2017-05-1
+## [0.1.1](releases/tag/v0.1.1) - 2017-05-01
 ### Added
 - Support for settings get/set endpoints ([@abrom][])
 
