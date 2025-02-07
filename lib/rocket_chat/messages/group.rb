@@ -85,7 +85,7 @@ module RocketChat
       def online(room_id: nil, name: nil)
         response = session.request_json(
           '/api/v1/groups.online',
-          body: { query: room_query_params(room_id, name) }
+          body: room_query_params(room_id, name)
         )
 
         response['online'].map { |hash| RocketChat::User.new hash } if response['success']

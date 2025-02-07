@@ -259,7 +259,7 @@ describe RocketChat::Messages::Group do
       stub_authed_request(:get, described_class.api_path('online?query=%7B%22name%22:%22room-one%22%7D'))
         .to_return(online_users_response)
 
-      stub_authed_request(:get, described_class.api_path('online?query=%7B%22_id%22:%22TZtANZwQt369rR4UR%22%7D'))
+      stub_authed_request(:get, described_class.api_path('online?_id=TZtANZwQt369rR4UR'))
         .to_return(online_users_response)
 
       stub_authed_request(:get, described_class.api_path('online?query=%7B%22name%22:%22empty-room%22%7D'))

@@ -341,8 +341,9 @@ module RocketChat
       end
 
       def validate_attribute(attribute)
-        raise ArgumentError, "Unsettable attribute: #{attribute || 'nil'}" unless \
-          self.class.settable_attributes.include?(attribute)
+        return if self.class.settable_attributes.include?(attribute)
+
+        raise ArgumentError, "Unsettable attribute: #{attribute || 'nil'}"
       end
 
       def file_upload_array(**params)

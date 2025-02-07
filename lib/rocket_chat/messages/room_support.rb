@@ -20,10 +20,10 @@ module RocketChat
         if id
           { _id: id }
         elsif name
-          { name: name }
+          { query: { name: name }.to_json }
         else
           {}
-        end.to_json
+        end
       end
     end
   end
