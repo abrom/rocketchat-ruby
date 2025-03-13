@@ -122,8 +122,7 @@ module RocketChat
       def info(user_id: nil, username: nil, include_rooms: false)
         response = session.request_json(
           '/api/v1/users.info',
-          body: user_params(user_id, username)
-            .merge(include_rooms ? { fields: { userRooms: 1 }.to_json } : {}),
+          body: user_params(user_id, username).merge(include_rooms ? { includeUserRooms: true } : {}),
           upstreamed_errors: ['error-invalid-user']
         )
 

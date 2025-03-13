@@ -172,7 +172,7 @@ describe RocketChat::Messages::User do
       stub_authed_request(:get, '/api/v1/users.info?username=some_user')
         .to_return(expected)
 
-      stub_authed_request(:get, '/api/v1/users.info?fields=%7B%22userRooms%22:1%7D&username=some_user')
+      stub_authed_request(:get, '/api/v1/users.info?includeUserRooms=true&username=some_user')
         .to_return(
           body: {
             success: true,
