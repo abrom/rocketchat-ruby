@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module RocketChat
-  VERSION = '0.2.7'
+  VERSION = '0.3.1'
 end

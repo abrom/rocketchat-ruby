@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.3.1](releases/tag/v0.3.1) - 2025-03-13
+### Fixed
+- [#51] Fix deprecation in User#info fetching of user room ([@abrom][]) 
+
 ## [0.2.7](releases/tag/v0.2.7) - 2025-02-07
 ### Fixed
 - [#50] Fix bug in group/channel online API where ID usage broken ([@abrom][])
