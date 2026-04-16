@@ -30,6 +30,3 @@ jobs:
 
       - name: Run tests
         run: bundle exec rspec
-
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.0.0
