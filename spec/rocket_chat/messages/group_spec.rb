@@ -7,7 +7,7 @@ describe RocketChat::Messages::Group do
     'The required "roomId" or "roomName" param provided does not match any group [error-room-not-found]'
   end
 
-  include_examples 'room_behavior', room_type: 'p', query: false
+  include_context 'room_behavior', room_type: 'p', query: false
 
   describe '#add_leader' do
     before do

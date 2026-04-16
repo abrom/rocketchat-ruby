@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe RocketChat::Messages::Channel do
-  include_examples 'room_behavior', room_type: 'c', query: true
+  include_context 'room_behavior', room_type: 'c', query: true
 
   describe '#join' do
     before do

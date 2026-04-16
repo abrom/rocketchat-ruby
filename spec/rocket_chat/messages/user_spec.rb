@@ -7,23 +7,26 @@ describe RocketChat::Messages::User do
   let(:token) { RocketChat::Token.new(authToken: AUTH_TOKEN, userId: USER_ID) }
   let(:session) { RocketChat::Session.new(server, token) }
 
-  invalid_user_body = {
-    body: {
-      success: false,
-      error: 'The required "userId" or "username" param provided does not match any users [error-invalid-user]',
-      errorType: 'error-invalid-user'
-    }.to_json,
-    status: 400
-  }
-
-  not_provided_user_body = {
-    body: {
-      success: false,
-      error: 'The required "userId" or "username" param was not provided [error-user-param-not-provided]',
-      errorType: 'error-user-param-not-provided'
-    }.to_json,
-    status: 400
-  }
+  let(:invalid_user_body) do
+    {
+      body: {
+        success: false,
+        error: 'The required "userId" or "username" param provided does not match any users [error-invalid-user]',
+        errorType: 'error-invalid-user'
+      }.to_json,
+      status: 400
+    }
+  end
+  let(:not_provided_user_body) do
+    {
+      body: {
+        success: false,
+        error: 'The required "userId" or "username" param was not provided [error-user-param-not-provided]',
+        errorType: 'error-user-param-not-provided'
+      }.to_json,
+      status: 400
+    }
+  end
 
   describe '#create' do
     subject(:users_create) do

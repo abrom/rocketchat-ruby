@@ -20,7 +20,7 @@ module RocketChat
           self.class.api_path('addLeader'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -36,7 +36,7 @@ module RocketChat
           self.class.api_path('removeLeader'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 

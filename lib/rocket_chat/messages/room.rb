@@ -79,7 +79,7 @@ module RocketChat
           self.class.api_path('addAll'),
           method: :post,
           body: room_params(room_id, name)
-                  .merge(activeUsersOnly: active_users_only)
+                .merge(activeUsersOnly: active_users_only)
         )['success']
       end
 
@@ -97,7 +97,7 @@ module RocketChat
           self.class.api_path('addOwner'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -115,7 +115,7 @@ module RocketChat
           self.class.api_path('removeOwner'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -133,7 +133,7 @@ module RocketChat
           self.class.api_path('addModerator'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -151,7 +151,7 @@ module RocketChat
           self.class.api_path('removeModerator'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -186,7 +186,7 @@ module RocketChat
           self.class.api_path('invite'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -204,7 +204,7 @@ module RocketChat
           self.class.api_path('kick'),
           method: :post,
           body: room_params(room_id, name)
-            .merge(user_params(user_id, username))
+                .merge(user_params(user_id, username))
         )['success']
       end
 
@@ -283,7 +283,7 @@ module RocketChat
           self.class.api_path(Util.camelize("set_#{attribute}")),
           method: :post,
           body: room_params(room_id, name)
-            .merge(Util.camelize(attribute) => value)
+                .merge(Util.camelize(attribute) => value)
         )['success']
       end
 
