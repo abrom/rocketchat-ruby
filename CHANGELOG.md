@@ -3,6 +3,10 @@
 ## Unreleased
 - None
 
+## [0.4.1](releases/tag/v0.4.1) - 2026-04-16
+### Added
+- [#52] Add Ruby 4.0 support ([@abrom][])
+
 ## [0.3.1](releases/tag/v0.3.1) - 2025-03-13
 ### Fixed
 - [#51] Fix deprecation in User#info fetching of user room ([@abrom][]) 
