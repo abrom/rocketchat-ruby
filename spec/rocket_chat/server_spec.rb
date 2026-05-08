@@ -83,4 +83,50 @@ describe RocketChat::Server do
       end
     end
   end
+
+  describe '#login_with_token' do
+    before do
+      stub_request(:get, "#{SERVER_URI}api/v1/me").to_return(
+        body: {
+          status: :error,
+          message: 'You must be logged in to do this.'
+        }.to_json,
+        status: 401
+      )
+
+      stub_request(:get, "#{SERVER_URI}api/v1/me")
+        .with(headers: { 'X-Auth-Token' => AUTH_TOKEN, 'X-User-Id' => USER_ID })
+        .to_return(
+          body: {
+            status: :success,
+            data: { _id: USER_ID }
+          }.to_json,
+          status: 200
+        )
+    end
+
+    context 'with valid credentials' do
+      it 'returns a new session' do
+        rc = server.login_with_token(USER_ID, AUTH_TOKEN)
+        expect(rc.token.auth_token).to eq AUTH_TOKEN
+        expect(rc.token.user_id).to eq USER_ID
+      end
+    end
+
+    context 'with invalid user id' do
+      it 'raises a status error' do
+        expect do
+          server.login_with_token('invalid-user-id', AUTH_TOKEN)
+        end.to raise_error RocketChat::StatusError, 'Invalid credentials'
+      end
+    end
+
+    context 'with invalid auth token' do
+      it 'raises a status error' do
+        expect do
+          server.login_with_token(USER_ID, 'invalid-auth-token')
+        end.to raise_error RocketChat::StatusError, 'Invalid credentials'
+      end
+    end
+  end
 end
