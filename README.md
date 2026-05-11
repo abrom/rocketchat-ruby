@@ -122,7 +122,7 @@ puts "Rocket.Chat version: #{info.version}"
 ```
 
 #### authentication
-To logout from a server:
+With username and password
 
 ```ruby
 require 'rocketchat'
@@ -131,6 +131,17 @@ rocket_server = RocketChat::Server.new('http://your.server.address/')
 session = rocket_server.login('username', 'password')
 # ... use the API ...
 session.logout
+```
+
+With user ID and personal access token (PAT) obtained from `https://your.server.address/account/tokens`
+
+```ruby
+require 'rocketchat'
+
+rocket_server = RocketChat::Server.new('http://your.server.address/')
+session = rocket_server.login_with_token('user-id', 'pat')
+# ... use the API ...
+# Logout not required
 ```
 
 #### debugging

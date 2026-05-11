@@ -48,6 +48,25 @@ module RocketChat
       Session.new self, Token.new(response['data'])
     end
 
+    #
+    # Login with personal access token (PAT) to the REST API
+    #
+    # Get user ID and PAT from https://your.server.address/account/tokens.
+    # @param [String] user_id User ID
+    # @param [String] auth_token Token
+    # @return [Session] Rocket.Chat Session
+    # @raise [HTTPError, StatusError]
+    #
+    def login_with_token(user_id, auth_token)
+      session = Session.new self, Token.new(userId: user_id, authToken: auth_token)
+      # Call `me` endpoint to validate credentials. Raises StatusError for
+      # invalid credentials.
+      session.me
+      session
+    rescue StatusError => e
+      raise e.exception('Invalid credentials')
+    end
+
     def request_json(path, options = {})
       super(path, @options.merge(options))
     end
